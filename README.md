@@ -23,7 +23,9 @@ I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basi
 - B2S @ $34USD/mth
 
 ## IMPORTANT
-The key to getting the savings here is to limit the amount of nodes in your cluster (until you need it).  The 2 key settings to ensure this is `node_locations` and `node_count` (or `initial_node_count`).  
+The key to getting the savings here is to limit the amount of nodes in your cluster (until you need it).  The 3 key settings to ensure this is `location`, `node_locations` and `node_count` (or `initial_node_count`).  
+
+`location` specifies where to place the cluster (masters).  By specifying a zone, you have a free, zonal cluster.  If you replaced it with a region instead, it becomes a regional cluster -- ideal for a production cluster, but not part of the free tier offering.
 
 Leaving `node_locations` blank will default your node to be in the same zone as your GKE cluster's zone.  Any zone you specify will be **in addition** to the the cluster's zone (i.e. `node_locations = ["northamerica-northeast1-a",]`), meaning your nodes will span more than one zone.  This is referred to as a multi-zone cluster.
 
