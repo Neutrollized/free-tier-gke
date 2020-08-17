@@ -18,6 +18,7 @@ variable "zone" {
 #-----------------------------
 
 variable "gke_cluster_name" {}
+
 variable "node_locations" {
   type    = list(string)
   default = []
