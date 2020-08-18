@@ -29,6 +29,11 @@ variable "enable_shielded_nodes" {
   default     = "true"
 }
 
+variable "enable_private_nodes" {
+  description = "In a private cluster, nodes only have RFC 1918 private addresses and communicate with the master's private endpoint via private networking."
+  default     = "true"
+}
+
 variable "channel" {
   description = "The channel to get the k8s release from. Accepted values are UNSPECIFIED, RAPID, REGULAR and STABLE"
   default     = "UNSPECIFIED"
