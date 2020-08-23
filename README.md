@@ -52,9 +52,9 @@ channel      = "REGULAR"
 auto_upgrade = "true"
 
 gke_cluster_name = "playground"
-istio_disabled   = "false"
 
 machine_type = "e2-small"
+disk_size_gb = "40"
 max_nodes    = "1"
 ```
 
@@ -111,7 +111,7 @@ Terraform will perform the following actions:
             }
 
           + istio_config {
-              + disabled = false
+              + disabled = true
             }
 
           + kubernetes_dashboard {
@@ -270,7 +270,7 @@ Terraform will perform the following actions:
       + instance_group_urls = (known after apply)
       + location            = "northamerica-northeast1-c"
       + max_pods_per_node   = (known after apply)
-      + name                = "preempt-node-pool"
+      + name                = "preempt-pool"
       + name_prefix         = (known after apply)
       + node_count          = (known after apply)
       + project             = (known after apply)
@@ -289,7 +289,7 @@ Terraform will perform the following actions:
         }
 
       + node_config {
-          + disk_size_gb      = (known after apply)
+          + disk_size_gb      = 40
           + disk_type         = (known after apply)
           + guest_accelerator = (known after apply)
           + image_type        = (known after apply)
@@ -299,7 +299,10 @@ Terraform will perform the following actions:
           + metadata          = {
               + "disable-legacy-endpoints" = "true"
             }
-          + oauth_scopes      = (known after apply)
+          + oauth_scopes      = [
+              + "https://www.googleapis.com/auth/logging.write",
+              + "https://www.googleapis.com/auth/monitoring",
+            ]
           + preemptible       = true
           + service_account   = (known after apply)
 

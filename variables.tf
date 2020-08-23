@@ -29,11 +29,6 @@ variable "enable_shielded_nodes" {
   default     = "true"
 }
 
-variable "enable_private_nodes" {
-  description = "In a private cluster, nodes only have RFC 1918 private addresses and communicate with the master's private endpoint via private networking."
-  default     = "true"
-}
-
 variable "channel" {
   description = "The channel to get the k8s release from. Accepted values are UNSPECIFIED, RAPID, REGULAR and STABLE"
   default     = "UNSPECIFIED"
@@ -55,6 +50,11 @@ variable "istio_disabled" {
 
 variable "machine_type" {
   default = "e2-small"
+}
+
+variable "disk_size_gb" {
+  description = "The default disk size the nodes are given.  100G is probably too much for a test cluster, so you can change it if you'd like.  Don't set it too low though as disk I/O is also tied to disk size."
+  default     = "100"
 }
 
 variable "min_nodes" {

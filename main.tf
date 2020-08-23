@@ -27,11 +27,6 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-  # TODO
-  #private_cluster_config {
-  #  enable_private_nodes = var.enable_private_nodes
-  #}
-
   addons_config {
     http_load_balancing {
       disabled = var.http_lb_disabled
@@ -61,16 +56,17 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   }
 
   node_config {
-    preemptible  = true # KEY IF YOU WANT TO SAVE
+    preemptible  = true
     machine_type = var.machine_type
+    disk_size_gb = var.disk_size_gb
 
     metadata = {
       disable-legacy-endpoints = "true"
     }
 
-    #oauth_scopes = [
-    #  "https://www.googleapis.com/auth/logging.write",
-    #  "https://www.googleapis.com/auth/monitoring",
-    #]
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
   }
 }
