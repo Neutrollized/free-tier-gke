@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.1.2] - 2020-11-05
 ### Changed
-- Updated **google** and **google-beta** providers to `~> 3.0` from `~> 2.0`
+- Updated **google** and **google-beta** providers from `~> 2.0` to `~> 3.0`
 - Added a `regional` boolean variable to set the location to `var.region` if true and `var.zone` otherwise (defaults to `false`)
 
 ## [0.1.1] - 2020-08-23
