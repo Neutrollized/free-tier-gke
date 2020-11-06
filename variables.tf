@@ -13,6 +13,16 @@ variable "zone" {
   default = "us-central1-c"
 }
 
+#------------------------------------------------
+# VPC_native cluster networking
+# https://cloud.google.com/kubernetes-engine/docs/concepts/alias-ips#cluster_sizing_secondary_range_svcs
+#------------------------------------------------
+
+variable "primary_vm_cidr" {
+  description = "Primary CIDR for nodes"
+  default     = "10.0.0.0/24"
+}
+
 #-----------------------------
 # GKE Cluster
 #-----------------------------
@@ -32,6 +42,26 @@ variable "node_locations" {
 variable "enable_shielded_nodes" {
   description = "Shielded GKE nodes provide strong cryptographic identity for nodes joining a cluster.  Will be default with version 1.18+"
   default     = "true"
+}
+
+variable "networking_mode" {
+  description = "Determines whether alias IPs or routes are used for pod IPs in the cluster.  ip_allocation_policy block needs to be defined if using VPC_NATIVE.  Accepted values are VPC_NATIVE or ROUTES."
+  default     = "VPC_NATIVE"
+}
+
+variable "enable_private_endpoint" {
+  description = "When true public access to cluster (master) endpoint s disabled.  When false, it can be accessed both publicly and privately."
+  default     = "true"
+}
+
+variable "enable_private_nodes" {
+  description = "Nodes only have private IPs and communicate to master via private networking."
+  default     = "true"
+}
+
+variable "master_ipv4_cidr_block" {
+  description = "CIDR of the master network.  Range must not overlap with any other ranges in use within the cluster's network."
+  default     = ""
 }
 
 variable "channel" {

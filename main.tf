@@ -11,6 +11,29 @@ resource "google_container_cluster" "primary" {
 
   enable_shielded_nodes = var.enable_shielded_nodes
 
+  network    = google_compute_network.k8s_vpc.id
+  subnetwork = google_compute_subnetwork.k8s_subnet.id
+
+  # ip_allocation_policy left empty here to let GCP pick
+  # otherwise you will have to define your own secondary CIDR ranges
+  # which I will probably look to add at a later date
+  networking_mode = var.networking_mode
+  ip_allocation_policy {}
+
+  private_cluster_config {
+    enable_private_endpoint = var.enable_private_endpoint
+    enable_private_nodes    = var.enable_private_ndoes
+    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+  }
+
+  # not recommended for prod, obvs
+  master_authorized_networks_config {
+    cidr_blocks {
+      cidr_block   = "0.0.0.0/0"
+      display_name = "allow-all"
+    }
+  }
+
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.
