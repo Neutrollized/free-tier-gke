@@ -3,7 +3,7 @@
 
 [GKE Container Node Pool ](https://www.terraform.io/docs/providers/google/r/container_node_pool.html)
 
-It's not 100% free, but with my 1 node setup, I'm paying ~$4USD/mth for a fully managed Kubernetes cluster.  This works by taking advantage of Google [always free](https://cloud.google.com/free/docs/gcp-free-tier) tier which waives the management fee of one **zonal** GKE cluster, so you only have to pay for your nodes.  Combine this with using [preemptible VMs](https://cloud.google.com/compute/docs/instances/preemptible) as your nodes and you'll have some spectacular savings.
+It's not 100% free, but with my 1 node setup, I'm paying ~$5USD/mth for a fully managed Kubernetes cluster.  This works by taking advantage of Google [always free](https://cloud.google.com/free/docs/gcp-free-tier) tier which waives the management fee of one **zonal** GKE cluster, so you only have to pay for your nodes.  Combine this with using [preemptible VMs](https://cloud.google.com/compute/docs/instances/preemptible) as your nodes and you'll have some spectacular savings.
 
 This is great if you're looking for a small k8s cluster that more closely resembles what you might see in the real world (not that [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) or [MicroK8s](https://microk8s.io/) isn't good as a learning tool -- it's just not the same).  Here, you can also scale in/out your cluster easily if you want test some features or add-ons (like service meshes!).
 
@@ -62,8 +62,10 @@ max_nodes    = "1"
 ## Example Kubernetes Deployment
 I've included an example deployment of nginx with *LoadBalancer* (GCP ALB) service.  Please note that the deployment does provision an GCP load balancer so this will incur extra charges if you leave it running for too long.
 
-To deploy: `kubectl apply -f example/nginx-deployment.yaml`
+To deploy: `kubectl apply -f examples/nginx-deployment.yaml`
 
-To delete: `kubectl delete -f example/nginx-deployment.yaml`
+To delete: `kubectl delete -f examples/nginx-deployment.yaml`
 
 The pods should deploy fairly quickly, but the service might take a bit before you get the load balancer's public IP (you can do a `watch kubectl get service` if you're the impatient type)
+
+(There are also other examples in there if you want try them out as well)
