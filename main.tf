@@ -64,13 +64,13 @@ resource "google_container_cluster" "primary" {
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
   name     = "preempt-pool"
-  location = var.zone
+  location = var.regional ? var.region : var.zone
   cluster  = google_container_cluster.primary.name
 
   initial_node_count = 1
   autoscaling {
-    min_node_count = 1
-    max_node_count = 1
+    min_node_count = var.min_nodes
+    max_node_count = var.max_nodes
   }
 
   management {
