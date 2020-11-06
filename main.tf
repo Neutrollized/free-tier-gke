@@ -2,6 +2,7 @@
 
 resource "google_container_cluster" "primary" {
   provider = google-beta
+
   name     = var.gke_cluster_name
   location = var.regional ? var.region : var.zone
 
