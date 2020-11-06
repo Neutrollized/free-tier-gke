@@ -13,11 +13,36 @@ variable "zone" {
   default = "us-central1-c"
 }
 
+#------------------------------------------------
+# VPC_native cluster networking
+# https://cloud.google.com/kubernetes-engine/docs/concepts/alias-ips#cluster_sizing_secondary_range_svcs
+#------------------------------------------------
+
+variable "primary_vm_cidr" {
+  description = "Primary CIDR for nodes"
+  default     = "10.0.0.0/24"
+}
+
+variable "secondary_cluster_cidr" {
+  description = "Secondary CIDR for pods"
+  default     = "172.16.0.0/16"
+}
+
+variable "secondary_service_cidr" {
+  description = "Secondary CIDR for services.  If not set, it will use the secondary_pod_cidr to allocate IPs for services as well."
+  default     = "172.20.0.0/16"
+}
+
 #-----------------------------
 # GKE Cluster
 #-----------------------------
 
 variable "gke_cluster_name" {}
+
+variable "regional" {
+  description = "Is this cluster regional or zonal? Regional clusters aren't covered by Google's Always Free tier."
+  default     = "false"
+}
 
 variable "node_locations" {
   type    = list(string)
@@ -27,6 +52,19 @@ variable "node_locations" {
 variable "enable_shielded_nodes" {
   description = "Shielded GKE nodes provide strong cryptographic identity for nodes joining a cluster.  Will be default with version 1.18+"
   default     = "true"
+}
+
+variable "networking_mode" {
+  description = "Determines whether alias IPs or routes are used for pod IPs in the cluster.  ip_allocation_policy block needs to be defined if using VPC_NATIVE.  Accepted values are VPC_NATIVE or ROUTES."
+  default     = "VPC_NATIVE"
+}
+
+variable "cluster_secondary_range_name" {
+  default = ""
+}
+
+variable "services_secondary_range_name" {
+  default = ""
 }
 
 variable "channel" {

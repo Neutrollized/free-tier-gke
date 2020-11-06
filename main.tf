@@ -3,7 +3,7 @@
 resource "google_container_cluster" "primary" {
   provider = google-beta
   name     = var.gke_cluster_name
-  location = var.zone # if you set this to var.region, it becomes a regional cluster 
+  location = var.regional ? var.region : var.zone
 
   # Can be single or multi-zone, as
   # https://www.terraform.io/docs/providers/google/r/container_cluster.html#node_locations

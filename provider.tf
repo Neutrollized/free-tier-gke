@@ -4,7 +4,7 @@ terraform {
 
 // Configure the GCP provider
 provider "google" {
-  version     = "~> 2.0"
+  version     = "~> 3.0"
   project     = var.project_id
   credentials = file(var.credentials_file_path)
   region      = var.region
@@ -12,7 +12,7 @@ provider "google" {
 }
 
 provider "google-beta" {
-  version     = "~> 2.0"
+  version     = "~> 3.0"
   project     = var.project_id
   credentials = file(var.credentials_file_path)
   region      = var.region
