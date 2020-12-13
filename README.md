@@ -93,7 +93,7 @@ The parameters for `location`, `node_locations` and `node_count` are a little di
 The full list of options for `gcloud container clusters create` can be found [here](https://cloud.google.com/sdk/gcloud/reference/container/clusters/create) but the following is a minimal set of configurations to achieve a low cost cluster:
 
 ```
-  gcloud container clusters create market-navigator \
+  gcloud container clusters create cheap-cluster \
     --zone us-west1-a \
     --node-locations us-west1-a \
     --machine-type=e2-small \
