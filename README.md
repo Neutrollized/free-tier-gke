@@ -23,13 +23,13 @@ I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basi
 - B2S @ $34USD/mth
 
 ## IMPORTANT
-The key to getting the savings here is to limit the amount of nodes in your cluster (until you need it).  The 3 key settings to ensure this is `location`, `node_locations` and `node_count` (or `initial_node_count`).  
+The key to getting the savings here is to limit the amount of nodes in your cluster (until you need it).  The 3 key settings to ensure this is `zone`, `node_locations` and `node_count` (defined by the `min-nodes` and `max-nodes` configurations).
 
-`location` specifies where to place the cluster (masters).  By specifying a zone, you have a free, zonal cluster.  If you replaced it with a region instead, it becomes a regional cluster -- ideal for a production cluster, but not part of the free tier offering.
+`zone` specifies where to place the cluster (masters).  By specifying a zone, you have a free, zonal cluster.  If you replaced it with a region instead, it becomes a regional cluster -- ideal for a production cluster, but not part of the free tier offering. According to [GCP's free tier](https://cloud.google.com/free), a free `f1-micro` instance is only available in one of the following regions: `us-west1`, `us-central1`, `us-east1`. Unfortunately, `f1-micro` instances are too small to run GKE.
 
 Leaving `node_locations` blank will default your node to be in the same zone as your GKE cluster's zone.  Any zone you specify will be **in addition** to the the cluster's zone (i.e. `node_locations = ["northamerica-northeast1-a",]`), meaning your nodes will span more than one zone.  This is referred to as a multi-zone cluster.
 
-`node_count` specifies how many nodes **per zone** rather than the total node count in your cluster.  Therefore, if you set 3 zones in `node_locations` with a `node_count` of 2, you're going to have 6 nodes in total.
+`node_count` specifies how many nodes **per zone** rather than the total node count in your cluster.  Therefore, if you set 3 zones in `node_locations` with a `node_count` of 2, you're going to have 6 nodes in total. The upper limit on the `node_count` can be configured using the `--max-nodes` configuration.
 
 ### Additional Notes
 - While `e2-micro` is a viable option for `machine_type`, in practice it's not very useful as all the overhead that comes with GKE such as Stackdriver agent, `kube-dns`, `kube-proxy`, etc. consumes most of availble memory.  I recommend starting with at least an `e2-small` (2CPUs/2GB memory)
@@ -70,3 +70,14 @@ To delete: `kubectl delete -f examples/nginx-deployment.yaml`
 The pods should deploy fairly quickly, but the service might take a bit before you get the load balancer's public IP (you can do a `watch kubectl get service` if you're the impatient type)
 
 (There are also other examples in there if you want try them out as well)
+
+## Using the Google Cloud SDK
+If you've installed the [Google Cloud SDK](https://cloud.google.com/sdk/docs/quickstart), the following is a minimal example of how you can create your low cost cluster:
+
+```
+	gcloud container clusters create market-navigator \
+	--zone us-west1-a \
+	--node-locations us-west1-a \
+	--machine-type=e2-small \
+	--max-nodes=1
+```
