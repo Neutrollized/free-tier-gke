@@ -12,15 +12,18 @@ I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basi
 
 #### GKE
 - 1 free zonal GKE cluster
-- e2-medium @ $27USD/mth (or $8USD/mth for preemptible)
+- e2-medium @ $27USD/mth (or $8USD/mth for [preemptible](https://cloud.google.com/compute/docs/instances/preemptible))
 
 #### EKS
 - $0.10/hr per EKS cluster @ 730hrs/mth (or $73USD/mth)
-- t3.medium @ $29USD/mth
+- t3.medium @ $29USD/mth ([Spot](https://aws.amazon.com/ec2/spot/?cards.sort-by=item.additionalFields.startDateTime&cards.sort-order=asc) instances available at up to 90% savings)
 
 #### AKS
 - [free cluster management](https://azure.microsoft.com/en-ca/pricing/details/kubernetes-service/)
-- B2S @ $34USD/mth
+- B2S @ $34USD/mth ([Spot](https://azure.microsoft.com/en-us/pricing/spot/) instances available at up to 90% savings)
+
+Azure's AKS combined with Spot instances are actually incredibly competitive in pricing vs preemptibles, but in my mind, preemptibles have the edge due to ease of use -- no price bidding and a generably more reliable/predicatable uptime (in my use don't think I've had any node get terminated before 22hrs).
+
 
 ## IMPORTANT
 The key to getting the savings here is to limit the amount of nodes in your cluster (until you need it).  The 3 key settings to ensure this is `location`, `node_locations` and `node_count` (or `initial_node_count`).  
