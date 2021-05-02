@@ -13,8 +13,12 @@ resource "google_compute_subnetwork" "k8s_subnet" {
   region                   = var.region
   #  secondary_ip_range = [
   #    {
-  #      range_name    = var.secondary_ip_range_name
-  #      ip_cidr_range = var.secondary_ip_cidr
+  #      range_name    = var.secondary_pods_range_name
+  #      ip_cidr_range = var.secondary_pods_cidr
+  #    },
+  #    {
+  #      range_name    = var.secondary_services_range_name
+  #      ip_cidr_range = var.secondary_services_cidr
   #    }
   #  ]
 }

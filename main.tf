@@ -21,6 +21,8 @@ resource "google_container_cluster" "primary" {
   # which I will probably look to add at a later date
   networking_mode = var.networking_mode
   ip_allocation_policy {
+    #cluster_secondary_range_name   = var.secondary_pods_range_name
+    #services_secondary_range_name  = var.secondary_services_range_name
     cluster_ipv4_cidr_block  = var.cluster_ipv4_cidr_block
     services_ipv4_cidr_block = var.services_ipv4_cidr_block
   }
