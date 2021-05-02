@@ -1,20 +1,29 @@
 terraform {
-  required_version = "~> 0.13.0"
+  required_version = "~> 0.15.0"
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 3.0"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 3.0"
+    }
+  }
 }
 
-// Configure the GCP provider
 provider "google" {
-  version     = "~> 3.0"
-  project     = var.project_id
   credentials = file(var.credentials_file_path)
-  region      = var.region
-  zone        = var.zone
+
+  project = var.project_id
+  region  = var.region
+  zone    = var.zone
 }
 
 provider "google-beta" {
-  version     = "~> 3.0"
-  project     = var.project_id
   credentials = file(var.credentials_file_path)
-  region      = var.region
-  zone        = var.zone
+
+  project = var.project_id
+  region  = var.region
+  zone    = var.zone
 }

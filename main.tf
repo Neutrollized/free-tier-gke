@@ -11,6 +11,7 @@ resource "google_container_cluster" "primary" {
   node_locations = var.node_locations
 
   enable_shielded_nodes = var.enable_shielded_nodes
+  enable_tpu            = var.enable_tpu
 
   network    = google_compute_network.k8s_vpc.id
   subnetwork = google_compute_subnetwork.k8s_subnet.id
@@ -19,7 +20,13 @@ resource "google_container_cluster" "primary" {
   # otherwise you will have to define your own secondary CIDR ranges
   # which I will probably look to add at a later date
   networking_mode = var.networking_mode
-  ip_allocation_policy {}
+  ip_allocation_policy {
+    cluster_ipv4_cidr_block  = var.cluster_ipv4_cidr_block
+    services_ipv4_cidr_block = var.services_ipv4_cidr_block
+  }
+
+  # https://cloud.google.com/kubernetes-engine/docs/how-to/flexible-pod-cidr#cidr_ranges_for_clusters
+  default_max_pods_per_node = var.max_pods_per_node
 
   private_cluster_config {
     enable_private_endpoint = var.enable_private_endpoint
@@ -27,10 +34,9 @@ resource "google_container_cluster" "primary" {
     master_ipv4_cidr_block  = var.master_ipv4_cidr_block
   }
 
-  # not recommended for prod, obvs
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = "0.0.0.0/0"
+      cidr_block   = var.master_authorized_network_cidr
       display_name = "allow-all"
     }
   }
