@@ -34,8 +34,8 @@ variable "cluster_ipv4_cidr_block" {
 }
 
 variable "services_ipv4_cidr_block" {
-  description = "Secondary CIDR for services.  /17 will provide 32k IPs which is a 2:1 pods-to-service ratio."
-  default     = "10.1.0.0/17"
+  description = "Secondary CIDR for services.  /20 will provide 4k service IPs."
+  default     = "10.1.0.0/20"
 }
 
 #-----------------------------
