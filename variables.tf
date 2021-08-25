@@ -89,6 +89,10 @@ variable "master_ipv4_cidr_block" {
   default     = ""
 }
 
+variable "network_policy_enabled" {
+  description = "If enabled, allows GKE's network policy enforcement to control communication between cluster's pods and services."
+  default     = "false"
+}
 variable "channel" {
   description = "The channel to get the k8s release from. Accepted values are UNSPECIFIED, RAPID, REGULAR and STABLE"
   default     = "UNSPECIFIED"

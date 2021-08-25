@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2021-08-25
+### Added
+- new variable `network_policy_enabled` for enabling [Network Policy](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy#overview).  Please note the [cluster sizing requirements](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy#limitations_and_requirements) if you do enable this (default: `false`)
+### Changed
+- Updated **terraform** provider from `~> 0.15.0` to `~> 1.0`
+
 ## [0.3.0] - 2021-05-02
 ### Added
 - new variables (`max_mods_per_node`, `cluster_ipv4_cidr_block` and `services_ipv4_cidr_block`)to support VPC-native cluster settings
@@ -20,7 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.1.2] - 2020-11-05
 ### Changed
 - Updated **google** and **google-beta** providers from `~> 2.0` to `~> 3.0`
-- Added a `regional` boolean variable to set the location to `var.region` if true and `var.zone` otherwise (defaults to `false`)
+- Added a `regional` boolean variable to set the location to `var.region` if true and `var.zone` otherwise (default: `false`)
 
 ## [0.1.1] - 2020-08-23
 ### Changed

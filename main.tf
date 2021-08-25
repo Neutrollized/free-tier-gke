@@ -21,8 +21,6 @@ resource "google_container_cluster" "primary" {
   # which I will probably look to add at a later date
   networking_mode = var.networking_mode
   ip_allocation_policy {
-    #cluster_secondary_range_name   = var.secondary_pods_range_name
-    #services_secondary_range_name  = var.secondary_services_range_name
     cluster_ipv4_cidr_block  = var.cluster_ipv4_cidr_block
     services_ipv4_cidr_block = var.services_ipv4_cidr_block
   }
@@ -41,6 +39,12 @@ resource "google_container_cluster" "primary" {
       cidr_block   = var.master_authorized_network_cidr
       display_name = "allow-all"
     }
+  }
+
+  # there are cluster sizing requirements if network policy is to be enabled
+  # https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy#limitations_and_requirements
+  network_policy {
+    enabled = var.network_policy_enabled
   }
 
   # We can't create a cluster with no node pool defined, but we want to only use
