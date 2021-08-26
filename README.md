@@ -73,6 +73,15 @@ enable_private_nodes           = "false"
 machine_type = "e2-small"
 disk_size_gb = "40"
 max_nodes    = "1"
+
+# custom node taints
+taint = [
+  {
+    key    = "node.cilium.io/agent-not-ready"
+    value  = "true"
+    effect = "NO_SCHEDULE"
+  }
+]
 ```
 
 ## Example Kubernetes Deployment

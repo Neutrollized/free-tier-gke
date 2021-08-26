@@ -80,7 +80,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   location = var.regional ? var.region : var.zone
   cluster  = google_container_cluster.primary.name
 
-  initial_node_count = 1
+  initial_node_count = var.initial_node_count
   autoscaling {
     min_node_count = var.min_nodes
     max_node_count = var.max_nodes
@@ -104,5 +104,14 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
     ]
+
+    dynamic "taint" {
+      for_each = var.taint
+      content {
+        key    = taint.value["key"]
+        value  = taint.value["value"]
+        effect = taint.value["effect"]
+      }
+    }
   }
 }

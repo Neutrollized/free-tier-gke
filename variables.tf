@@ -121,12 +121,16 @@ variable "disk_size_gb" {
   default     = "100"
 }
 
+variable "initial_node_count" {
+  default = "1"
+}
+
 variable "min_nodes" {
   default = "1"
 }
 
 variable "max_nodes" {
-  default = "3"
+  default = "5"
 }
 
 variable "auto_upgrade" {
@@ -134,3 +138,14 @@ variable "auto_upgrade" {
   default     = "false"
 }
 
+variable "taint" {
+  description = "Used to specify node taints (if any). List of maps whose values are strings."
+  type        = list(map(string))
+  default = [
+    #    {
+    #      key    = "node.cilium.io/agent-not-ready"
+    #      value  = "true"
+    #      effect = "NO_SCHEDULE"
+    #    }
+  ]
+}
