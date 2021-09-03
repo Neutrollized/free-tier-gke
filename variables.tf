@@ -121,6 +121,11 @@ variable "disk_size_gb" {
   default     = "100"
 }
 
+variable "image_type" {
+  description = "Node/OS image used for each node."
+  default     = "COS_CONTAINERD"
+}
+
 variable "initial_node_count" {
   default = "1"
 }
@@ -130,7 +135,7 @@ variable "min_nodes" {
 }
 
 variable "max_nodes" {
-  default = "5"
+  default = "3"
 }
 
 variable "auto_upgrade" {
