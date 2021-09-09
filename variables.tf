@@ -89,22 +89,28 @@ variable "master_ipv4_cidr_block" {
   default     = ""
 }
 
-variable "network_policy_enabled" {
-  description = "If enabled, allows GKE's network policy enforcement to control communication between cluster's pods and services."
+variable "dataplane_v2_enabled" {
+  description = "If enabled, it uses a dataplane that harnesses the power of eBPF and Cilium."
   default     = "false"
 }
+
 variable "channel" {
   description = "The channel to get the k8s release from. Accepted values are UNSPECIFIED, RAPID, REGULAR and STABLE"
   default     = "UNSPECIFIED"
 }
 
+variable "horizontal_pod_autoscaling_disabled" {
+  description = "When enabled, allows increase/decrease number of replica pods based on resource usage of existing pods."
+  default     = "false"
+}
+
 variable "http_lb_disabled" {
-  description = "If enabled, a controller will be installed to coordinate applying load balancing configuration changes to your GCP project."
+  description = "When enabled, a controller will be installed to coordinate applying load balancing configuration changes to your GCP project."
   default     = "false"
 }
 
 variable "istio_disabled" {
-  description = "If enabled, the Istio components will be installed in your cluster."
+  description = "When enabled, the Istio components will be installed in your cluster."
   default     = "true"
 }
 

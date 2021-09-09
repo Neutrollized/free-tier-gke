@@ -37,15 +37,19 @@ resource "google_container_cluster" "primary" {
   master_authorized_networks_config {
     cidr_blocks {
       cidr_block   = var.master_authorized_network_cidr
-      display_name = "allow-all"
+      display_name = "allowed-cidr"
     }
   }
 
-  # there are cluster sizing requirements if network policy is to be enabled
-  # https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy#limitations_and_requirements
+  # GKE Dataplane V2 is generally available as of GKE version 1.20.6-gke.700
+  # https://cloud.google.com/kubernetes-engine/docs/how-to/dataplane-v2#create-cluster
   network_policy {
-    enabled = var.network_policy_enabled
+    enabled = var.dataplane_v2_enabled ? false : true
+
+    provider = var.dataplane_v2_enabled ? "PROVIDER_UNSPECIFIED" : "CALICO"
   }
+
+  datapath_provider = var.dataplane_v2_enabled ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -64,6 +68,10 @@ resource "google_container_cluster" "primary" {
   }
 
   addons_config {
+    horizontal_pod_autoscaling {
+      disabled = var.horizontal_pod_autoscaling_disabled
+    }
+
     http_load_balancing {
       disabled = var.http_lb_disabled
     }

@@ -84,6 +84,11 @@ taint = [
 ]
 ```
 
+## eBPF and Cilium
+Over the last serveral weeks, I've been learning a lot about [eBPF](https://ebpf.io/) and experimenting with [Cilium](https://cilium.io/) in particular.  It was the main reason behind the changes in [v0.3.2](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#032---2021-08-26).  New in [v0.4.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#040---2021-09-09), you will have the option of enabling [GKE Dataplane V2](https://cloud.google.com/blog/products/containers-kubernetes/bringing-ebpf-and-cilium-to-google-kubernetes-engine) which leverages the power of eBPF and Cilium to provide enhanced security and observability in your GKE cluster.  
+
+In my opinion, GKE Dataplane V2 may not be suitable for production just quite yet due to some of its current [limitations](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2#limitations), but I expect this technology to get picked up by other cloud providers and mature further over the next few years.
+
 ## Example Kubernetes Deployment
 I've included an example deployment of nginx with *LoadBalancer* (GCP ALB) service.  Please note that the deployment does provision an GCP load balancer so this will incur extra charges if you leave it running for too long.
 
