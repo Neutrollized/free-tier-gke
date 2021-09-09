@@ -89,8 +89,13 @@ variable "master_ipv4_cidr_block" {
   default     = ""
 }
 
+variable "network_policy_enabled" {
+  description = "If enabled, allows GKE's network policy enforcement to control communication between cluster's pods and services.  Cannot be set to true if dataplane_v2_enabled is also set to true."
+  default     = "false"
+}
+
 variable "dataplane_v2_enabled" {
-  description = "If enabled, it uses a dataplane that harnesses the power of eBPF and Cilium."
+  description = "If enabled, it uses a dataplane that harnesses the power of eBPF and Cilium.  Cannot be set to true if network_policy_enabled is also set to true."
   default     = "false"
 }
 

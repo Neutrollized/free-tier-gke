@@ -44,9 +44,7 @@ resource "google_container_cluster" "primary" {
   # GKE Dataplane V2 is generally available as of GKE version 1.20.6-gke.700
   # https://cloud.google.com/kubernetes-engine/docs/how-to/dataplane-v2#create-cluster
   network_policy {
-    enabled = var.dataplane_v2_enabled ? false : true
-
-    provider = var.dataplane_v2_enabled ? "PROVIDER_UNSPECIFIED" : "CALICO"
+    enabled = var.network_policy_enabled
   }
 
   datapath_provider = var.dataplane_v2_enabled ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
