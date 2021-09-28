@@ -22,7 +22,7 @@ I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basi
 - [free cluster management](https://azure.microsoft.com/en-ca/pricing/details/kubernetes-service/)
 - B2S @ $34USD/mth ([Spot](https://azure.microsoft.com/en-us/pricing/spot/) instances available at up to 90% savings)
 
-Azure's AKS combined with Spot instances are actually incredibly competitive in pricing vs preemptibles, but in my mind, preemptibles have the edge due to ease of use -- no price bidding and a generably more reliable/predicatable uptime (in my use don't think I've had any node get terminated before 22hrs).
+Azure's AKS combined with Spot instances are actually incredibly competitive in pricing vs preemptibles, but in my mind, preemptibles have the edge due to ease of use -- no price bidding and a generably more reliable/predictable uptime (in my use don't think I've had any node get terminated before 22hrs).
 
 
 ## IMPORTANT
@@ -89,7 +89,7 @@ Over the last serveral weeks, I've been learning a lot about [eBPF](https://ebpf
 
 When Dataplane V2 is enabled, one of the things you may notice is the absence of **kube-proxy** in the cluster.  That's becuase it has been replaced by Cilium CNI!  It replaces iptables as compoent that controls connections between pods (and between nodes). Iptables is an old-school (albeit, extensive and powerful) program that allows the configuration of (mainly static) IP packet filter rules in a Linux kernel firewall and was never meant for something as dynamic as a Kubernetes environment.  The sheer number of iptables rules in very large clusters makes scaling difficult and hence a kube-proxy replacement such as Cilium would be very welcomed in such a scenario.
 
-In my opinion, GKE Dataplane V2 may not be suitable for production just quite yet due to some of its current [limitations](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2#limitations), but I expect this technology to get picked up by other cloud providers and mature further over the next few years.
+In my opinion, GKE Dataplane V2 may not be suitable for production just quite yet due to some of its current [limitations](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2#limitations), but I expect this technology to get picked up by other cloud providers which will help it mature further over couple of years.
 
 ## Example Kubernetes Deployment
 I've included an example deployment of nginx with *LoadBalancer* (GCP ALB) service.  Please note that the deployment does provision an GCP load balancer so this will incur extra charges if you leave it running for too long.
