@@ -91,6 +91,8 @@ When Dataplane V2 is enabled, one of the things you may notice is the absence of
 
 In my opinion, GKE Dataplane V2 may not be suitable for production just quite yet due to some of its current [limitations](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2#limitations), but I expect this technology to get picked up by other cloud providers which will help it mature further over couple of years.
 
+If you would like to learn more about Cilium and how to get started, I wrote a short Medium article about it [here](https://medium.com/@glen.yu/getting-started-with-ebpf-and-cilium-on-gke-6553c5d7e02a).
+
 ## Example Kubernetes Deployment
 I've included an example deployment of nginx with *LoadBalancer* (GCP ALB) service.  Please note that the deployment does provision an GCP load balancer so this will incur extra charges if you leave it running for too long.
 
