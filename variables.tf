@@ -119,6 +119,11 @@ variable "istio_disabled" {
   default     = "true"
 }
 
+variable "confidential_nodes_enabled" {
+  description = "If enabled, enables Confidential Nodes for this cluster.  If set to true, requires N2D machine_type"
+  default     = "false"
+}
+
 #-----------------------------
 # GKE Node Pool
 #-----------------------------

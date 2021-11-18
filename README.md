@@ -48,48 +48,13 @@ gcloud services enable --async \
 - Enabling Istio will add an NLB to the deployment which will increase your costs so unless you want to do something with the service mesh, I recommend leaving it disabled to save yourself some money :)
 - Depending on your workload/application that you're running, you definitely could run most (or all) of it on a preemptible node pool in GCP, but if you're going to run production, please provision a **regional** cluster rather than cheap out for the free zonal one
 - If you deployed a private cluster, some of your k8s deployments may fail due to your pods [not having outbound access to the public Internet](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#docker_hub)...having said that, some of the more common images like the nginx one that I used in my examples folder may still work because you're [pulling from a Docker Hub cache](https://cloud.google.com/container-registry/docs/pulling-cached-images).  Ideally, you should be pulling images from your private GCR in this case
+- If `confidential_nodes_enabled` is set to true, the `machine_type` needs to be from the [N2D family](https://cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes) where the smallest node size starts at `n2d-standard-2` (2CPUs/8GB memory)
 
-### Example `terraform.tfvars`
-
-```
-project_id            = "my-project"
-credentials_file_path = "/path/to/my/credentials.json"
-region                = "northamerica-northeast1"
-zone                  = "northamerica-northeast1-c"
-
-primary_ip_cidr          = "192.168.0.0/26" # max node IPs = 64 (max nodes = 60; 4 IPs reservered in every VPC)
-max_pods_per_node        = "32"             # max pods per node <= half of max node IPs
-cluster_ipv4_cidr_block  = "10.0.0.0/18"    # max pod IPs = 15360 (60 * 256), CIDR must be able to cover for all the potential IPs
-services_ipv4_cidr_block = "10.1.0.0/20"
-
-channel      = "REGULAR"
-auto_upgrade = "true"
-
-gke_cluster_name               = "playground"
-master_authorized_network_cidr = "my.ext.ip.addr/32"
-enable_private_endpoint        = "false"
-enable_private_nodes           = "false"
-
-machine_type = "e2-small"
-disk_size_gb = "40"
-max_nodes    = "1"
-
-# custom node taints
-taint = [
-  {
-    key    = "node.cilium.io/agent-not-ready"
-    value  = "true"
-    effect = "NO_SCHEDULE"
-  }
-]
-```
 
 ## eBPF, Cilium and GKE Dataplane V2
 Over the last serveral weeks, I've been learning a lot about [eBPF](https://ebpf.io/) and experimenting with [Cilium](https://cilium.io/) in particular.  It was the main reason behind the changes in [v0.3.2](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#032---2021-08-26).  New in [v0.4.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#040---2021-09-09), you will have the option of enabling [GKE Dataplane V2](https://cloud.google.com/blog/products/containers-kubernetes/bringing-ebpf-and-cilium-to-google-kubernetes-engine) which leverages the power of eBPF and Cilium to provide enhanced security and observability in your GKE cluster.  
 
 When Dataplane V2 is enabled, one of the things you may notice is the absence of **kube-proxy** in the cluster.  That's becuase it has been replaced by Cilium CNI!  It replaces iptables as compoent that controls connections between pods (and between nodes). Iptables is an old-school (albeit, extensive and powerful) program that allows the configuration of (mainly static) IP packet filter rules in a Linux kernel firewall and was never meant for something as dynamic as a Kubernetes environment.  The sheer number of iptables rules in very large clusters makes scaling difficult and hence a kube-proxy replacement such as Cilium would be very welcomed in such a scenario.
-
-In my opinion, GKE Dataplane V2 may not be suitable for production just quite yet due to some of its current [limitations](https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2#limitations), but I expect this technology to get picked up by other cloud providers which will help it mature further over couple of years.
 
 If you would like to learn more about Cilium and how to get started, I wrote a short Medium article about it [here](https://medium.com/@glen.yu/getting-started-with-ebpf-and-cilium-on-gke-6553c5d7e02a).
 

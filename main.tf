@@ -16,6 +16,10 @@ resource "google_container_cluster" "primary" {
   network    = google_compute_network.k8s_vpc.id
   subnetwork = google_compute_subnetwork.k8s_subnet.id
 
+  confidential_nodes {
+    enabled = var.confidential_nodes_enabled
+  }
+
   # ip_allocation_policy left empty here to let GCP pick
   # otherwise you will have to define your own secondary CIDR ranges
   # which I will probably look to add at a later date
