@@ -10,15 +10,23 @@ resource "google_container_cluster" "primary" {
   # https://www.terraform.io/docs/providers/google/r/container_cluster.html#node_locations
   node_locations = var.node_locations
 
+  confidential_nodes {
+    enabled = var.confidential_nodes_enabled
+  }
+
+  # this node_config block is for the "default pool", which we are not using as per recommendations:
+  # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#node_config
+  # however, it is required if you're going to use confidential nodes otherwise it will complain about the 
+  # machine family not being set to N2D, even though is in the "google_container_node_pool" resource
+  node_config {
+    machine_type = var.machine_type
+  }
+
   enable_shielded_nodes = var.enable_shielded_nodes
   enable_tpu            = var.enable_tpu
 
   network    = google_compute_network.k8s_vpc.id
   subnetwork = google_compute_subnetwork.k8s_subnet.id
-
-  confidential_nodes {
-    enabled = var.confidential_nodes_enabled
-  }
 
   # ip_allocation_policy left empty here to let GCP pick
   # otherwise you will have to define your own secondary CIDR ranges
@@ -102,7 +110,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   }
 
   node_config {
-    preemptible  = true
+    preemptible  = var.preemptible
     machine_type = var.machine_type
     disk_size_gb = var.disk_size_gb
     image_type   = var.image_type

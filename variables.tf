@@ -120,7 +120,7 @@ variable "istio_disabled" {
 }
 
 variable "confidential_nodes_enabled" {
-  description = "If enabled, enables Confidential Nodes for this cluster.  If set to true, requires N2D machine_type"
+  description = "If enabled, enables Confidential Nodes for this cluster.  If set to true, requires N2D machine_type AND must not be a preemptible node."
   default     = "false"
 }
 
@@ -129,7 +129,13 @@ variable "confidential_nodes_enabled" {
 #-----------------------------
 
 variable "machine_type" {
-  default = "e2-small"
+  default = "n2d-standard-2"
+  #  default = "e2-small"
+}
+
+variable "preemptible" {
+  description = "Preemptible nodes are Compute Engine instances that last up to 24 hours and provide no availability guarantees, but are priced lower."
+  default     = "true"
 }
 
 variable "disk_size_gb" {

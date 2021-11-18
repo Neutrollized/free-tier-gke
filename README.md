@@ -48,7 +48,7 @@ gcloud services enable --async \
 - Enabling Istio will add an NLB to the deployment which will increase your costs so unless you want to do something with the service mesh, I recommend leaving it disabled to save yourself some money :)
 - Depending on your workload/application that you're running, you definitely could run most (or all) of it on a preemptible node pool in GCP, but if you're going to run production, please provision a **regional** cluster rather than cheap out for the free zonal one
 - If you deployed a private cluster, some of your k8s deployments may fail due to your pods [not having outbound access to the public Internet](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#docker_hub)...having said that, some of the more common images like the nginx one that I used in my examples folder may still work because you're [pulling from a Docker Hub cache](https://cloud.google.com/container-registry/docs/pulling-cached-images).  Ideally, you should be pulling images from your private GCR in this case
-- If `confidential_nodes_enabled` is set to true, the `machine_type` needs to be from the [N2D family](https://cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes) where the smallest node size starts at `n2d-standard-2` (2CPUs/8GB memory)
+- If `confidential_nodes_enabled` is set to true, the `machine_type` needs to be from the [N2D family](https://cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes) where the smallest node size starts at `n2d-standard-2` (2CPUs/8GB memory) and it must also NOT be a preemptible node (which effectively nullifies one of the cost-saving components of this free-tier GKE)
 
 
 ## eBPF, Cilium and GKE Dataplane V2
