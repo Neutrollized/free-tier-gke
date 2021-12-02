@@ -12,3 +12,29 @@ resource "google_compute_subnetwork" "k8s_subnet" {
   private_ip_google_access = "true"
   region                   = var.region
 }
+
+
+# https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways#gateway_controller_requirements
+# https://cloud.google.com/load-balancing/docs/l7-internal/proxy-only-subnets
+resource "google_compute_subnetwork" "proxy_only_subnet" {
+  provider = google-beta
+
+  name          = "${var.gke_cluster_name}-proxy-only-subnet"
+  purpose       = "INTERNAL_HTTPS_LOAD_BALANCER"
+  role          = "ACTIVE"
+  ip_cidr_range = var.proxy_only_ip_cidr
+  network       = google_compute_network.k8s_vpc.id
+  region        = var.region
+}
+
+# https://cloud.google.com/vpc/docs/private-service-connect#psc-subnets
+resource "google_compute_subnetwork" "psc_subnet" {
+  provider = google-beta
+
+  name                     = "${var.gke_cluster_name}-psc-subnet"
+  purpose                  = "PRIVATE_SERVICE_CONNECT"
+  ip_cidr_range            = var.psc_ip_cidr
+  network                  = google_compute_network.k8s_vpc.id
+  private_ip_google_access = "true"
+  region                   = var.region
+}

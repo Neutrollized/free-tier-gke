@@ -38,6 +38,17 @@ variable "services_ipv4_cidr_block" {
   default     = "10.1.0.0/20"
 }
 
+variable "proxy_only_ip_cidr" {
+  description = "CIDR for proxy-only subnet to be used by internal HTTP(s) load balancers."
+  default     = "192.168.254.0/23"
+}
+
+variable "psc_ip_cidr" {
+  description = "CIDR for Private Service Connect subnet. In terms of sizing, you will need 1 IP for every 63 consumer VMs."
+  default     = "192.168.253.0/26"
+}
+
+
 #-----------------------------
 # GKE Cluster
 #-----------------------------

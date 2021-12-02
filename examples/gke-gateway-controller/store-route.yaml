@@ -1,0 +1,29 @@
+---
+kind: HTTPRoute
+apiVersion: networking.x-k8s.io/v1alpha1
+metadata:
+  name: store
+  labels:
+    gateway: internal-http
+spec:
+  hostnames:
+  - "store.example.com"
+  rules:
+  - forwardTo:
+    - serviceName: store-v1
+      port: 8080
+  - matches:
+    - headers:
+        type: Exact
+        values:
+          env: canary
+    forwardTo:
+    - serviceName: store-v2
+      port: 8080
+  - matches:
+    - path:
+        type: Prefix
+        value: /de
+    forwardTo:
+    - serviceName: store-german
+      port: 8080
