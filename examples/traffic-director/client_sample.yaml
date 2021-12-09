@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: client
+  name: busybox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: client
+  template:
+    metadata:
+      labels:
+        run: client
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command:
+        - sh
+        - -c
+        - while true; do sleep 1; done
+      securityContext:
+        fsGroup: 1337

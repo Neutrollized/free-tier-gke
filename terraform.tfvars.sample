@@ -20,6 +20,12 @@ machine_type = "e2-medium"
 disk_size_gb = "40"
 max_nodes    = "1"
 
+oauth_scopes = [
+  "https://www.googleapis.com/auth/cloud-platform", # required for traffic director
+  "https://www.googleapis.com/auth/logging.write",
+  "https://www.googleapis.com/auth/monitoring",
+]
+
 # custom node taints
 taint = [
   {

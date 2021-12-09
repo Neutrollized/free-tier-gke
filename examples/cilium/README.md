@@ -7,6 +7,7 @@ With Cilium deployed, you have now unlocked a new resource called `CiliumNetwork
 Below are the [NetworkPolicy](https://kubernetes.io/docs/concepts/services-networking/network-policies/) equivalents of [`sw_l3_l4_policy.yaml`](./sw_l3_l4_policy.yaml) and [`sw_deny_policy.yaml`](./sw_deny_policy.yaml) respectively, and as you can see, they differ very little in structure so knowledge in defining policies in either format is transferrable to the other.  And while both network policy types will be honored, it is strongly recommended that you stick to one kind of policy rather than to mix and match.
 
 ```
+---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -20,7 +21,7 @@ spec:
   - Ingress
   ingress:
   - from:
-    - podSelector
+    - podSelector:
         matchLabels:
           org: empire
     ports:
@@ -29,6 +30,7 @@ spec:
 ```
 
 ```
+---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
