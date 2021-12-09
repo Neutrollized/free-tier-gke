@@ -83,7 +83,7 @@ gcloud compute health-checks delete td-gke-health-check
 ```
 kubectl delete -f trafficdirector_service_sample.yaml
 kubectl delete -f client_sample.yaml
-``
+```
 
 You may also have to delete the NEGs that are listed relating to your service (but wait a bit first, it may tak some time):
 ```
