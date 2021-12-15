@@ -38,3 +38,22 @@ resource "google_compute_subnetwork" "psc_subnet" {
   private_ip_google_access = "true"
   region                   = var.region
 }
+
+
+#------------------------------
+# Firewalls
+#------------------------------
+
+resource "google_compute_firewall" "lb_health_check" {
+  name    = "allow-health-check"
+  network = google_compute_network.k8s_vpc.name
+
+  direction = "INGRESS"
+
+  allow {
+    protocol = "tcp"
+  }
+
+  # https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges
+  source_ranges = ["35.191.0.0/16", "130.211.0.0/22"]
+}
