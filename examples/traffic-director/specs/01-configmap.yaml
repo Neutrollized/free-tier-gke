@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -35,9 +36,9 @@ data:
         # the request to Traffic Director (trafficdirector.googleapis.com) is sent out.
         # Leaving empty is not recommended as it is not guaranteed to work in future
         # releases.
-        TRAFFICDIRECTOR_NETWORK_NAME: "playground-k8s-vpc"
 	# for shared VPCs, use the following format:
-        #TRAFFICDIRECTOR_NETWORK_NAME: "https://www.googleapis.com/compute/v1/projects/[SHARED_VPC_HOST_PROJECT]/global/networks/[SHARED_VPC]"
+        # TRAFFICDIRECTOR_NETWORK_NAME: "https://www.googleapis.com/compute/v1/projects/[SHARED_VPC_HOST_PROJECT]/global/networks/[SHARED_VPC]"
+        TRAFFICDIRECTOR_NETWORK_NAME: "playground-k8s-vpc"
 
         # The port at which Envoy's /stats page can be accessed externally(from any source).
         # This setting is independent of the setting "proxyAdminPort". When both are set,
@@ -50,4 +51,3 @@ data:
         #   * 15001
         #   * 15006
         # PROXY_STATS_PORT: "16000"
----
