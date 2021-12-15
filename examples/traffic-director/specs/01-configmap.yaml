@@ -36,7 +36,7 @@ data:
         # the request to Traffic Director (trafficdirector.googleapis.com) is sent out.
         # Leaving empty is not recommended as it is not guaranteed to work in future
         # releases.
-	# for shared VPCs, use the following format:
+        # for shared VPCs, use the following format:
         # TRAFFICDIRECTOR_NETWORK_NAME: "https://www.googleapis.com/compute/v1/projects/[SHARED_VPC_HOST_PROJECT]/global/networks/[SHARED_VPC]"
         TRAFFICDIRECTOR_NETWORK_NAME: "playground-k8s-vpc"
 
