@@ -1,4 +1,4 @@
-# README
+# Cilium
 Deployment manifests used here are taken from [Cilium's GitHub Repo](https://github.com/cilium/cilium/tree/master/examples/minikube) and thorough walkthrough of the example can be found [here](https://docs.cilium.io/en/latest/gettingstarted/http/)
 
 With Cilium deployed, you have now unlocked a new resource called `CiliumNetworkPolicy` (`cnp`).

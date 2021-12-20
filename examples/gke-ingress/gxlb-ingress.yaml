@@ -1,0 +1,52 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gxlb-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.allow-http: "true"
+spec:
+  defaultBackend:
+    service:
+      name: api
+      port:
+        number: 80
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: web
+            port:
+              number: 80
+      - path: /ui
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: web
+            port:
+              number: 80
+      - path: /api
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api
+            port:
+              number: 80
+      - path: /payments
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: payments
+            port:
+              number: 80
+      - path: /currency
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: currency
+            port:
+              number: 80
