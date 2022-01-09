@@ -25,7 +25,9 @@ kubectl apply -f ./nginx-ingress-rewrite.yaml
 ## NOTES
 - access the endpoint at `http://${LOAD_BALANCER_IP}/${ENDPOINT}`
 - you need to specify `kubernetes.io/ingress.class: "nginx"` otherwise it will default to `"gce"` and your rewrite rules won't work as expected
+- example:
 ```
+metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
