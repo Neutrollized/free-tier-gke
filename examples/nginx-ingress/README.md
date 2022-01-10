@@ -1,6 +1,6 @@
 # NGINX Ingress
 
-https://cloud.google.com/community/tutorials/nginx-ingress-gke
+Most of the example is taken from [here](https://cloud.google.com/community/tutorials/nginx-ingress-gke) with my own notes added.
 
 The services in this example all utilize the [fake-service](https://github.com/nicholasjackson/fake-service) container created by [Nic Jackson](https://github.com/nicholasjackson)
 
@@ -44,4 +44,4 @@ spec:
               number: 80
 ```
 
-- the example above will rewrite `http://${LOAD_BALANCER_IP}/hello/test` to `http://${LOAD_BALANCER_IP/test`
+- the example above will rewrite `http://${LOAD_BALANCER_IP}/hello/test` to `http://${LOAD_BALANCER_IP}/test`
