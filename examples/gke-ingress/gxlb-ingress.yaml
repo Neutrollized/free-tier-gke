@@ -5,23 +5,18 @@ metadata:
   name: gxlb-ingress
   namespace: default
   annotations:
+    kubernetes.io/ingress.class: "gce"
     kubernetes.io/ingress.allow-http: "true"
 spec:
-  defaultBackend:
-    service:
-      name: api
-      port:
-        number: 80
+#  defaultBackend:
+#    service:
+#      name: web
+#      port:
+#        number: 80
   rules:
-  - http:
+  - host: "mysite.example.com"
+    http:
       paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: web
-            port:
-              number: 80
       - path: /ui
         pathType: ImplementationSpecific
         backend:

@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2022-03-06
+### Added
+- Custom least privilege service account for use as per [GKE hardening best practices](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#permissions) 
+- New variable `iam_roles_list` for assinging roles to service account
+- `cloud-platform` added to OAuth scope
+### Changed
+- Updated **google** and **google-beta** providers from `~> 3.0` to `~> 4.0`
+- Updated `examples/gke-ingress`
+- Updated `examples/nginx-ingress`
+
 ## [0.5.6] - 2022-01-09
 ### Added
 - `examples/nginx-ingress`

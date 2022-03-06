@@ -6,22 +6,16 @@ metadata:
   namespace: default
   annotations:
     kubernetes.io/ingress.class: "gce-internal"
+    kubernetes.io/ingress.allow-http: "true"
 spec:
   defaultBackend:
     service:
-      name: api
+      name: web
       port:
         number: 80
   rules:
   - http:
       paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: web
-            port:
-              number: 80
       - path: /ui
         pathType: ImplementationSpecific
         backend:

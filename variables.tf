@@ -50,6 +50,22 @@ variable "psc_ip_cidr" {
 
 
 #-----------------------------
+# IAM
+#-----------------------------
+
+variable "iam_roles_list" {
+  description = "List of IAM roles to be assigned to GKE service account"
+  type        = list(string)
+  default = [
+    "roles/logging.logWriter",
+    "roles/monitoring.metricWriter",
+    "roles/monitoring.viewer",
+    "roles/stackdriver.resourceMetadata.writer",
+  ]
+}
+
+
+#-----------------------------
 # GKE Cluster
 #-----------------------------
 
@@ -180,6 +196,7 @@ variable "oauth_scopes" {
   description = "OAuth scopes of the node"
   type        = list(string)
   default = [
+    "https://www.googleapis.com/auth/cloud-platform",
     "https://www.googleapis.com/auth/devstorage.read_only",
     "https://www.googleapis.com/auth/logging.write",
     "https://www.googleapis.com/auth/monitoring",

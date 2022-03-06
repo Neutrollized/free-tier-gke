@@ -13,6 +13,7 @@ helm repo update
 ```
 
 - deploy NGINX ingress controller (this creates a TCP/UDP load balancer in GCP)
+- wait until you get an external IP
 ```
 helm install nginx-ingress ingress-nginx/ingress-nginx
 ```

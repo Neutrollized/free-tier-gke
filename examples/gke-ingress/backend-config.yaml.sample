@@ -1,0 +1,14 @@
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: mybackendconfig
+  namespace: default
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 9000
+    type: HTTP
+    requestPath: /healthz
+  securityPolicy:
+    name: mycloudarmorpolicy

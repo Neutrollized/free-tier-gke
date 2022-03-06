@@ -119,7 +119,9 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
       disable-legacy-endpoints = "true"
     }
 
-    oauth_scopes = var.oauth_scopes
+
+    service_account = google_service_account.gke_sa.email
+    oauth_scopes    = var.oauth_scopes
 
     dynamic "taint" {
       for_each = var.taint

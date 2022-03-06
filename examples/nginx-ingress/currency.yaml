@@ -1,14 +1,9 @@
 ---
 apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: currency
----
-apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: currency
+    app: currency 
   name: currency
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
@@ -38,7 +33,6 @@ spec:
       labels:
         app: currency
     spec:
-      serviceAccountName: currency
       containers:
       - env:
         - name: "LISTEN_ADDR"
@@ -49,10 +43,6 @@ spec:
           value: "currency"
         - name: "MESSAGE"
           value: "Response from currency"
-        - name: "TIMING_VARIANCE"
-          value: "40ms"
-        - name: "TIMING_50_PERCENTILE"
-          value: "150ms"
         - name: KUBERNETES_NAMESPACE
           valueFrom:
             fieldRef:

@@ -2,30 +2,36 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-ingress-rewrite
+  name: nginx-ingress-no-rewrite
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
-  defaultBackend:
-    service:
-      name: web
-      port:
-        number: 80
   rules:
-  - host: "mysite.example.com"
-    http:
+  - http:
       paths:
       - pathType: Prefix
-        path: "/hello(/|$)(.*)"
+        path: "/"
+        backend:
+          service:
+            name: web
+            port:
+              number: 80
+      - pathType: Prefix
+        path: "/ui"
+        backend:
+          service:
+            name: web
+            port:
+              number: 80
+        path: "/payments"
         backend:
           service:
             name: payments
             port:
               number: 80
       - pathType: Prefix
-        path: "/world(/|$)(.*)"
+        path: "/currency"
         backend:
           service:
             name: currency
