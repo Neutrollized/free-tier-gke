@@ -5,6 +5,7 @@ The steps used in this example is taken from [here](https://cloud.google.com/tra
 
 ## Prerequisite
 - enable **Traffic Director API**
+- GKE cluster has scope: **"https://www.googleapis.com/auth/cloud-platform"**
 
 
 #### Configuring TLS for sidecar injector
@@ -22,12 +23,16 @@ openssl req \
   -addext "subjectAltName=DNS:${CN}"
 ```
 
-**NOTE:** if you're using MacOS, it's likely your openssl version won't have the `-addext` option, in which case you will have to `brew install openssl`, which should install `openssl@3`, and you will have to reference that version instead.  For me, that path was `/usr/local/opt/openssl@3/bin/openssl`
+**MacOS NOTE:** it's likely the default MacOS openssl version won't have the `-addext` option, in which case you will have to `brew install openssl`, which should install `openssl@3`, and you will have to reference that version instead.  For me, that path was `/usr/local/opt/openssl@3/bin/openssl`
 
 I've also generated a set of keys that you can use if you wish if you don't already have your own or if you're just feeling lazy.
 
 
 #### Enabling sidecar injection
+```
+kubectl apply -f specs/00-namespaces.yaml
+```
+
 ```
 kubectl label namespace default istio-injection=enabled
 ```
@@ -37,6 +42,20 @@ You can see which namespaces have injection enabled with:
 kubectl get namespace -L istio-injection
 ```
 
+```
+kubectl create secret generic istio-sidecar-injector -n istio-control \
+  --from-file=tls-certs/key.pem \
+  --from-file=tls-certs/cert.pem \
+  --from-file=tls-certs/ca-cert.pem
+```
+
+```
+CA_BUNDLE=$(cat tls-certs/cert.pem | base64 | tr -d '\n')
+sed -i "s/caBundle:.*/caBundle:\ ${CA_BUNDLE}/g" specs/02-injector.yaml
+```
+
+**MacOS NOTE:** the MacOS `sed` command equivalent is: `sed -i '' "s/caBundle:.*/caBundle:\ ${CA_BUNDLE}/g" specs/02-injector.yaml`
+
 **NOTE:** if you're enabling this on an existing cluster with workload, enabling istio-injection will not add sidecars to existing workload -- you will have restart them
 
 
@@ -44,7 +63,50 @@ kubectl get namespace -L istio-injection
 If you created a regional cluster, adding backend services is the same, except you have to add every zone.
 
 
+```
+gcloud compute health-checks create http td-gke-health-check \
+  --use-serving-port
+```
+
+```
+gcloud compute backend-services create td-gke-service \
+ --global \
+ --health-checks td-gke-health-check \
+ --load-balancing-scheme INTERNAL_SELF_MANAGED
+```
+
+Adding backend services (if unsure of NEG values, do: `gcloud compute network-endpoint-groups list`)
+```
+gcloud compute backend-services add-backend td-gke-service \
+ --global \
+ --network-endpoint-group service-test-neg \
+ --network-endpoint-group-zone northamerica-northeast1-c \
+ --balancing-mode RATE \
+ --max-rate-per-endpoint 5
+```
+
+
 #### Creating the routing rule map
+```
+gcloud compute url-maps create td-gke-url-map \
+   --default-service td-gke-service
+```
+
+```
+gcloud compute url-maps add-path-matcher td-gke-url-map \
+   --default-service td-gke-service \
+   --path-matcher-name td-gke-path-matcher
+
+gcloud compute url-maps add-host-rule td-gke-url-map \
+   --hosts service-test \
+   --path-matcher-name td-gke-path-matcher
+```
+
+```
+gcloud compute target-http-proxies create td-gke-proxy \
+   --url-map td-gke-url-map
+```
+
 If you read the documention, you will see its mention of a virtual IP (VIP) address whose traffic gets intercepted by the Envoy sidecar.  The VIP is actually the address in the forwarding rule.  In the documentation they just use `0.0.0.0` without a detailed explanation.  I'm going to specify one (`192.168.9.9`):
 ```
 VIP=192.168.9.9
@@ -54,10 +116,10 @@ gcloud compute forwarding-rules create td-gke-forwarding-rule \
   --load-balancing-scheme=INTERNAL_SELF_MANAGED \
   --address=${VIP} \
   --target-http-proxy=td-gke-proxy \
-  --ports 80 --network default
+  --ports 80 --network playground-k8s-vpc
 ```
 
-In the verifying the configuration step, it does:
+Please be patient -- sometimes it can take several minutes before the test command below will return a valid response.  The error you may see is "wget: can't connect to remote host (192.168.9.9): Connection refused":
 ```
 BUSYBOX_POD=$(kubectl get po -l run=client -o=jsonpath='{.items[0].metadata.name}')
 
@@ -76,16 +138,10 @@ gcloud compute forwarding-rules delete td-gke-forwarding-rule --global
 gcloud compute target-http-proxies delete td-gke-proxy
 gcloud compute url-maps delete td-gke-url-map
 gcloud compute backend-services delete td-gke-service --global
-gcloud compute firewall-rules delete fw-allow-health-checks
 gcloud compute health-checks delete td-gke-health-check
 ```
 
 ```
 kubectl delete -f trafficdirector_service_sample.yaml
 kubectl delete -f client_sample.yaml
-```
-
-You may also have to delete the NEGs that are listed relating to your service (but wait a bit first, it may tak some time):
-```
-gcloud compute network-endpoint-groups list
 ```

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.6.1] - 2022-05-04
+### Changed
+- Changed from using `google_project_iam_binding` (authoritative) to `google_project_iam_member` (additive) when assigning IAM role bindings
+- Updated `apiVersion: policy/v1beta1` to `apiVersion: policy/v1` for `PodDisruptionBudget` in `examples/traffic-director/specs/02-injector.yaml`
+- Updated `examples/traffic-director`
+
 ## [0.6.0] - 2022-03-06
 ### Added
 - Custom least privilege service account for use as per [GKE hardening best practices](https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#permissions) 
@@ -26,7 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Firewall rule to allow [Health Checks](https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges)
 ### Changed
-- updated `key: beta.kubernetes.io/arch` to `key: kubernetes.io/arch` for `NodeAffinity` in `examples/traffic-director/specs/02-injector.yaml`
+- Updated `key: beta.kubernetes.io/arch` to `key: kubernetes.io/arch` for `NodeAffinity` in `examples/traffic-director/specs/02-injector.yaml`
 
 ## [0.5.3] - 2021-12-08
 ### Added
