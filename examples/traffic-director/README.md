@@ -119,6 +119,7 @@ gcloud compute forwarding-rules create td-gke-forwarding-rule \
   --ports 80 --network playground-k8s-vpc
 ```
 
+#### Verifying the configuration
 Please be patient -- sometimes it can take several minutes before the test command below will return a valid response.  The error you may see is "wget: can't connect to remote host (192.168.9.9): Connection refused":
 ```
 BUSYBOX_POD=$(kubectl get po -l run=client -o=jsonpath='{.items[0].metadata.name}')
