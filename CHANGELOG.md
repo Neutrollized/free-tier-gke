@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.6.2] - 2022-05-17
 ### Added
-- MPL 2.0 license
+- Apache v2 license
 
 ## [0.6.1] - 2022-05-04
 ### Changed
