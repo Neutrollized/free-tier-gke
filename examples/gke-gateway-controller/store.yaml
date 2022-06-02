@@ -28,6 +28,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: store-v1
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
   selector:
     app: store
@@ -65,6 +67,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: store-v2
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
   selector:
     app: store
@@ -102,6 +106,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: store-german
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
   selector:
     app: store

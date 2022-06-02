@@ -1,11 +1,11 @@
 # GKE Gateway Controller
 
-https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways
+Based on Google Cloud's [documented example](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways), but with some additional notes and fixes.
 
 ## Setup
 #### 1. Install Gateway API CRDs:
 ```
-kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.3.0" | kubectl apply -f -
+kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.4.3" | kubectl apply -f -
 ```
 
 - verify install with `kubectl get gatewayclass` (may take a minute, so be patient):
@@ -42,12 +42,12 @@ Events:
   Warning  SYNC    5s                sc-gateway-controller  generic::invalid_argument: error ensuring load balancer: Insert: The resource 'projects/my-project/regions/northamerica-northeast1/backendServices/gkegw-3ac3-default-gw-serve404-80-mcfti8ucx6x5' is not ready
 ```
 
-#### 2. Deploy demo "[store](https://raw.githubusercontent.com/GoogleCloudPlatform/gke-networking-recipes/master/gateway/gke-gateway-controller/app/store.yaml)" app:
+#### 2. Deploy Demo Store App
 ```
 kubectl apply -f store.yaml
 ```
 
-#### 3. Deploy HTTPRoute: 
+#### 3. Deploy HTTPRoute 
 ```
 kubectl apply -f store-route.yaml
 ```
@@ -79,6 +79,16 @@ Events:
   Normal  SYNC    2m43s               sc-gateway-controller  Bind of HTTPRoute "default/store" to Gateway "default/internal-http" was a success
   Normal  SYNC    2m43s               sc-gateway-controller  Reconciliation of HTTPRoute "default/store" bound to Gateway "default/internal-http" was a success
 ```
+
+#### 4. Deploy Demo Site App and Site HTTPRoute
+- like the store, but for "site.example.com" instead:
+```
+kubectl apply -f store.yaml
+
+kubectl apply -f store-route.yaml
+```
+
+**NOTE:** if it were GKE Ingress, you would not have this option as all routes are maintained in a single ingress definition
 
 
 ## Testing 
@@ -135,8 +145,25 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 }
 ```
 
+- kubectl exec -it store-v2-6856f59f7f-zrblv -- curl -H "host: site.example.com" 192.168.0.6`:
+```
+{
+  "cluster_name": "playground",
+  "host_header": "site.example.com",
+  "metadata": "site-v1",
+  "node_name": "gke-playground-preempt-pool-935e4e41-86nn.northamerica-northeast1-c.c.my-project.internal",
+  "pod_name": "site-v1-86dc4b4fbc-gt4kw",
+  "pod_name_emoji": "👨🏾‍🔬",
+  "project_id": "my-project",
+  "timestamp": "2022-06-02T21:43:03",
+  "zone": "northamerica-northeast1-c"
+}
+```
+
 ## Cleanup
 ```
+kubectl delete -f site-route.yaml
+kubectl delete -f site.yaml
 kubectl delete -f store-route.yaml
 kubectl delete -f store.yaml
 kubectl delete -f gateway.yaml

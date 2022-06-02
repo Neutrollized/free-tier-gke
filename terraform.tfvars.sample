@@ -26,6 +26,8 @@ oauth_scopes = [
   "https://www.googleapis.com/auth/monitoring",
 ]
 
+workload_metadata_enabled = "true"
+
 # custom node taints
 taint = [
   {

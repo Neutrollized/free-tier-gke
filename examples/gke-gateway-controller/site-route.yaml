@@ -1,0 +1,15 @@
+---
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha2
+metadata:
+ name: site
+spec:
+ parentRefs:
+ - kind: Gateway
+   name: internal-http
+ hostnames:
+ - "site.example.com"
+ rules:
+ - backendRefs:
+   - name: site-v1
+     port: 8080

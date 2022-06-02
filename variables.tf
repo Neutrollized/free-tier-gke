@@ -155,9 +155,12 @@ variable "confidential_nodes_enabled" {
 # GKE Node Pool
 #-----------------------------
 
+variable "gke_nodepool_name" {
+  default = "preempt-pool"
+}
+
 variable "machine_type" {
-  default = "n2d-standard-2"
-  #  default = "e2-small"
+  default = "e2-small"
 }
 
 variable "preemptible" {
@@ -216,4 +219,10 @@ variable "taint" {
     #      effect = "NO_SCHEDULE"
     #    }
   ]
+}
+
+# https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#option_2_node_pool_modification
+variable "workload_metadata_enabled" {
+  description = "Even though Workload Identity may be enabled at the cluster level, it can still be disabled at the node pool level"
+  default     = "false"
 }

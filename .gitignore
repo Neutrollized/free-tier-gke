@@ -32,3 +32,6 @@ override.tf.json
 # Ignore backend.tf and terraform.tfvars for security reasons
 backend.tf
 terraform.tfvars
+
+# Miscellaneous
+*.swp
