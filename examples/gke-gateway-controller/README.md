@@ -1,6 +1,6 @@
 # GKE Gateway Controller
 
-Based on Google Cloud's [documented example](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways), but with some additional notes and fixes.
+Based on Google Cloud's [documented example](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways), but with some additional personal notes/fixes and uses [Cross-Namespace routing](https://gateway-api.sigs.k8s.io/v1alpha2/guides/multiple-ns/).
 
 ## Setup
 #### 1. Install Gateway API CRDs:
@@ -17,12 +17,21 @@ gke-l7-rilb   networking.gke.io/gateway   51s
 
 
 ## Deploying the Demo
-#### 1. Deploy an internal gateway: 
+#### 1. Create Namespaces with Labels
+- create namespaces with lablel `shared-gateway-access: "true"`
+```
+kubectl apply -f namespaces.yaml
+```
+
+**NOTE:** only namespaces with the correct label will be able to attach their routes to the gateway
+
+
+#### 2. Deploy an internal gateway: 
 ```
 kubectl apply -f gateway.yaml
 ```
 
-- verify with `kubectl describe gateway internal-http` (ignore the warning for now as you have no backend yet):
+- verify with `kubectl describe gateway internal-http -n infra-ns` (ignore the warning for now as you have no backend yet):
 ```
 ...
 ...
@@ -37,22 +46,24 @@ Status:
 Events:
   Type     Reason  Age               From                   Message
   ----     ------  ----              ----                   -------
-  Normal   ADD     43s               sc-gateway-controller  default/internal-http
-  Normal   UPDATE  43s               sc-gateway-controller  default/internal-http
+  Normal   ADD     43s               sc-gateway-controller  infra-ns/internal-http
+  Normal   UPDATE  43s               sc-gateway-controller  infra-ns/internal-http
   Warning  SYNC    5s                sc-gateway-controller  generic::invalid_argument: error ensuring load balancer: Insert: The resource 'projects/my-project/regions/northamerica-northeast1/backendServices/gkegw-3ac3-default-gw-serve404-80-mcfti8ucx6x5' is not ready
 ```
 
-#### 2. Deploy Demo Store App
+
+#### 3. Deploy Demo Store App
 ```
 kubectl apply -f store.yaml
 ```
 
-#### 3. Deploy HTTPRoute 
+
+#### 4. Deploy HTTPRoute 
 ```
 kubectl apply -f store-route.yaml
 ```
 
-- verify with `kubectl describe httproute store`:
+- verify with `kubectl describe httproute store -n store-ns`:
 ```
 ...
 ...
@@ -75,12 +86,13 @@ Status:
 Events:
   Type    Reason  Age                 From                   Message
   ----    ------  ----                ----                   -------
-  Normal  ADD     3m40s               sc-gateway-controller  default/store
-  Normal  SYNC    2m43s               sc-gateway-controller  Bind of HTTPRoute "default/store" to Gateway "default/internal-http" was a success
-  Normal  SYNC    2m43s               sc-gateway-controller  Reconciliation of HTTPRoute "default/store" bound to Gateway "default/internal-http" was a success
+  Normal  ADD     3m40s               sc-gateway-controller  store-ns/store
+  Normal  SYNC    2m43s               sc-gateway-controller  Bind of HTTPRoute "default/store" to Gateway "infra-ns/internal-http" was a success
+  Normal  SYNC    2m43s               sc-gateway-controller  Reconciliation of HTTPRoute "store-ns/store" bound to Gateway "infra-ns/internal-http" was a success
 ```
 
-#### 4. Deploy Demo Site App and Site HTTPRoute
+
+#### 5. Deploy Demo Site App and Site HTTPRoute
 - like the store, but for "site.example.com" instead:
 ```
 kubectl apply -f store.yaml
@@ -94,13 +106,14 @@ kubectl apply -f store-route.yaml
 ## Testing 
 #### 1. Get the IP of the internal HTTP(s) load balancer:
 ```
-kubectl get gateway internal-http -o=jsonpath="{.status.addresses[0].value}"
+kubectl get gateway internal-http -n infra-ns -o=jsonpath="{.status.addresses[0].value}"
 ```
+
 
 #### 2. Send traffic!  
 Since only internal traffic is allowed, I'm going to do the `curl` command via one the of the pods.
 
-- `kubectl exec -it store-v2-6856f59f7f-7kj2w -- curl -H "host: store.example.com" 192.168.0.6`:
+- `kubectl exec -it store-v2-6856f59f7f-7kj2w -n store-ns -- curl -H "host: store.example.com" 192.168.0.6`:
 ```
 {
   "cluster_name": "playground",
@@ -115,7 +128,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 }
 ```
 
-- `kubectl exec -it store-v2-6856f59f7f-7kj2w -- curl -H "host: store.example.com" -H "env: canary" 192.168.0.6`:
+- `kubectl exec -it store-v2-6856f59f7f-7kj2w -n store-ns -- curl -H "host: store.example.com" -H "env: canary" 192.168.0.6`:
 ```
 {
   "cluster_name": "playground",
@@ -130,7 +143,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 }
 ```
 
-- `kubectl exec -it store-v2-6856f59f7f-7kj2w -- curl -H "host: store.example.com" 192.168.0.6/de`: 
+- `kubectl exec -it store-v2-6856f59f7f-7kj2w -n store-ns -- curl -H "host: store.example.com" 192.168.0.6/de`: 
 ```
 {
   "cluster_name": "playground",
@@ -145,7 +158,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 }
 ```
 
-- kubectl exec -it store-v2-6856f59f7f-zrblv -- curl -H "host: site.example.com" 192.168.0.6`:
+- kubectl exec -it store-v2-6856f59f7f-zrblv -n store-ns -- curl -H "host: site.example.com" 192.168.0.6`:
 ```
 {
   "cluster_name": "playground",
@@ -160,6 +173,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 }
 ```
 
+
 ## Cleanup
 ```
 kubectl delete -f site-route.yaml
@@ -167,6 +181,7 @@ kubectl delete -f site.yaml
 kubectl delete -f store-route.yaml
 kubectl delete -f store.yaml
 kubectl delete -f gateway.yaml
+kubectl delete -f namespaces.yaml
 ```
 
 You may also have to delete the backend services. I'm not sure why deleting the deployments doesn't clean them up, but you can verify with `gcloud compute backend-services list`.  You will have to delete them manually if they do still exist.

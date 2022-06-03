@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: store-v1
+  namespace: store-ns
 spec:
   replicas: 2
   selector:
@@ -28,6 +29,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: store-v1
+  namespace: store-ns
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
 spec:
@@ -42,6 +44,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: store-v2
+  namespace: store-ns
 spec:
   replicas: 2
   selector:
@@ -67,6 +70,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: store-v2
+  namespace: store-ns
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
 spec:
@@ -81,6 +85,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: store-german
+  namespace: store-ns
 spec:
   replicas: 2
   selector:
@@ -106,6 +111,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: store-german
+  namespace: store-ns
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
 spec:

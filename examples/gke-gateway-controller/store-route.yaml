@@ -3,11 +3,12 @@ kind: HTTPRoute
 apiVersion: gateway.networking.k8s.io/v1alpha2
 metadata:
   name: store
+  namespace: store-ns
 spec:
- # route binding (https://gateway-api.sigs.k8s.io/concepts/api-overview/#route-binding)
  parentRefs:
  - kind: Gateway
    name: internal-http
+   namespace: infra-ns
  hostnames:
  - "store.example.com"
  rules:
@@ -16,13 +17,15 @@ spec:
      port: 8080
  - matches:
    - headers:
-     - name: env
+     - type: Exact
+       name: env
        value: canary
    backendRefs:
    - name: store-v2
      port: 8080
  - matches:
    - path:
+       type: PathPrefix
        value: /de
    backendRefs:
    - name: store-german

@@ -3,10 +3,12 @@ kind: HTTPRoute
 apiVersion: gateway.networking.k8s.io/v1alpha2
 metadata:
  name: site
+ namespace: site-ns
 spec:
  parentRefs:
  - kind: Gateway
    name: internal-http
+   namespace: infra-ns
  hostnames:
  - "site.example.com"
  rules:
