@@ -5,28 +5,28 @@ metadata:
   name: store
   namespace: store-ns
 spec:
- parentRefs:
- - kind: Gateway
-   name: internal-http
-   namespace: infra-ns
- hostnames:
- - "store.example.com"
- rules:
- - backendRefs:
-   - name: store-v1
-     port: 8080
- - matches:
-   - headers:
-     - type: Exact
-       name: env
-       value: canary
-   backendRefs:
-   - name: store-v2
-     port: 8080
- - matches:
-   - path:
-       type: PathPrefix
-       value: /de
-   backendRefs:
-   - name: store-german
-     port: 8080
+  parentRefs:
+  - kind: Gateway
+    name: internal-http
+    namespace: infra-ns
+  hostnames:
+  - "store.example.com"
+  rules:
+  - backendRefs:
+    - name: store-v1
+      port: 8080
+  - matches:
+    - headers:
+      - type: Exact
+        name: env
+        value: canary
+    backendRefs:
+    - name: store-v2
+      port: 8080
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /de
+    backendRefs:
+    - name: store-german
+      port: 8080

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.7.1] - 2022-06-03
 ### Changed
 - Updated `examples/gke-gateway-controller` to use [Cross-Namespace routing](https://gateway-api.sigs.k8s.io/v1alpha2/guides/multiple-ns/)
+### Fixed
+- Improper spacing in some `examples/gke-gateway-controller` YAMLs
 
 ## [0.7.0] - 2022-06-02
 ### Added
