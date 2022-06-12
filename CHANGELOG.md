@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.7.2] - 2022-06-12
+### Added
+- New `filestore_csi_driver_enabled` (default: `false`)
+- `examples/filestore-csi-driver`
+### Changed
+- Updated **google** provider from `~> 4.0` to `>= 4.10.0` 
+
 ## [0.7.1] - 2022-06-03
 ### Changed
 - Updated `examples/gke-gateway-controller` to use [Cross-Namespace routing](https://gateway-api.sigs.k8s.io/v1alpha2/guides/multiple-ns/)

@@ -131,6 +131,11 @@ variable "channel" {
   default     = "UNSPECIFIED"
 }
 
+variable "filestore_csi_driver_enabled" {
+  description = "When enabled, allows use of Filestore instances as volumes."
+  default     = "false"
+}
+
 variable "horizontal_pod_autoscaling_disabled" {
   description = "When enabled, allows increase/decrease number of replica pods based on resource usage of existing pods."
   default     = "false"

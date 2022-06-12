@@ -1,7 +1,7 @@
 # Free-tier GKE Cluster
-[GKE Cluster](https://www.terraform.io/docs/providers/google/r/container_cluster.html)
+[GKE Cluster](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster)
 
-[GKE Container Node Pool ](https://www.terraform.io/docs/providers/google/r/container_node_pool.html)
+[GKE Container Node Pool](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool)
 
 It's not 100% free, but with my 1 node setup, I'm paying ~$5USD/mth for a fully managed Kubernetes cluster.  This works by taking advantage of Google [always free](https://cloud.google.com/free/docs/gcp-free-tier) tier which waives the management fee of one **zonal** GKE cluster, so you only have to pay for your nodes.  Combine this with using [preemptible VMs](https://cloud.google.com/compute/docs/instances/preemptible) as your nodes and you'll have some spectacular savings.
 

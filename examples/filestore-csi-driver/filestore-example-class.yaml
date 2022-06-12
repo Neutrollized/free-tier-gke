@@ -1,0 +1,12 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: filestore-example
+provisioner: filestore.csi.storage.gke.io
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+# https://github.com/kubernetes-sigs/gcp-filestore-csi-driver#plugin-features
+parameters:
+  tier: standard
+  network: playground-k8s-vpc
