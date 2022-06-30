@@ -31,7 +31,7 @@ kubectl apply -f namespaces.yaml
 kubectl apply -f gateway.yaml
 ```
 
-- verify with `kubectl describe gateway internal-http -n infra-ns` (ignore the warning for now as you have no backend yet):
+- verify with `kubectl describe gateway internal-http -n infra-ns` (ignore the warning for now, the backend it's complaining about is the default 404 page which Google provides, this will take a couple of minutes to provision):
 ```
 ...
 ...
@@ -127,6 +127,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
   "zone": "northamerica-northeast1-c"
 }
 ```
+**NOTE:** I am using the [traffic splitting](https://gateway-api.sigs.k8s.io/v1alpha2/guides/traffic-splitting/) of the Gateway API (which is normally a feature you would only find with serivce meshes), so you may hit *store-v2*
 
 - `kubectl exec -it store-v2-6856f59f7f-7kj2w -n store-ns -- curl -H "host: store.example.com" -H "env: canary" 192.168.0.6`:
 ```

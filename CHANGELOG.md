@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.7.3] - 2022-06-30
+### Changed
+- Updated `examples/gke-gateway-controller` to add [HTTP traffic splitting](https://gateway-api.sigs.k8s.io/v1alpha2/guides/traffic-splitting/)
+- Updated `examples/gke-ingress` to add notes on how to add/referenced Google-managed SSL certs to the deployment
+
 ## [0.7.2] - 2022-06-12
 ### Added
 - New `filestore_csi_driver_enabled` (default: `false`)

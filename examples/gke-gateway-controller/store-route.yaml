@@ -15,6 +15,10 @@ spec:
   - backendRefs:
     - name: store-v1
       port: 8080
+      weight: 80
+    - name: store-v2
+      port: 8080
+      weight: 20
   - matches:
     - headers:
       - type: Exact

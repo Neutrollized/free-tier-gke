@@ -9,3 +9,6 @@ the `/ui` endpoint in a web browser will show you a graphical representation of 
 ## BackendConfig
 - used to define health check rules
 - used to attach Cloud Armor security policies
+
+## Google-managed SSL certs
+[Documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs)
