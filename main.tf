@@ -48,7 +48,7 @@ resource "google_container_cluster" "primary" {
 
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = var.master_authorized_network_cidr
+      cidr_block   = var.enable_private_endpoint ? var.iap_proxy_ip_cidr : var.master_authorized_network_cidr
       display_name = "allowed-cidr"
     }
   }

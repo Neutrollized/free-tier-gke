@@ -48,6 +48,11 @@ variable "psc_ip_cidr" {
   default     = "192.168.253.0/26"
 }
 
+variable "enable_cloud_nat_logging" {
+  description = "Enable logging for Cloud NAT."
+  default     = "false"
+}
+
 
 #-----------------------------
 # IAM
@@ -62,6 +67,31 @@ variable "iam_roles_list" {
     "roles/monitoring.viewer",
     "roles/stackdriver.resourceMetadata.writer",
   ]
+}
+
+
+#-------------------------------
+# Private GKE Cluster settings
+#-------------------------------
+
+variable "enable_private_endpoint" {
+  description = "When true public access to cluster (master) endpoint is disabled.  When false, it can be accessed both publicly and privately."
+  default     = "true"
+}
+
+variable "enable_private_nodes" {
+  description = "Nodes only have private IPs and communicate to master via private networking."
+  default     = "true"
+}
+
+variable "master_ipv4_cidr_block" {
+  description = "CIDR of the master network.  Range must not overlap with any other ranges in use within the cluster's network.  Can be left blank for a public GKE endpoint but needs to be specified if provisioning a private GKE endpoint."
+  default     = ""
+}
+
+variable "iap_proxy_ip_cidr" {
+  description = "CIDR of subnet for IAP proxy VM.  Should make this subnet as small as possible (i.e. /29)"
+  default     = "192.168.100.0/29"
 }
 
 
@@ -96,24 +126,9 @@ variable "networking_mode" {
   default     = "VPC_NATIVE"
 }
 
-variable "enable_private_endpoint" {
-  description = "When true public access to cluster (master) endpoint is disabled.  When false, it can be accessed both publicly and privately."
-  default     = "true"
-}
-
-variable "enable_private_nodes" {
-  description = "Nodes only have private IPs and communicate to master via private networking."
-  default     = "true"
-}
-
 variable "master_authorized_network_cidr" {
   description = "External networks that can access the Kubernetes cluster master through HTTPS.  The default is to allow all (not recommended for production)."
   default     = "0.0.0.0/0"
-}
-
-variable "master_ipv4_cidr_block" {
-  description = "CIDR of the master network.  Range must not overlap with any other ranges in use within the cluster's network."
-  default     = ""
 }
 
 variable "network_policy_enabled" {

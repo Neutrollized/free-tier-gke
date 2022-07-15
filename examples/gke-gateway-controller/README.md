@@ -5,7 +5,7 @@ Based on Google Cloud's [documented example](https://cloud.google.com/kubernetes
 ## Setup
 #### 1. Install Gateway API CRDs:
 ```
-kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.4.3" | kubectl apply -f -
+kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.5.0" | kubectl apply -f -
 ```
 
 - verify install with `kubectl get gatewayclass` (may take a minute, so be patient):
@@ -18,7 +18,7 @@ gke-l7-rilb   networking.gke.io/gateway   51s
 
 ## Deploying the Demo
 #### 1. Create Namespaces with Labels
-- create namespaces with lablel `shared-gateway-access: "true"`
+- create namespaces with label `shared-gateway-access: "true"`
 ```
 kubectl apply -f namespaces.yaml
 ```

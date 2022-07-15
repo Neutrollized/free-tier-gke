@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2022-07-15
+### Added
+- When provisioning a GKE cluster with private nodes (`enable_private_nodes = true`), [Cloud NAT](https://cloud.google.com/nat/docs/overview) will also be deployed to provide private nodes with Internet access
+- When creating a private GKE cluster (`enable_private_endpoint = true`), also creates an additional subnet where an IAP proxy VM is deployed and forwards traffic from your local machine to the private GKE cluster
+- NOTE: you can have private nodes with a public GKE endpoint, but if you create a public GKE cluster/endpoint, the nodes also have to be private 
+### Changed
+- Updated `examples/gke-gateway-controller` CRD version from `v0.4.3` to `v0.5.0`
+- Updated `examples/gke-gateway-controller` API version from `v1alpha2` to `v1beta1`
+
 ## [0.7.3] - 2022-06-30
 ### Changed
 - Updated `examples/gke-gateway-controller` to add [HTTP traffic splitting](https://gateway-api.sigs.k8s.io/v1alpha2/guides/traffic-splitting/)
@@ -27,7 +36,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - New variable `gke_nodepool_name` (default: `preempt-pool`)
 - Workload Identity Pool (enabled on cluster, but disabled on node-pool which can be enabled by setting `workload_metadata_enabled` to `true`)
 ### Changed
-- Updated `examples/gke-gateway-controller` version from `v0.3.0` to `v0.4.3`
+- Updated `examples/gke-gateway-controller` CRD version from `v0.3.0` to `v0.4.3`
+- Updated `examples/gke-gateway-controller` API version from `v1alpha1` to `v1alpha2`
 
 ## [0.6.2] - 2022-05-17
 ### Added

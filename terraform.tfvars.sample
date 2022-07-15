@@ -11,17 +11,16 @@ services_ipv4_cidr_block = "10.1.0.0/20"
 channel      = "REGULAR"
 auto_upgrade = "true"
 
-gke_cluster_name               = "playground"
-master_authorized_network_cidr = "my.ext.ip.addr/32"
-enable_private_endpoint        = "false"
-enable_private_nodes           = "false"
+gke_cluster_name             = "playground"
+dataplane_v2_enabled         = "false"
+filestore_csi_driver_enabled = "true"
 
 machine_type = "e2-medium"
 disk_size_gb = "40"
 max_nodes    = "1"
 
 oauth_scopes = [
-  "https://www.googleapis.com/auth/cloud-platform", # required for traffic director
+  "https://www.googleapis.com/auth/cloud-platform",
   "https://www.googleapis.com/auth/logging.write",
   "https://www.googleapis.com/auth/monitoring",
 ]
@@ -36,3 +35,11 @@ taint = [
     effect = "NO_SCHEDULE"
   }
 ]
+
+
+# private GKE cluster settings
+master_ipv4_cidr_block         = "10.100.100.0/28"    # CIDR of GKE control-plane, this needs to be /28
+enable_private_endpoint        = "true"
+enable_private_nodes           = "true"               # ATTENTION: when enable_private_nodes = true, Cloud NAT will be provisioned
+master_authorized_network_cidr = "my.ext.ip.addr/32"  # this gets used only if enable_private_endpoint = false
+iap_proxy_ip_cidr              = "192.168.100.0/29"

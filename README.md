@@ -41,7 +41,7 @@ gcloud services enable --async \
   container.googleapis.com
 ```
 
-### Additional Notes
+### Additional Deployment Notes
 - While `e2-micro` is a viable option for `machine_type`, in practice it's not very useful as all the overhead that comes with GKE such as Stackdriver agent, `kube-dns`, `kube-proxy`, etc. consumes most of availble memory.  I recommend starting with at least an `e2-small` (2CPUs/2GB memory)
 - Leaving [`release_channel`](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels) as `UNSPECIFIED` means that you will perform upgrades manually, where as if you subscribed to a channel, you will the get the regular updates that gets released to that channel
 - At time of writing, enabling [Istio](https://istio.io) on the GKE cluster is a Beta feature and thus I have specified `provider = google-beta` in the `google_container_cluster` resource block
@@ -52,19 +52,21 @@ gcloud services enable --async \
 
 
 ## eBPF, Cilium and GKE Dataplane V2
-I've been learning a lot about [eBPF](https://ebpf.io/) and experimenting with [Cilium](https://cilium.io/) in particular.  It was the main reason behind the changes in [v0.3.2](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#032---2021-08-26).  New in [v0.4.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#040---2021-09-09), you will have the option of enabling [GKE Dataplane V2](https://cloud.google.com/blog/products/containers-kubernetes/bringing-ebpf-and-cilium-to-google-kubernetes-engine) which leverages the power of eBPF and Cilium to provide enhanced security and observability in your GKE cluster.  
+I've been learning a lot about [eBPF](https://ebpf.io/) and experimenting with [Cilium](https://cilium.io/) in particular.  New in [v0.4.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#040---2021-09-09), you will have the option of enabling [GKE Dataplane V2](https://cloud.google.com/blog/products/containers-kubernetes/bringing-ebpf-and-cilium-to-google-kubernetes-engine) which leverages the power of eBPF and Cilium to provide enhanced security and observability in your GKE cluster.  
 
 When Dataplane V2 is enabled, one of the things you may notice is the absence of **kube-proxy** in the cluster.  That's becuase it has been replaced by Cilium CNI!  It replaces iptables as compoent that controls connections between pods (and between nodes). Iptables is an old-school (albeit, extensive and powerful) program that allows the configuration of (mainly static) IP packet filter rules in a Linux kernel firewall and was never meant for something as dynamic as a Kubernetes environment.  The sheer number of iptables rules in very large clusters makes scaling difficult and hence a kube-proxy replacement such as Cilium would be very welcomed in such a scenario.
 
 If you would like to learn more about Cilium and how to get started, I wrote a short Medium article about it [here](https://medium.com/@glen.yu/getting-started-with-ebpf-and-cilium-on-gke-6553c5d7e02a).
 
-## Example Kubernetes Deployment
-I've included an example deployment of nginx with *LoadBalancer* (GCP ALB) service.  Please note that the deployment does provision an GCP load balancer so this will incur extra charges if you leave it running for too long.
 
-To deploy: `kubectl apply -f examples/nginx-deployment.yaml`
+## Private GKE Cluster and Nodes
+As of [v0.8.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#080---2022-07-15), you will have the option of provisioning a private GKE nodes.  Doing so will also provision a [Cloud NAT](https://cloud.google.com/nat/docs/overview) router in order for your nodes to get internet -- but this, of course will incur extra costs.
 
-To delete: `kubectl delete -f examples/nginx-deployment.yaml`
+If you decide to go the full private GKE cluster route (private GKE endpoint/control-plane AND private GKE nodes) then it will provision an additional /29 subnet that will house a VM running [tinyproxy](https://github.com/tinyproxy) that will act as a forwarding proxy to the private GKE endpoint. 
 
-The pods should deploy fairly quickly, but the service might take a bit before you get the load balancer's public IP (you can do a `watch kubectl get service` if you're the impatient type)
+See this [Medium article](https://medium.com/google-cloud/accessing-gke-private-clusters-through-iap-14fedad694f8) if you want to see how the network traffic flows in this setup.
 
-(There are also other examples in there if you want try them out as well)
+### IMPORTANT
+To use the IAP tunnel, your user needs to have the IAP-secured Tunnel User (**roles/iap.tunnelResourceAccessor**) -- even if you're the Owner of the project, you will need to add this role!!
+
+You will need to create an IAP tunnel from your local machine/laptop to the IAP proxy VM (command will be in the Terraform output) and you will also have to `export HTTPS_PROXY=localhost:8888` (just remember to unset the env var when you're done).  Alternatively you can set an alias which prepends the env var (e.g. `alias k='HTTPS_PROXY=localhost:8888 kubectl '`).
