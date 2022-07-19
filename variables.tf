@@ -85,7 +85,7 @@ variable "enable_private_nodes" {
 }
 
 variable "master_ipv4_cidr_block" {
-  description = "CIDR of the master network.  Range must not overlap with any other ranges in use within the cluster's network.  Can be left blank for a public GKE endpoint but needs to be specified if provisioning a private GKE endpoint."
+  description = "CIDR of the master network.  Range must not overlap with any other ranges in use within the cluster's network.  Left blank for a public GKE endpoint but needs to be specified if provisioning a private GKE endpoint."
   default     = ""
 }
 
