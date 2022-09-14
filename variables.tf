@@ -171,6 +171,17 @@ variable "confidential_nodes_enabled" {
   default     = "false"
 }
 
+variable "config_connector_enabled" {
+  description = "When enabled, ConfigConnector addon will be installed.  Note: this also requires Workload Identity to be enabled."
+  default     = "false"
+}
+
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#binary_authorization
+variable "binary_auth_enabled" {
+  description = "Enable Binary Authorization."
+  default     = "false"
+}
+
 #-----------------------------
 # GKE Node Pool
 #-----------------------------
@@ -219,7 +230,6 @@ variable "oauth_scopes" {
   description = "OAuth scopes of the node"
   type        = list(string)
   default = [
-    "https://www.googleapis.com/auth/cloud-platform",
     "https://www.googleapis.com/auth/devstorage.read_only",
     "https://www.googleapis.com/auth/logging.write",
     "https://www.googleapis.com/auth/monitoring",

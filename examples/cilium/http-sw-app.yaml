@@ -26,6 +26,7 @@ spec:
       labels:
         org: empire
         class: deathstar
+        app.kubernetes.io/name: deathstar
     spec:
       containers:
       - name: deathstar
@@ -38,6 +39,7 @@ metadata:
   labels:
     org: empire
     class: tiefighter
+    app.kubernetes.io/name: tiefighter
 spec:
   containers:
   - name: spaceship
@@ -50,6 +52,7 @@ metadata:
   labels:
     org: alliance
     class: xwing
+    app.kubernetes.io/name: xwing
 spec:
   containers:
   - name: spaceship

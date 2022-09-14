@@ -81,6 +81,10 @@ resource "google_container_cluster" "primary" {
     workload_pool = "${var.project_id}.svc.id.goog"
   }
 
+  binary_authorization {
+    evaluation_mode = var.binary_auth_enabled ? "PROJECT_SINGLETON_POLICY_ENFORCE" : "DISABLED"
+  }
+
   addons_config {
     gcp_filestore_csi_driver_config {
       enabled = var.filestore_csi_driver_enabled
@@ -96,6 +100,10 @@ resource "google_container_cluster" "primary" {
 
     istio_config {
       disabled = var.istio_disabled
+    }
+
+    config_connector_config {
+      enabled = var.config_connector_enabled
     }
   }
 }
@@ -144,5 +152,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     workload_metadata_config {
       mode = var.workload_metadata_enabled ? "GKE_METADATA" : "GCE_METADATA"
     }
+
+
   }
 }

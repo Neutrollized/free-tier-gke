@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2022-??-??
+### Added
+- New variable `config_connector_enabled` (default: `false`) to enable [Config Connector](https://cloud.google.com/config-connector/docs/overview), which will also require [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
+- New variable `binary_auth_enabled` (default: `false`) to enable [Binary Authorization](https://cloud.google.com/binary-authorization)
+### Changed
+- Updated **google** provider from `>= 4.10` to `>= 4.29.0` 
+### Removed
+- Removed `https://www.googleapis.com/auth/cloud-platform` from the default `oauth_scopes`
+### Fixed
+- Updated `examples/cilium/http-sw-app.yaml` so that labels will show up properly in Hubble
+
 ## [0.8.0] - 2022-07-15
 ### Added
 - When provisioning a GKE cluster with private nodes (`enable_private_nodes = true`), [Cloud NAT](https://cloud.google.com/nat/docs/overview) will also be deployed to provide private nodes with Internet access
@@ -20,7 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.7.2] - 2022-06-12
 ### Added
-- New `filestore_csi_driver_enabled` (default: `false`)
+- New variable `filestore_csi_driver_enabled` (default: `false`)
 - `examples/filestore-csi-driver`
 ### Changed
 - Updated **google** provider from `~> 4.0` to `>= 4.10.0` 

@@ -12,12 +12,29 @@ spec:
   ingress:
   - fromEndpoints:
     - matchLabels:
-        org: empire
+        class: tiefighter
     toPorts:
     - ports:
       - port: "80"
         protocol: TCP
       rules:
         http:
+        - method: GET
+          path: "/v1/"
         - method: POST
           path: "/v1/request-landing"
+  - fromEndpoints:
+    - matchLabels:
+        class: xwing
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
+      rules:
+        http:
+        - method: GET
+          path: "/v1/"
+        - method: PUT
+          path: "/v1/exhaust-port$"
+          headers:
+          - "X-Has-Force: True"
