@@ -1,0 +1,19 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: redis-cart
+spec:
+  endpointSelector:
+    matchLabels:
+      app: redis-cart
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: cartservice
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - all

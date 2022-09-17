@@ -1,0 +1,26 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cartservice
+spec:
+  endpointSelector:
+    matchLabels:
+      app: cartservice
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: frontend
+      toPorts:
+        - ports:
+            - port: "7070"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            app: checkoutservice
+      toPorts:
+        - ports:
+            - port: "7070"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - all

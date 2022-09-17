@@ -3,6 +3,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: rule1
+  namespace: galaxy
 spec:
   description: "L3-L4 policy to restrict deathstar access to empire ships only"
   endpointSelector:

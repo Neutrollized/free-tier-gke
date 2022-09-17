@@ -4,16 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.9.0] - 2022-??-??
+## [0.9.0] - 2022-09-16
 ### Added
 - New variable `config_connector_enabled` (default: `false`) to enable [Config Connector](https://cloud.google.com/config-connector/docs/overview), which will also require [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
 - New variable `binary_auth_enabled` (default: `false`) to enable [Binary Authorization](https://cloud.google.com/binary-authorization)
+- New variable `wi_iam_roles_list` to define roles assigned to GCP SA for Workload Identity use (default roles allow will allow pods to send traces and metrics to GCP) 
+- Create GCP SA for Workload Identity use based on `wi_iam_roles_list`
+- `examples/workload-identity`
 ### Changed
 - Updated **google** provider from `>= 4.10` to `>= 4.29.0` 
+- Variable `workload_metadata_enabled` default changed from `false` to `true`
+- Updated `examples/cilium`
 ### Removed
 - Removed `https://www.googleapis.com/auth/cloud-platform` from the default `oauth_scopes`
 ### Fixed
-- Updated `examples/cilium/http-sw-app.yaml` so that labels will show up properly in Hubble
+- Added [`linux_node_config`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#linux_node_config) in GKE cluster `node_config` which would otherwise perform a cluster update in-place when running `terraform apply` if left out
 
 ## [0.8.0] - 2022-07-15
 ### Added

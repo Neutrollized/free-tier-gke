@@ -1,0 +1,19 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: adservice
+spec:
+  endpointSelector:
+    matchLabels:
+      app: adservice
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: frontend
+      toPorts:
+        - ports:
+            - port: "9555"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - all

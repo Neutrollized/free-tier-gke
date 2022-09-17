@@ -1,0 +1,20 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: checkoutservice
+spec:
+  endpointSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: frontend
+      toPorts:
+        - ports:
+            - port: "5050"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - all
+

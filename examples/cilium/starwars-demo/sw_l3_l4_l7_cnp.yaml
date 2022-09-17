@@ -3,6 +3,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: rule1
+  namespace: galaxy
 spec:
   description: "L7 policy to restrict access to specific HTTP call"
   endpointSelector:

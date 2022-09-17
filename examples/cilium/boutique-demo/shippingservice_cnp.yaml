@@ -1,0 +1,27 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: shippingservice
+spec:
+  endpointSelector:
+    matchLabels:
+      app: shippingservice
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: frontend
+      toPorts:
+        - ports:
+            - port: "50051"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            app: checkoutservice
+      toPorts:
+        - ports:
+            - port: "50051"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - all
+

@@ -3,6 +3,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: empire-default-deny
+  namespace: galaxy
 spec:
   description: "Default-deny ingress policy for the empire"
   endpointSelector:

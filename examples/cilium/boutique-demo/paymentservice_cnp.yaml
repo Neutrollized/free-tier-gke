@@ -1,0 +1,20 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: paymentservice
+spec:
+  endpointSelector:
+    matchLabels:
+      app: paymentservice
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: checkoutservice
+      toPorts:
+        - ports:
+            - port: "50051"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - all
+

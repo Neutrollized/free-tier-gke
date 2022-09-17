@@ -1,0 +1,34 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: productcatalogservice
+spec:
+  endpointSelector:
+    matchLabels:
+      app: productcatalogservice
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: frontend
+      toPorts:
+        - ports:
+            - port: "3550"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            app: checkoutservice
+      toPorts:
+        - ports:
+            - port: "3550"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            app: recommendationservice
+      toPorts:
+        - ports:
+            - port: "3550"
+              protocol: TCP
+  egress:
+    - toEntities:
+        - all
+

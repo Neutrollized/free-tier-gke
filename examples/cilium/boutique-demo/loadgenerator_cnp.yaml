@@ -1,0 +1,11 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: loadgenerator
+spec:
+  endpointSelector:
+    matchLabels:
+      app: loadgenerator
+  egress:
+    - toEntities:
+        - all

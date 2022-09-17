@@ -69,6 +69,17 @@ variable "iam_roles_list" {
   ]
 }
 
+variable "wi_iam_roles_list" {
+  description = "List of IAM roles to be assigned to Workload Identity service account"
+  type        = list(string)
+  default = [
+    "roles/clouddebugger.agent",
+    "roles/cloudprofiler.agent",
+    "roles/cloudtrace.agent",
+    "roles/monitoring.metricWriter",
+  ]
+}
+
 
 #-------------------------------
 # Private GKE Cluster settings
@@ -254,5 +265,5 @@ variable "taint" {
 # https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#option_2_node_pool_modification
 variable "workload_metadata_enabled" {
   description = "Even though Workload Identity may be enabled at the cluster level, it can still be disabled at the node pool level"
-  default     = "false"
+  default     = "true"
 }
