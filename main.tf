@@ -20,11 +20,6 @@ resource "google_container_cluster" "primary" {
   # machine family not being set to N2D, even though is in the "google_container_node_pool" resource
   node_config {
     machine_type = var.machine_type
-
-    # https://cloud.google.com/sdk/gcloud/reference/beta/container/node-pools/create#--system-config-from-file
-    linux_node_config {
-      sysctls = {}
-    }
   }
 
   enable_shielded_nodes = var.enable_shielded_nodes
@@ -157,7 +152,6 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     workload_metadata_config {
       mode = var.workload_metadata_enabled ? "GKE_METADATA" : "GCE_METADATA"
     }
-
 
   }
 }

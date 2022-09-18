@@ -1,4 +1,4 @@
-# the resources here are onlly created
+# the resources here are only created
 # if enable_private_endpoint = "true"
 
 resource "google_compute_subnetwork" "iap_subnet" {
@@ -50,4 +50,8 @@ resource "google_compute_instance" "iap-proxy" {
   }
 
   metadata_startup_script = file("./scripts/startup.sh")
+
+  depends_on = [
+    google_compute_router_nat.k8s_vpc_router_nat
+  ]
 }

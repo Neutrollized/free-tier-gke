@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2022-09-18
+### Fixed
+- Reverted fix I made in v0.9.0 regarding `linux_node_config`
+- Updated conditional and requirements for Cloud NAT to also be deployed
+
 ## [0.9.0] - 2022-09-16
 ### Added
 - New variable `config_connector_enabled` (default: `false`) to enable [Config Connector](https://cloud.google.com/config-connector/docs/overview), which will also require [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
@@ -108,7 +113,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `terraform.tfvars.sample` file
 
 ## [0.5.0] - 2021-09-09
-### Changed 
+### Fixed 
 - Having the network policy provider default to `CALICO` was unintended, so I will be adding the `network_policy_enabled` variable back in and added extra notes in the variable descriptions for anyone who wishes to play around with the settings themselves
 
 ## [0.4.0] - 2021-09-09
