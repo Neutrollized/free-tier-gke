@@ -1,7 +1,7 @@
 # Cilium
 
 ## Installation 
-Steps to install can be found[here](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/), but basically boils down to:
+Steps to install can be found [here](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/), but basically boils down to:
 ```
 cilium install
 cilium hubble enable --ui
