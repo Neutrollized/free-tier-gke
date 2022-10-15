@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kaniko
+spec:
+  containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:latest
+    args: ["--dockerfile=Dockerfile",
+           "--context=gs://${GCS_BUCKET}/context.tar.gz",
+           "--destination=gcr.io/${PROJECT_ID}/test-image:latest",
+           "--cache=true"]
+  restartPolicy: Never
+  serviceAccountName: wi-kaniko-user
+  nodeSelector:
+    iam.gke.io/gke-metadata-server-enabled: "true"

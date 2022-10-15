@@ -2,10 +2,13 @@
 
 Based on Google Cloud's [documented example](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways), but with some additional personal notes/fixes and uses [Cross-Namespace routing](https://gateway-api.sigs.k8s.io/v1alpha2/guides/multiple-ns/).
 
+You can check out the [optional](./optional/README.md) steps for the full experience of connecting with service accounts that have namespace-restricted access.
+
+
 ## Setup
 #### 1. Install Gateway API CRDs:
 ```
-kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.5.0" | kubectl apply -f -
+kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.5.1" | kubectl apply -f -
 ```
 
 - verify install with `kubectl get gatewayclass` (may take a minute, so be patient):

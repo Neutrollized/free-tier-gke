@@ -238,7 +238,7 @@ variable "auto_upgrade" {
 }
 
 variable "oauth_scopes" {
-  description = "OAuth scopes of the node"
+  description = "OAuth scopes of the node. Full list can be found at https://developers.google.com/identity/protocols/oauth2/scopes"
   type        = list(string)
   default = [
     "https://www.googleapis.com/auth/devstorage.read_only",

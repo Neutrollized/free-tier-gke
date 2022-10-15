@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.10.1] - 2022-10-15
+### Added
+- `examples/kaniko`
+- `examples/gke-gateway-controller/optional` with steps for connecting to GKE cluster using namespace-restricted service accounts
+### Changed
+- Updated `examples/gke-gateway-controller` CRD version from `v0.5.0` to `v0.5.1`
+
 ## [0.10.0] - 2022-09-18
 ### Fixed
 - Reverted fix I made in v0.9.0 regarding `linux_node_config`
