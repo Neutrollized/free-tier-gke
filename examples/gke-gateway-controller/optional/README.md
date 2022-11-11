@@ -6,7 +6,7 @@ Follows documentation for [restricting deployment to a GKE namespace](https://cl
 gcloud iam service-accounts create store-user
 ```
 
-- give the service account the Kubernetes Cluster Viewer role (`rols/container.clusterViewer`) which allows the sa access to the cluster **only**:
+- give the service account the Kubernetes Cluster Viewer role (`roles/container.clusterViewer`) which allows the SA access to the cluster **only**:
 ```
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member=serviceAccount:store-user@${PROJECT_ID}.iam.gserviceaccount.com \

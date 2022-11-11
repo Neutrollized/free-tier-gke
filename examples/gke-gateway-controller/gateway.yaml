@@ -1,6 +1,6 @@
 ---
-kind: Gateway
 apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
 metadata:
   name: internal-http
   namespace: infra-ns
