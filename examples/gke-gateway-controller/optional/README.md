@@ -54,7 +54,7 @@ gcloud iam service-accounts keys create gsa-key.json \
 ### `kubeconfig.yaml`
 - you can get the ENDPOINT with:
 ```
-gcloud container clusters describe playground 
+gcloud container clusters describe playground \
     --zone=northamerica-northeast1-c \
     --format="value(endpoint)" 
 ```
@@ -62,7 +62,7 @@ or from `kubectl cluster-info`
 
 - you can get the CA_CERT with:
 ```
-gcloud container clusters describe playground 
+gcloud container clusters describe playground \
     --zone=northamerica-northeast1-c \
     --format="value(masterAuth.clusterCaCertificate)" 
 ```
