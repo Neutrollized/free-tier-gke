@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.10.2] - 2022-11-12
+### Fixed
+- Updated `examples/gke-gateway-controller` README to reflect the new GKE version requirements and installation of the Gateway API via `gcloud` (no longer installs from kubernetes-sigs GitHub repo)
+
 ## [0.10.1] - 2022-10-15
 ### Added
 - `examples/kaniko`

@@ -6,12 +6,22 @@ You can check out the [optional](./optional/README.md) steps for the full experi
 
 
 ## Setup
-#### 1. Install Gateway API CRDs:
+#### 1. Ensure GKE cluster meets requirements
+- [GKE Gateway controller requirements](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways#requirements)
+- currently requires a newer GKE version, best bet is to set `channel = "RAPID"`
+- [Rapid channel release notes](https://cloud.google.com/kubernetes-engine/docs/release-notes-rapid)
+- [Regular channel release notes](https://cloud.google.com/kubernetes-engine/docs/release-notes-regular)
+- [Stable channel release notes](https://cloud.google.com/kubernetes-engine/docs/release-notes-stable)
+
+#### 2. Enabling Gateway API:
+- currently, there's no option to enable Gateway API via the Terraform provider yet, so you will have to update the cluster manually:
 ```
-kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.5.1" | kubectl apply -f -
+gcloud container clusters update playground \
+    --gateway-api=standard \
+    --zone=northamerica-northeast1-c
 ```
 
-- verify install with `kubectl get gatewayclass` (may take a minute, so be patient):
+- verify install with `kubectl get gatewayclass -n kube-system` (may take a minute, so be patient):
 ```
 NAME          CONTROLLER                  AGE
 gke-l7-gxlb   networking.gke.io/gateway   51s
