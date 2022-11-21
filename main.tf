@@ -85,6 +85,26 @@ resource "google_container_cluster" "primary" {
     evaluation_mode = var.binary_auth_enabled ? "PROJECT_SINGLETON_POLICY_ENFORCE" : "DISABLED"
   }
 
+  # https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler#autoscaling_profiles
+  # NOTE: this creates an additional node pool
+  dynamic "cluster_autoscaling" {
+    for_each = var.enable_cluster_autoscaling ? [1] : []
+    content {
+      enabled             = var.enable_cluster_autoscaling
+      autoscaling_profile = var.nap_profile
+
+      resource_limits {
+        resource_type = "cpu"
+        maximum       = var.nap_max_cpu
+      }
+
+      resource_limits {
+        resource_type = "memory"
+        maximum       = var.nap_max_memory
+      }
+    }
+  }
+
   addons_config {
     gcp_filestore_csi_driver_config {
       enabled = var.filestore_csi_driver_enabled
