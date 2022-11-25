@@ -1,0 +1,25 @@
+---
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8simagetag
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sImageTag
+      validation:
+        openAPIV3Schema:
+          properties:
+            tag:
+              type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8simagetag
+
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          endswith(container.image, sprintf(":%s", [input.parameters.tag]))
+          msg := sprintf("container <%v> uses an image tagged with %v <%v>", [container.name, input.parameters.tag, container.image])
+        }        
