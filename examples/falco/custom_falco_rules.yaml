@@ -1,0 +1,12 @@
+# https://falco.org/docs/rules/
+# https://falco.org/docs/examples/
+customRules:
+  rules-shell.yaml: |-
+    - list: linux_shells
+      items: [bash, zsh, ksh, sh, csh]
+
+    - rule: run_shell_in_container
+      desc: a shell was spawned by a non-shell program in a container. Container entrypoints are excluded.
+      condition: container.id != host and proc.name in (linux_shells)
+      output: "Shell opened (user=%user.name container_id=%container.id container_name=%container.name)"
+      priority: CRITICAL
