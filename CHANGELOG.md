@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.11.2] - 2023-02-07
+### Added
+- New variable `enable_managed_prometheus` (default: `false`) to disable [Managed Service for Prometheus](https://cloud.google.com/stackdriver/docs/managed-prometheus).  As of March 15, 2023 this feature will be enabled by default unless otherwise specified. 
+
 ## [0.11.1] - 2022-12-08
 ### Added
 - `examples/opa-gatekeeper`

@@ -229,6 +229,12 @@ variable "binary_auth_enabled" {
   default     = false
 }
 
+variable "enable_managed_prometheus" {
+  description = "Enable Managed Prometheus."
+  type        = bool
+  default     = false
+}
+
 
 #----------------------------------------------
 # GKE Cluster - Node Auto-provisioning (NAP)

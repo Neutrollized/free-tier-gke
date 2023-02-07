@@ -36,7 +36,7 @@ Leaving `node_locations` blank will default your node to be in the same zone as 
 
 ### Enable Required APIs
 You can do this via console or...
-```
+```console
 gcloud services enable --async \
   container.googleapis.com
 ```

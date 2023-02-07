@@ -20,6 +20,14 @@ helm install falco falcosecurity/falco \
   --create-namespace
 ```
 
+For GKE Sandbox (gVisor enabled) clusters:
+```
+helm install falco-gvisor falcosecurity/falco \
+  -f https://raw.githubusercontent.com/falcosecurity/charts/master/falco/values-gvisor-gke.yaml \
+  --namespace falco-gvisor \
+  --create-namespace
+```
+
 
 ## Adding Custom Rules
 If you want to add custom rules, you can redeploy falco with helm and specify custom rules file:

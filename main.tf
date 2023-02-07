@@ -77,6 +77,12 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  monitoring_config {
+    managed_prometheus {
+      enabled = var.enable_managed_prometheus
+    }
+  }
+
   workload_identity_config {
     workload_pool = "${var.project_id}.svc.id.goog"
   }
