@@ -1,0 +1,13 @@
+# Optional: PodDisruptionBudget will instruct Kubernetes to ensure at least 1 replica
+# is available when possible
+# Used on >=1.21 K8S versions
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: istio-ingressgateway
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      istio: ingressgateway
+      app: istio-ingressgateway

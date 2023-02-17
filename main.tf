@@ -20,6 +20,10 @@ resource "google_container_cluster" "primary" {
   # machine family not being set to N2D, even though is in the "google_container_node_pool" resource
   node_config {
     machine_type = var.machine_type
+
+    labels = {
+      mesh_id = "proj-${var.project_id}"
+    }
   }
 
   enable_shielded_nodes = var.enable_shielded_nodes
@@ -124,10 +128,6 @@ resource "google_container_cluster" "primary" {
       disabled = var.http_lb_disabled
     }
 
-    istio_config {
-      disabled = var.istio_disabled
-    }
-
     config_connector_config {
       enabled = var.config_connector_enabled
     }
@@ -156,6 +156,10 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     machine_type = var.machine_type
     disk_size_gb = var.disk_size_gb
     image_type   = var.image_type
+
+    labels = {
+      mesh_id = "proj-${var.project_id}"
+    }
 
     metadata = {
       disable-legacy-endpoints = "true"
