@@ -17,7 +17,7 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: productpage-ingress
+  name: productpage-vs
   namespace: bookinfo
 spec:
   hosts:
@@ -30,3 +30,36 @@ spec:
         host: productpage
         port:
           number: 9080
+   # fault injection
+    fault:
+      abort:
+        percentage:
+          value: 20
+        httpStatus: 401
+#      delay:
+#        percentage:
+#          value: 50
+#        fixedDelay: 5s
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: productpage-dr
+  namespace: bookinfo
+spec:
+  host: productpage
+  trafficPolicy:
+    loadBalancer:
+      simple: LEAST_REQUEST
+    connectionPool:
+      tcp:
+        maxConnections: 2
+      http:
+        http1MaxPendingRequests: 1
+        http2MaxRequests: 1
+        maxRequestsPerConnection: 1 
+    # circuit breaking
+    outlierDetection:
+      consecutive5xxErrors: 2
+      interval: 3s
+      baseEjectionTime: 30s

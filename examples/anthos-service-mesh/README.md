@@ -11,6 +11,10 @@ gcloud services enable --async \
 ```
 - Workload Identity enabled (which it should be already if you are using my Terraform blueprint)
 
+NOTE 1: despite the documentation saying the [cluster requirements](https://cloud.google.com/service-mesh/docs/unified-install/anthos-service-mesh-prerequisites#cluster_requirements) as needing at least 2 nodes and 8 vCPUs, my example here works even on a single, n2-standard-2 node (2 vCPU, 8GB mem)
+
+NOTE 2: the **mesh_id** label is only required for multi-cluster deployments -- not necessary in a standalone
+
 
 ## Enable ASM
 ```console
@@ -69,6 +73,8 @@ For the app, I will be using the [Bookinfo sample](https://github.com/istio/isti
 ### Deploy Ingress Gateway
 You will need a namespace for your ASM gateway.  Here I just called it **asm-gateway** (original, I know).  We will be using the [revision](https://cloud.google.com/service-mesh/docs/revisions-overview#what_is_a_revision) as the auto-injection label.
 
+The revision can be found in the output of the verification step above, or you can run: `kubectl -n istio-system get controlplanerevision`
+
 ```console
 kubectl create ns asm-gateway
 kubectl label ns asm-gateway istio.io/rev=asm-managed-rapid
@@ -96,7 +102,10 @@ kubectl apply -f istio-manifests/productpage-gateway.yaml
 ```
 
 
+
 ## Additional Notes
+I've added some fault injection and circuit breaking into to the **VirtualService** and **DestinationRule** respectively, which you can comment out if you wish.  You can use a tool like [`fortio`](https://github.com/fortio/fortio) to perform load testing (i.e. `fortio load -c 3 -qps 0 -n 50 -loglevel Warning http://$(kubectl get svc -n asm-gateway --output jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')`).
+
 Some useful security configurations to know are [ServiceEntry](https://istio.io/latest/docs/reference/config/networking/service-entry/) and [AuthorizationPolicy](https://istio.io/latest/docs/reference/config/security/authorization-policy/)
 
 Despite its name, **ServiceEntry** is used *allow* your pods egress to the Internet (i.e. external services/APIs). 
