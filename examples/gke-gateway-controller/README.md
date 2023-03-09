@@ -15,7 +15,7 @@ You can check out the [optional](./optional/README.md) steps for the full experi
 
 #### 2. Enabling Gateway API:
 - currently, there's no option to enable Gateway API via the Terraform provider yet, so you will have to update the cluster manually:
-```
+```console
 gcloud container clusters update playground \
     --gateway-api=standard \
     --zone=northamerica-northeast1-c
@@ -32,7 +32,7 @@ gke-l7-rilb   networking.gke.io/gateway   51s
 ## Deploying the Demo
 #### 1. Create Namespaces with Labels
 - create namespaces with label `shared-gateway-access: "true"`
-```
+```console
 kubectl apply -f namespaces.yaml
 ```
 
@@ -40,7 +40,7 @@ kubectl apply -f namespaces.yaml
 
 
 #### 2. Deploy an internal gateway: 
-```
+```console
 kubectl apply -f gateway.yaml
 ```
 
@@ -66,13 +66,13 @@ Events:
 
 
 #### 3. Deploy Demo Store App
-```
+```console
 kubectl apply -f store.yaml
 ```
 
 
 #### 4. Deploy HTTPRoute 
-```
+```console
 kubectl apply -f store-route.yaml
 ```
 
@@ -107,7 +107,7 @@ Events:
 
 #### 5. Deploy Demo Site App and Site HTTPRoute
 - like the store, but for "site.example.com" instead:
-```
+```console
 kubectl apply -f store.yaml
 
 kubectl apply -f store-route.yaml
@@ -118,7 +118,7 @@ kubectl apply -f store-route.yaml
 
 ## Testing 
 #### 1. Get the IP of the internal HTTP(s) load balancer:
-```
+```console
 kubectl get gateway internal-http -n infra-ns -o=jsonpath="{.status.addresses[0].value}"
 ```
 
@@ -189,7 +189,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 
 
 ## Cleanup
-```
+```console
 kubectl delete -f site-route.yaml
 kubectl delete -f site.yaml
 kubectl delete -f store-route.yaml

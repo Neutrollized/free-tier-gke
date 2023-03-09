@@ -7,19 +7,19 @@ The services in this example all utilize the [fake-service](https://github.com/n
 
 ## Install Ingress Controller with Helm
 - add repo:
-```
+```console
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 ```
 
 - deploy NGINX ingress controller (this creates a TCP/UDP load balancer in GCP)
 - wait until you get an external IP
-```
+```console
 helm install nginx-ingress ingress-nginx/ingress-nginx
 ```
 
 - deploy Ingress resource
-```
+```console
 kubectl apply -f ./nginx-ingress-rewrite.yaml
 ```
 

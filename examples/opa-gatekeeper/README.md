@@ -1,6 +1,6 @@
 # README
 
-```
+```console
 helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
 
 helm install --namespace gatekeeper-system [RELEASE_VERSION] gatekeeper/gatekeeper --create-namespace
@@ -27,7 +27,7 @@ Example policies include:
 
 
 ## Testing
-```
+```console
 kubectl run nginx-test --image nginx:latest
 ```
 

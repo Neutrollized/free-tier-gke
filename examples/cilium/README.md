@@ -2,7 +2,7 @@
 
 ## Installation 
 Steps to install can be found [here](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/), but basically boils down to:
-```
+```console
 cilium install
 cilium hubble enable --ui
 ```
@@ -60,13 +60,13 @@ spec:
 ## Boutique demo
 The boutique demo comes from [GCP's microservices demo](https://github.com/GoogleCloudPlatform/microservices-demo), and assuming you have open-source Cilium installed, you can apply the Cilium Network Policies (CNPs):
 
-```
+```console
 kubectl apply -f ./boutique-demo/
 ```
 
 On the surface, the boutique seems to be working (and it is), but actually the **adservice** is being blocked by the [Deny All](./boutique-demo/deny_all_cnp.yaml) policy.  If you installed Hubble, you will be able to see *DROPPED* traffic to/from the **adservice**.  To fix this, run:
 
-```
+```console
 kubectl apply -f ./boutique-demo/extra/
 ```
 

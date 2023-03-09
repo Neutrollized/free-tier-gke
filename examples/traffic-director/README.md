@@ -9,7 +9,7 @@ The steps used in this example is taken from [here](https://cloud.google.com/tra
 
 
 #### Configuring TLS for sidecar injector
-```
+```console
 CN=istio-sidecar-injector.istio-control.svc
 
 openssl req \
@@ -29,27 +29,27 @@ I've also generated a set of keys that you can use if you wish if you don't alre
 
 
 #### Enabling sidecar injection
-```
+```console
 kubectl apply -f specs/00-namespaces.yaml
 ```
 
-```
+```console
 kubectl label namespace default istio-injection=enabled
 ```
 
 You can see which namespaces have injection enabled with:
-```
+```console
 kubectl get namespace -L istio-injection
 ```
 
-```
+```console
 kubectl create secret generic istio-sidecar-injector -n istio-control \
   --from-file=tls-certs/key.pem \
   --from-file=tls-certs/cert.pem \
   --from-file=tls-certs/ca-cert.pem
 ```
 
-```
+```console
 CA_BUNDLE=$(cat tls-certs/cert.pem | base64 | tr -d '\n')
 sed -i "s/caBundle:.*/caBundle:\ ${CA_BUNDLE}/g" specs/02-injector.yaml
 ```
@@ -63,12 +63,12 @@ sed -i "s/caBundle:.*/caBundle:\ ${CA_BUNDLE}/g" specs/02-injector.yaml
 If you created a regional cluster, adding backend services is the same, except you have to add every zone.
 
 
-```
+```console
 gcloud compute health-checks create http td-gke-health-check \
   --use-serving-port
 ```
 
-```
+```console
 gcloud compute backend-services create td-gke-service \
  --global \
  --health-checks td-gke-health-check \
@@ -76,7 +76,7 @@ gcloud compute backend-services create td-gke-service \
 ```
 
 Adding backend services (if unsure of NEG values, do: `gcloud compute network-endpoint-groups list`)
-```
+```console
 gcloud compute backend-services add-backend td-gke-service \
  --global \
  --network-endpoint-group service-test-neg \
@@ -87,12 +87,12 @@ gcloud compute backend-services add-backend td-gke-service \
 
 
 #### Creating the routing rule map
-```
+```console
 gcloud compute url-maps create td-gke-url-map \
    --default-service td-gke-service
 ```
 
-```
+```console
 gcloud compute url-maps add-path-matcher td-gke-url-map \
    --default-service td-gke-service \
    --path-matcher-name td-gke-path-matcher
@@ -102,13 +102,13 @@ gcloud compute url-maps add-host-rule td-gke-url-map \
    --path-matcher-name td-gke-path-matcher
 ```
 
-```
+```console
 gcloud compute target-http-proxies create td-gke-proxy \
    --url-map td-gke-url-map
 ```
 
 If you read the documention, you will see its mention of a virtual IP (VIP) address whose traffic gets intercepted by the Envoy sidecar.  The VIP is actually the address in the forwarding rule.  In the documentation they just use `0.0.0.0` without a detailed explanation.  I'm going to specify one (`192.168.9.9`):
-```
+```console
 VIP=192.168.9.9
 
 gcloud compute forwarding-rules create td-gke-forwarding-rule \
@@ -121,7 +121,7 @@ gcloud compute forwarding-rules create td-gke-forwarding-rule \
 
 #### Verifying the configuration
 Please be patient -- sometimes it can take several minutes before the test command below will return a valid response.  The error you may see is "wget: can't connect to remote host (192.168.9.9): Connection refused":
-```
+```console
 BUSYBOX_POD=$(kubectl get po -l run=client -o=jsonpath='{.items[0].metadata.name}')
 
 TEST_CMD="wget -q --header 'Host: service-test' -O - 192.168.9.9; echo"
@@ -134,7 +134,7 @@ kubectl exec -it $BUSYBOX_POD -c busybox -- /bin/sh -c "$TEST_CMD"
 
 ## Cleanup
 Assuming you followed the naming in the example, these are the commands to delete the resources you created:
-```
+```console
 gcloud compute forwarding-rules delete td-gke-forwarding-rule --global
 gcloud compute target-http-proxies delete td-gke-proxy
 gcloud compute url-maps delete td-gke-url-map
@@ -142,7 +142,7 @@ gcloud compute backend-services delete td-gke-service --global
 gcloud compute health-checks delete td-gke-health-check
 ```
 
-```
+```console
 kubectl delete -f trafficdirector_service_sample.yaml
 kubectl delete -f client_sample.yaml
 ```

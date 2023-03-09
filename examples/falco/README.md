@@ -7,13 +7,13 @@ You will need something beefier than an **e2-medium** node machine type.  I pers
 
 ## Setup
 Add the Helm chart:
-```
+```console
 helm repo add falcosecurity https://falcosecurity.github.io/charts
 ```
 
 
 Install using Helm (set driver to `ebpf`):
-```
+```console
 helm install falco falcosecurity/falco \
   --set driver.kind=ebpf \
   --namespace falco \
@@ -21,7 +21,7 @@ helm install falco falcosecurity/falco \
 ```
 
 For GKE Sandbox (gVisor enabled) clusters:
-```
+```console
 helm install falco-gvisor falcosecurity/falco \
   -f https://raw.githubusercontent.com/falcosecurity/charts/master/falco/values-gvisor-gke.yaml \
   --namespace falco-gvisor \
@@ -31,7 +31,7 @@ helm install falco-gvisor falcosecurity/falco \
 
 ## Adding Custom Rules
 If you want to add custom rules, you can redeploy falco with helm and specify custom rules file:
-```
+```console
 helm upgrade falco falcosecurity/falco --set driver.kind=ebpf --namespace falco -f ./custom_falco_rules.yaml
 ```
 

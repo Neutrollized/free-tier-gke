@@ -4,29 +4,29 @@ This example very closely follows the example found [here](https://cloud.google.
 
 ## Deploying Example
 - verify Filestore CSI driver is enabled
-```
+```console
 kubectl get storageclass
 ```
 
 - apply the StorageClass
-```
+```console
 kubectl apply -f filestore-example-class.yaml
 ```
 
 **NOTE:** `volumeBindingMode` here is set to `WaitForFirstConsumer`.  The default is `Immediate`, which provisions the [Filestore](https://cloud.google.com/filestore) instance (i.e. the PV) once the PVC is created (next step).  With `WaitForFirstConsumer`, the Filestore will be provisioned once there are pods that will utilize the PVC (which will take ~2 min)
 
 - apply the PVC
-```
+```console
 kubectl apply -f pvc-example.yaml
 ```
 
 - apply the deployment
-```
+```console
 kubectl apply -f web-server-example.yaml
 ```
 
 ## Cleanup
-```
+```console
 kubectl delete -f web-server-example.yaml
 kubectl delete -f pvc-example.yaml
 kubectl delete -f filestore-example-class.yaml
