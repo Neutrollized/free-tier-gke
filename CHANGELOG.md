@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.12.2] - 2023-03-09
+### Changed
+- Replaced specifying GCP's special IP ranges explicitly with the data source, [`google_netblock_ip_ranges`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/netblock_ip_ranges)
+- Replace list of roles for GKE service account with [**roles/container.nodeServiceAccount**](https://cloud.google.com/iam/docs/understanding-roles#container.nodeServiceAccount)
+- Updated `examples/kaniko`
+
 ## [0.12.1] - 2023-02-28
 ### Changed
 - Updated `examples/anthos-service-mesh` to include examples with: mTLS, ServiceEntry, fault injection and circuit breaking

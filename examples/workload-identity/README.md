@@ -12,6 +12,10 @@ Example below based on [Workload Identity guide](https://cloud.google.com/kubern
 
 ## Syntax
 ```
+gcloud iam service-accounts create GSA_NAME
+```
+
+```
 kubectl create serviceaccount KSA_NAME \
   --namespace NAMESPACE
 ```
@@ -42,31 +46,31 @@ kubectl create ns wi-test
 ```
 
 ```
-kubectl create serviceaccount wi-ksa \
-  --namespace wi-test
+kubectl create serviceaccount simple-wi-ksa -n wi-test
 ```
 
+- if you deployed the cluster from my blueprint, a Google service account called "simple-wi-gsa" should arleady be created for you, otherwise please create one first before continuing onto the next step
 ```
-gcloud iam service-accounts add-iam-policy-binding basic-wi-gsa@my-project.iam.gserviceaccount.com \
+gcloud iam service-accounts add-iam-policy-binding simple-wi-gsa@my-project.iam.gserviceaccount.com \
   --role roles/iam.workloadIdentityUser \
-  --member "serviceAccount:my-project.svc.id.goog[wi-test/wi-ksa]"
+  --member "serviceAccount:my-project.svc.id.goog[wi-test/simple-wi-ksa]"
 ```
 
 ```
-kubectl annotate serviceaccount wi-ksa \
+kubectl annotate serviceaccount simple-wi-ksa \
   --namespace wi-test \
-  iam.gke.io/gcp-service-account=basic-wi-gsa@my-project.iam.gserviceaccount.com
+  iam.gke.io/gcp-service-account=simple-wi-gsa@my-project.iam.gserviceaccount.com
 ```
 
 - you can confirm the changes with `kubectl describe serviceaccount wi-ksa -n wi-test`:
 ```
-Name:                wi-ksa
+Name:                simple-wi-ksa
 Namespace:           wi-test
 Labels:              <none>
-Annotations:         iam.gke.io/gcp-service-account: basic-wi-gsa@my-project.iam.gserviceaccount.com
+Annotations:         iam.gke.io/gcp-service-account: simple-wi-gsa@my-project.iam.gserviceaccount.com
 Image pull secrets:  <none>
-Mountable secrets:   wi-ksa-token-th4tc
-Tokens:              wi-ksa-token-th4tc
+Mountable secrets:   simple-wi-ksa-token-th4tc
+Tokens:              simple-wi-ksa-token-th4tc
 Events:              <none>
 ```
 

@@ -75,10 +75,7 @@ variable "iam_roles_list" {
   description = "List of IAM roles to be assigned to GKE service account"
   type        = list(string)
   default = [
-    "roles/logging.logWriter",
-    "roles/monitoring.metricWriter",
-    "roles/monitoring.viewer",
-    "roles/stackdriver.resourceMetadata.writer",
+    "roles/container.nodeServiceAccount",
   ]
 }
 
@@ -211,7 +208,7 @@ variable "confidential_nodes_enabled" {
 }
 
 variable "config_connector_enabled" {
-  description = "When enabled, ConfigConnector addon will be installed.  Note: this also requires Workload Identity to be enabled."
+  description = "When enabled, ConfigConnector addon will be installed.  Note: this also requires Workload Identity to be enabled. Node size should also be 4vCPUs or more."
   type        = bool
   default     = false
 }

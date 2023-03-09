@@ -1,3 +1,8 @@
+data "google_netblock_ip_ranges" "health-checkers" {
+  range_type = "health-checkers"
+}
+
+
 resource "google_compute_network" "k8s_vpc" {
   name = "${var.gke_cluster_name}-k8s-vpc"
 
@@ -54,7 +59,7 @@ resource "google_compute_firewall" "lb_health_check" {
   }
 
   # https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges
-  source_ranges = ["35.191.0.0/16", "130.211.0.0/22"]
+  source_ranges = data.google_netblock_ip_ranges.health-checkers.cidr_blocks_ipv4
 }
 
 

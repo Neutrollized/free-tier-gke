@@ -1,4 +1,4 @@
-output "connect_to_zonal_cluster" {
+output "connection_string" {
   value = var.enable_private_endpoint ? "gcloud container clusters get-credentials ${var.gke_cluster_name} --zone ${var.zone} --project ${var.project_id} --internal-ip" : "gcloud container clusters get-credentials ${var.gke_cluster_name} --zone ${var.zone} --project ${var.project_id}"
 }
 

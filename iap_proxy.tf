@@ -1,6 +1,11 @@
 # the resources here are only created
 # if enable_private_endpoint = "true"
 
+data "google_netblock_ip_ranges" "iap-forwarders" {
+  range_type = "iap-forwarders"
+}
+
+
 resource "google_compute_subnetwork" "iap_subnet" {
   count                    = var.enable_private_endpoint ? 1 : 0
   name                     = "${var.gke_cluster_name}-iap-subnet"
@@ -23,7 +28,7 @@ resource "google_compute_firewall" "iap_tcp_forwarding" {
   }
 
   # https://cloud.google.com/iap/docs/using-tcp-forwarding
-  source_ranges = ["35.235.240.0/20"]
+  source_ranges = data.google_netblock_ip_ranges.iap-forwarders.cidr_blocks_ipv4
   target_tags   = ["iap"]
 }
 

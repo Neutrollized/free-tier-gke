@@ -16,7 +16,7 @@ resource "google_project_iam_member" "gke_sa_iam_member" {
 # Workload Identity
 #-------------------------------------
 resource "google_service_account" "wi_gsa" {
-  account_id   = "basic-wi-gsa"
+  account_id   = "simple-wi-gsa"
   display_name = "Workload Identity Google service account"
 }
 

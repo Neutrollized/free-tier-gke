@@ -7,33 +7,41 @@ This example makes use of [Workload Identity](https://cloud.google.com/kubernete
 **IMPORTANT**: your GKE cluster's OAuth scopes will have to include **`https://www.googleapis.com/auth/devstorage.full_control`**
 
 ### How-To
--you will need to create a GCS bucket to store the container image context tarball (I've provided an [example](./context.tar.gz), but feel free to use your own):
+You will need to create a GCS bucket to store the container image context tarball (I've provided an [example](./context.tar.gz), but feel free to use your own):
 ```
 gsutil mb gs://${GCS_BUCKET}
 
 gsutil cp ./context.tar.gz gs://${GCS_BUCKET}
 ```
+NOTE 1: the build context needs to be in `.tar.gz` format and is just a tarball of your Dockerfile and anything else needed (i.e. `tar -zcvf context.tar.gz ./*` from the build context directory)
+NOTE 2: the `context.tar.gz` I've included builds a HashiCorp Vault image
+
+- create Google service account (GSA) and Kubernetes service account (KSA)
+```
+gcloud iam service-accounts create kaniko-wi-gsa \
+  --description="Workload Identity SA for Kaniko"
+```
 
 ```
-kubectl create serviceaccount wi-kaniko-user
+kubectl create serviceaccount kaniko-wi-ksa
 ```
 
-- you will need an additional role added to the **basic-wi-gsa** service account that got created as part of this repo's blueprint:
+- you will need an additional role added to the **kaniko-wi-gsa** service account that got created as part of this repo's blueprint:
 ```
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --role roles/storage.admin \
-  --member "serviceAccount:basic-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com"
+  --member "serviceAccount:kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com"
 ```
 
 ```
-gcloud iam service-accounts add-iam-policy-binding basic-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com \
+gcloud iam service-accounts add-iam-policy-binding kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com \
   --role roles/iam.workloadIdentityUser \
-  --member "serviceAccount:${PROJECT_ID}.svc.id.goog[default/wi-kaniko-user]"
+  --member "serviceAccount:${PROJECT_ID}.svc.id.goog[default/kaniko-wi-ksa]"
 ```
 
 ```
-kubectl annotate serviceaccount wi-kaniko-user \
-  iam.gke.io/gcp-service-account=basic-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com
+kubectl annotate serviceaccount kaniko-wi-ksa \
+  iam.gke.io/gcp-service-account=kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 - make a copy of the [pod YAML](./kaniko-executor-wi.yaml.sample), edit accordingly and then apply!

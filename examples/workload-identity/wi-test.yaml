@@ -8,6 +8,6 @@ spec:
   - image: google/cloud-sdk:slim
     name: workload-identity-test
     command: ["sleep","infinity"]
-  serviceAccountName: wi-ksa
+  serviceAccountName: simple-wi-ksa
   nodeSelector:
     iam.gke.io/gke-metadata-server-enabled: "true"
