@@ -22,7 +22,7 @@ gcloud container fleet mesh enable --project ${PROJECT_ID}
 ```
 
 ```console
-gcloud container fleet membership register ${GKE_CLUSTER_NAME}-membership \
+gcloud container fleet memberships register ${GKE_CLUSTER_NAME}-membership \
   --gke-cluster=${GKE_LOCATION}/${GKE_CLUSTER_NAME} \
   --enable-workload-identity \
   --project ${PROJECT_ID}
