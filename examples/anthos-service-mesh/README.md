@@ -86,7 +86,7 @@ kubectl apply -f gateways/istio-ingressgateway -n asm-gateway
 kubectl get service -n asm-gateway
 ```
 
-### Deploy Sample App
+## Deploy Bookinfo Sample App
 We will use the same auto-injection label for the namespace in which we will be deploying our sample application.
 
 ```console
@@ -98,9 +98,8 @@ kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bo
 
 ### Expose Application 
 ```console
-kubectl apply -f istio-manifests/productpage-gateway.yaml
+kubectl apply -f productpage-gateway.yaml
 ```
-
 
 
 ## Additional Notes
@@ -112,9 +111,11 @@ Despite its name, **ServiceEntry** is used *allow* your pods egress to the Inter
 
 **AuthorizationPolicy**, on the other hand, is more for ingress controls.  I included some [sample policies](./istio-manifests/authorization-policies) here that you can try out if you wish.
 
+**For an additional super lightweight sample app, check out the [starwars-app](./starwars-app) folder**
 
 ## Cleanup
 ```console
+kubectl delete -f istio-manifests/productpage-gateway.yaml
 kubectl delete -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/platform/kube/bookinfo.yaml -n bookinfo
 kubectl delete -f gateways/istio-ingressgateway -n asm-gateway
 

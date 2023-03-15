@@ -2,6 +2,7 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: ingress-policy
+  namespace: "ASM_GATEWAY_NS_HERE"
 spec:
   selector:
     matchLabels:
@@ -10,4 +11,4 @@ spec:
   rules:
   - from:
     - source:
-       ipBlocks: ["YOUR_IP_HERE"]
+        ipBlocks: ["YOUR_IP_HERE"]

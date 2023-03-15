@@ -13,7 +13,7 @@ With Cilium deployed, you have now unlocked a new resource called `CiliumNetwork
 
 
 ## Star Wars demo
-My deployment is a modified version of [Cilium's Star Wars demo](https://github.com/cilium/cilium/tree/master/examples/minikube)
+My deployment is a modified version of [Cilium's Star Wars demo](https://github.com/cilium/star-wars-demo)
 
 ### NetworkPolicy vs. CiliumNetworkPolicy
 Below are the [NetworkPolicy](https://kubernetes.io/docs/concepts/services-networking/network-policies/) equivalents of [`starwars-demo/sw_l3_l4_cnp.yaml`](./starwars-demo/sw_l3_l4_cnp.yaml) and [`starwars-demo/sw_deny_cnp.yaml`](./starwars-demo/sw_deny_cnp.yaml) respectively, and as you can see, they differ very little in structure so knowledge in defining policies in either format is transferrable to the other.  And while both network policy types will be honored, it is strongly recommended that you stick to one kind of policy rather than to mix and match.

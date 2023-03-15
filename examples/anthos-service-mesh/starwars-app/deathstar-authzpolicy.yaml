@@ -1,0 +1,21 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: deathstar-authzpolicy
+  namespace: galaxy
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: deathstar
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        hosts: ["deathstar.galaxy.com"]
+        methods: ["GET", "POST"]
+        paths: ["/v1/", "/v1/request-landing"]
+  - to:
+    - operation:
+        hosts: ["deathstar.galaxy.com"]
+        methods: ["PUT"]
+        paths: ["/v1/exhaust-port"]

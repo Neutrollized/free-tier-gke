@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: deathstar-gateway
+  namespace: galaxy
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - deathstar.galaxy.com
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: deathstar-vs
+  namespace: galaxy
+spec:
+  hosts:
+  - deathstar.galaxy.com
+  gateways:
+  - deathstar-gateway
+  http:
+  - route:
+    - destination:
+        host: deathstar
+        port:
+          number: 80
+#---
+#apiVersion: networking.istio.io/v1beta1
+#kind: DestinationRule
+#metadata:
+#  name: deathstar-dr
+#  namespace: galaxy
+#spec:
+#  host: deathstar
+#  trafficPolicy:
+#    loadBalancer:
+#      simple: LEAST_REQUEST
