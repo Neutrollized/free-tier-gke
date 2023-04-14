@@ -1,10 +1,11 @@
 # README
 
+See my [article](https://cloud.google.com/blog/products/containers-kubernetes/open-source-tools-can-help-gke-work-with-cloud-apis) on Google Cloud Blog!
+
 [Kaniko](https://github.com/GoogleContainerTools/kaniko) is an OSS project that allows you to build container images in Kubernetes.  This is often used with CI/CD or GitOps pipelines.
 
-This example makes use of [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) to get authorization to push to [GCR](https://cloud.google.com/container-registry), but you can alternatively [use GCP credentials passed as a k8s secret](https://github.com/GoogleContainerTools/kaniko/blob/main/README.md#kubernetes-secret).
+This example makes use of [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) to get authorization to push to [GAR](https://cloud.google.com/artifact-registry), but you can alternatively [use GCP credentials passed as a k8s secret](https://github.com/GoogleContainerTools/kaniko/blob/main/README.md#kubernetes-secret).
 
-**IMPORTANT**: your GKE cluster's OAuth scopes will have to include **`https://www.googleapis.com/auth/devstorage.full_control`**
 
 ### How-To
 You will need to create a GCS bucket to store the container image context tarball (I've provided an [example](./context.tar.gz), but feel free to use your own):
@@ -16,6 +17,14 @@ gsutil cp ./context.tar.gz gs://${GCS_BUCKET}
 NOTE 1: the build context needs to be in `.tar.gz` format and is just a tarball of your Dockerfile and anything else needed (i.e. `tar -zcvf context.tar.gz ./*` from the build context directory)
 NOTE 2: the `context.tar.gz` I've included builds a HashiCorp Vault image
 
+- create Docker repo in GAR
+```console
+gcloud artifacts repositories create ${GAR_REPO_NAME} \
+  --repository-format=docker \
+  --location=${GAR_LOCATION} \
+  --description="Docker repository"
+```
+
 - create Google service account (GSA) and Kubernetes service account (KSA)
 ```console
 gcloud iam service-accounts create kaniko-wi-gsa \
@@ -26,13 +35,20 @@ gcloud iam service-accounts create kaniko-wi-gsa \
 kubectl create serviceaccount kaniko-wi-ksa
 ```
 
-- you will need an additional role added to the **kaniko-wi-gsa** service account that got created as part of this repo's blueprint:
+- you will need additional roles added to the **kaniko-wi-gsa** service account that got created as part of this repo's blueprint to write to GAR
 ```console
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --role roles/storage.admin \
+  --role roles/artifactregistry.writer \
+  --member "serviceAccount:kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com"
+```
+and
+```console
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --role roles/storage.objectViewer \
   --member "serviceAccount:kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com"
 ```
 
+- assign your KSA the [Workload Identity User](https://cloud.google.com/iam/docs/understanding-roles#iam.workloadIdentityUser) role which gives it the permission to impersonate your GSA
 ```console
 gcloud iam service-accounts add-iam-policy-binding kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com \
   --role roles/iam.workloadIdentityUser \
@@ -93,4 +109,10 @@ kaniko kaniko Get:4 http://deb.debian.org/debian buster/main amd64 libssl1.1 amd
 kaniko kaniko Get:5 http://deb.debian.org/debian buster/main amd64 openssl amd64 1.1.1n-0+deb10u3 [855 kB]
 ...
 ...
+```
+
+
+## Cleanup
+```console
+gcloud artifacts repositories delete ${GAR_REPO_NAME} --location=${GAR_LOCATION}
 ```

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.12.4] - 2023-04-13
+### Changed
+- Updated `examples/kaniko` to use Google Artifact Registry (GAR) instead of Google Container Registry (GCR)
+
 ## [0.12.3] - 2023-03-15
 ### Fixed
 - Various typos and formatting inconsistencies, READMEs

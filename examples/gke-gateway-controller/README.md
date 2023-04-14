@@ -172,7 +172,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 }
 ```
 
-- kubectl exec -it store-v2-6856f59f7f-zrblv -n store-ns -- curl -H "host: site.example.com" 192.168.0.6`:
+- `kubectl exec -it store-v2-6856f59f7f-zrblv -n store-ns -- curl -H "host: site.example.com" 192.168.0.6`:
 ```
 {
   "cluster_name": "playground",
