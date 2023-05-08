@@ -16,6 +16,23 @@ resource "google_compute_subnetwork" "k8s_subnet" {
   network                  = google_compute_network.k8s_vpc.id
   private_ip_google_access = "true"
   region                   = var.region
+
+  # settings for VPC Flow Logs, if enabled
+  dynamic "log_config" {
+    for_each = var.enable_intranode_visibility ? [{
+      aggregation_interval = var.flow_logs_interval
+      flow_sampling        = var.flow_logs_sampling
+      metadata             = var.flow_logs_metadata
+      filter_expr          = var.flow_logs_filter
+    }] : []
+    content {
+      aggregation_interval = log_config.value["aggregation_interval"]
+      flow_sampling        = log_config.value["flow_sampling"]
+      metadata             = log_config.value["metadata"]
+      filter_expr          = log_config.value["filter_expr"]
+    }
+  }
+
 }
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways#gateway_controller_requirements

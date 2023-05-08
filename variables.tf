@@ -226,6 +226,42 @@ variable "enable_managed_prometheus" {
   default     = false
 }
 
+variable "enable_intranode_visibility" {
+  description = "If enabled, same node pod to pad traffic visible for VPC network.  Requires VPC Flow Logs for subnet to also be enabled."
+  type        = bool
+  default     = false
+}
+
+variable "flow_logs_interval" {
+  description = "Sets aggregation interval for collecting flow logs."
+  type        = string
+  default     = "INTERVAL_5_SEC"
+}
+
+variable "flow_logs_sampling" {
+  description = "Sets sampling rate.  0.5 means half of all collected logs are reported.  1.0 means all collected logs are reported."
+  type        = number
+  default     = 0.5
+}
+
+variable "flow_logs_metadata" {
+  description = "Specifies whether metadata is added to VPC flow logs."
+  type        = string
+  default     = "INCLUDE_ALL_METADATA"
+}
+
+variable "flow_logs_filter" {
+  description = "Enable/disable log filtering."
+  type        = bool
+  default     = true
+}
+
+variable "log_config" {
+  description = "VPC Flow Log configuration.  This is set dynamically and by the flow_logs_xxx variables above.  See network.tf for more details."
+  type        = list(map(string))
+  default     = []
+}
+
 
 #----------------------------------------------
 # GKE Cluster - Node Auto-provisioning (NAP)

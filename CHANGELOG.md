@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.12.5] - 2023-05-08
+### Added
+- New variable `enable_intranode_visibiity` (default: `false`). If set to `true`, [VPC Flow Logs](https://cloud.google.com/vpc/docs/flow-logs) will also be enabled.
+- New variable `flow_logs_interval` (default: `INTERVAL_5_SEC`) sets aggregation interval for collecting flow logs.
+- New variable `flow_logs_sampling` (default: `0.5`) set sampling rate.  `0.5` means half of all collected logs are reported.
+- New variable `flow_logs_metadata` (default: `INCLUDE_ALL_METADATA`) specifies whether metadata is added to VPC flow logs.
+- New variable `flow_logs_filter` (default: `true`) enables/disables log filtering.
+
 ## [0.12.4] - 2023-04-13
 ### Changed
 - Updated `examples/kaniko` to use Google Artifact Registry (GAR) instead of Google Container Registry (GCR)
