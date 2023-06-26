@@ -53,10 +53,14 @@ resource "google_container_cluster" "primary" {
   # https://cloud.google.com/kubernetes-engine/docs/how-to/flexible-pod-cidr#cidr_ranges_for_clusters
   default_max_pods_per_node = var.max_pods_per_node
 
-  private_cluster_config {
-    enable_private_endpoint = var.enable_private_endpoint
-    enable_private_nodes    = var.enable_private_nodes
-    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+  # Only applied if `enable_private_nodes` is `true`.
+  dynamic "private_cluster_config" {
+    for_each = var.enable_private_nodes ? [1] : []
+    content {
+      enable_private_endpoint = var.enable_private_endpoint
+      enable_private_nodes    = var.enable_private_nodes
+      master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+    }
   }
 
   master_authorized_networks_config {
