@@ -146,7 +146,7 @@ resource "google_container_cluster" "primary" {
 resource "google_container_node_pool" "primary_preemptible_nodes" {
   name     = var.gke_nodepool_name
   location = var.regional ? var.region : var.zone
-  cluster  = google_container_cluster.primary.name
+  cluster  = google_container_cluster.primary.id
 
   initial_node_count = var.initial_node_count
   autoscaling {
