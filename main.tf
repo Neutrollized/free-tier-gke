@@ -18,13 +18,22 @@ resource "google_container_cluster" "primary" {
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#node_config
   # however, it is required if you're going to use confidential nodes otherwise it will complain about the 
   # machine family not being set to N2D, even though is in the "google_container_node_pool" resource
-  node_config {
-    machine_type = var.machine_type
+  dynamic "node_config" {
+    for_each = var.confidential_nodes_enabled ? [1] : []
+    content {
+      machine_type = var.machine_type
 
-    labels = {
-      mesh_id = "proj-${var.project_id}"
+      labels = {
+        mesh_id = "proj-${var.project_id}"
+      }
     }
   }
+  # We can't create a cluster with no node pool defined, but we want to only use
+  # separately managed node pools. So we create the smallest possible default
+  # node pool and immediately delete it.
+  remove_default_node_pool = true
+  initial_node_count       = var.initial_node_count
+
 
   enable_shielded_nodes = var.enable_shielded_nodes
   enable_tpu            = var.enable_tpu
@@ -44,10 +53,14 @@ resource "google_container_cluster" "primary" {
   # https://cloud.google.com/kubernetes-engine/docs/how-to/flexible-pod-cidr#cidr_ranges_for_clusters
   default_max_pods_per_node = var.max_pods_per_node
 
-  private_cluster_config {
-    enable_private_endpoint = var.enable_private_endpoint
-    enable_private_nodes    = var.enable_private_nodes
-    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+  # Only applied if `enable_private_nodes` is `true`.
+  dynamic "private_cluster_config" {
+    for_each = var.enable_private_nodes ? [1] : []
+    content {
+      enable_private_endpoint = var.enable_private_endpoint
+      enable_private_nodes    = var.enable_private_nodes
+      master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+    }
   }
 
   master_authorized_networks_config {
@@ -65,11 +78,6 @@ resource "google_container_cluster" "primary" {
 
   datapath_provider = var.dataplane_v2_enabled ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
 
-  # We can't create a cluster with no node pool defined, but we want to only use
-  # separately managed node pools. So we create the smallest possible default
-  # node pool and immediately delete it.
-  remove_default_node_pool = true
-  initial_node_count       = var.initial_node_count
 
   release_channel {
     channel = var.channel
@@ -138,7 +146,7 @@ resource "google_container_cluster" "primary" {
 resource "google_container_node_pool" "primary_preemptible_nodes" {
   name     = var.gke_nodepool_name
   location = var.regional ? var.region : var.zone
-  cluster  = google_container_cluster.primary.name
+  cluster  = google_container_cluster.primary.id
 
   initial_node_count = var.initial_node_count
   autoscaling {
