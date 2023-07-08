@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2023-07-08
+### Added
+- `examples/secrets-store-csi-driver` 
+### Changed
+- Removed scenarios that would trigger recreation of GKE cluster resource.  Thank you, [whi-tw](https://github.com/whi-tw) for your [PR](https://github.com/Neutrollized/free-tier-gke/pull/3)
+
 ## [0.12.5] - 2023-05-08
 ### Added
 - New variable `enable_intranode_visibiity` (default: `false`). If set to `true`, [VPC Flow Logs](https://cloud.google.com/vpc/docs/flow-logs) will also be enabled.

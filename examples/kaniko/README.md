@@ -115,4 +115,6 @@ kaniko kaniko Get:5 http://deb.debian.org/debian buster/main amd64 openssl amd64
 ## Cleanup
 ```console
 gcloud artifacts repositories delete ${GAR_REPO_NAME} --location=${GAR_LOCATION}
+
+gcloud iam service-accounts delete kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com
 ```
