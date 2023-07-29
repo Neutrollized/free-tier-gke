@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-test
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - pathType: Prefix
+            backend:
+              service:
+                name: nginx-service
+                port:
+                  number: 80
+            path: /
+  tls:
+    - hosts:
+      - example.com
+      secretName: tls-cert
