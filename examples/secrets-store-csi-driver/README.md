@@ -138,5 +138,13 @@ kubectl delete -f app-secrets.yaml
 
 gcloud secrets delete myappsecret
 
+gcloud iam service-accounts remove-iam-policy-binding secret-csi-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com \
+  --role roles/iam.workloadIdentityUser \
+  --member "serviceAccount:${PROJECT_ID}.svc.id.goog[default/secret-csi-wi-ksa]"
+
+gcloud projects remove-iam-policy-binding ${PROJECT_ID} \
+  --role roles/secretmanager.secretAccessor \
+  --member "serviceAccount:secret-csi-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com"
+
 gcloud iam service-accounts delete secret-csi-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com
 ```

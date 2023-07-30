@@ -18,26 +18,34 @@ helm repo update
 helm install nginx-ingress ingress-nginx/ingress-nginx
 ```
 
-- deploy Ingress resource
+- deploy services
+```console
+kubectl apply -f ./currency.yaml
+kubectl apply -f ./payments.yaml
+kubectl apply -f ./web.yaml
+```
+
+- deploy Ingress resource (with rewrite)
 ```console
 kubectl apply -f ./nginx-ingress-rewrite.yaml
 ```
 
 ## NOTES
 - access the endpoint at `http://${LOAD_BALANCER_IP}/${ENDPOINT}`
-- you need to specify `kubernetes.io/ingress.class: "nginx"` otherwise it will default to `"gce"` and your rewrite rules won't work as expected
+- you need to specify `spec.ingressClassName: nginx` otherwise it will default to `"gce"` and your rewrite rules won't work as expected
 - example:
 ```
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
-      - pathType: Prefix
-        path: "/hello(/|$)(.*)"
+      - pathType: ImplementationSpecific
+        path: /hello(/|$)(.*)
         backend:
           service:
             name: web
@@ -45,4 +53,21 @@ spec:
               number: 80
 ```
 
-- the example above will rewrite `http://${LOAD_BALANCER_IP}/hello/test` to `http://${LOAD_BALANCER_IP}/test`
+The example above will rewrite `http://${LOAD_BALANCER_IP}/hello/web` to `http://${LOAD_BALANCER_IP}/web`.  If you're using my sample code for rewrite, *nginx-ingress-rewrite.yaml*, then you will need to specify a host header as well such as:
+```console
+curl -H "host: mysite.example.com" http://${LOAD_BALANCER_IP}/hello/payments
+
+curl -H "host: mysite.example.com" http://${LOAD_BALANCER_IP}/world/currency
+```
+
+
+## Cleanup
+```console
+kubectl delete -f ./currency.yaml
+kubectl delete -f ./payments.yaml
+kubectl delete -f ./web.yaml
+
+kubectl delete -f ./nginx-ingress-rewrite.yaml
+
+helm uninstall ingress-nginx
+```

@@ -116,5 +116,13 @@ kaniko kaniko Get:5 http://deb.debian.org/debian buster/main amd64 openssl amd64
 ```console
 gcloud artifacts repositories delete ${GAR_REPO_NAME} --location=${GAR_LOCATION}
 
+gcloud iam service-accounts remove-iam-policy-binding kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com \
+  --role roles/iam.workloadIdentityUser \
+  --member "serviceAccount:${PROJECT_ID}.svc.id.goog[default/kaniko-wi-ksa]"
+
+gcloud projects remove-iam-policy-binding ${PROJECT_ID} \
+  --role roles/storage.objectViewer \
+  --member "serviceAccount:kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com"
+
 gcloud iam service-accounts delete kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com
 ```

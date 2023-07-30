@@ -1,3 +1,9 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nginx-sa
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,9 +21,12 @@ spec:
         app: nginx
     spec:
 #      runtimeClassName: gvisor
+      serviceAccountName: nginx-sa
       containers:
       - name: nginx
         image: nginx:latest
+        securityContext:
+          allowPrivilegeEscalation: false
         ports:
         - name: web
           containerPort: 80
