@@ -69,5 +69,5 @@ kubectl delete -f ./web.yaml
 
 kubectl delete -f ./nginx-ingress-rewrite.yaml
 
-helm uninstall ingress-nginx
+helm uninstall nginx-ingress
 ```
