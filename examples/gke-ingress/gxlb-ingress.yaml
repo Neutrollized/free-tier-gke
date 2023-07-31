@@ -10,22 +10,14 @@ metadata:
 #    cloud.google.com/backend-config: '{"default": "mybackendconfig"}'
 #    networking.gke.io/managed-certificates: my-managed-cert
 spec:
-#  defaultBackend:
-#    service:
-#      name: web
-#      port:
-#        number: 80
+  defaultBackend:
+    service:
+      name: web
+      port:
+        number: 80
   rules:
-  - host: "mysite.example.com"
-    http:
+  - http:
       paths:
-      - path: /ui
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: web
-            port:
-              number: 80
       - path: /api
         pathType: ImplementationSpecific
         backend:

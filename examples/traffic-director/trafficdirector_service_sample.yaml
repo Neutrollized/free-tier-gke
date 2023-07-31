@@ -14,9 +14,7 @@ spec:
   selector:
     run: app1
   type: ClusterIP
-
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
