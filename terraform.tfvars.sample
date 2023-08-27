@@ -11,10 +11,12 @@ channel      = "RAPID"
 auto_upgrade = true
 
 gke_cluster_name             = "playground"
-dataplane_v2_enabled         = false
 filestore_csi_driver_enabled = true
 enable_managed_prometheus    = true
 enable_intranode_visibility  = true
+
+dataplane_v2_enabled = true
+enable_dpv2_hubble   = true
 
 machine_type = "e2-medium"
 disk_size_gb = 40

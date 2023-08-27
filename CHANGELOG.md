@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.13.2] - 2023-??-??
+## [0.14.0] - 2023-08-27
+### Added
+- New variable `enable_dpv2_metrics` (default: `false`) for enabling GKE Dataplane V2 metrics.  It is recommended this is enabled along with `enable_managed_prometheus` so that the metrics are sent to GCP Managed Prometheus.
+- New variable `enable_dpv2_hubble` (default: `false`) for enabling GKE Dataplane V2 observability via [Hubble](https://github.com/cilium/hubble)
+- New variable `location_policy` (default: `ANY`) for specifying the algorithm used when scaling up node pool.  ANY reduces risk of preemption in Spot and Preemptibla VMs
+- `examples/hubble`
+### Changed
+- Updated **google** provider from `>= 4.29.0` to `>= 4.78.0` 
 ### Removed
 - `examples/wordpress` in favor of keeping examples to be more tooling oriented
 

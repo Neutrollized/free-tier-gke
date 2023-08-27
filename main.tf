@@ -93,6 +93,14 @@ resource "google_container_cluster" "primary" {
     managed_prometheus {
       enabled = var.enable_managed_prometheus
     }
+
+    dynamic "advanced_datapath_observability_config" {
+      for_each = var.dataplane_v2_enabled ? [1] : []
+      content {
+        enable_metrics = var.enable_dpv2_metrics
+        relay_mode     = var.enable_dpv2_hubble ? "INTERNAL_VPC_LB" : "DISABLED"
+      }
+    }
   }
 
   workload_identity_config {
@@ -150,8 +158,9 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
   initial_node_count = var.initial_node_count
   autoscaling {
-    min_node_count = var.min_nodes
-    max_node_count = var.max_nodes
+    min_node_count  = var.min_nodes
+    max_node_count  = var.max_nodes
+    location_policy = var.location_policy
   }
 
   management {
