@@ -58,7 +58,7 @@ When Dataplane V2 is enabled, one of the things you may notice is the absence of
 If you would like to learn more about Cilium and how to get started, I wrote a short Medium article about it [here](https://medium.com/@glen.yu/getting-started-with-ebpf-and-cilium-on-gke-6553c5d7e02a).
 
 ### Hubble
-Hubble is an observability platform built on top of Cilium and as of [v0.14.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#0140---2023-08-27) it can be enabled as part of [GKE Dataplane V2 observability tools](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-dpv2-observability#configure-gke-dpv2-observability-tools).  Please see the [Hubble README](./examples/hubble/README) for more details.
+Hubble is an observability platform built on top of Cilium and as of [v0.14.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#0140---2023-08-27) it can be enabled as part of [GKE Dataplane V2 observability tools](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-dpv2-observability#configure-gke-dpv2-observability-tools).  Please see the [Hubble README](./examples/hubble/README.md) for more details.
 
 
 ## Private GKE Cluster and Nodes
