@@ -12,11 +12,14 @@ auto_upgrade = true
 
 gke_cluster_name             = "playground"
 filestore_csi_driver_enabled = true
-enable_managed_prometheus    = true
+enable_managed_prometheus    = false
 enable_intranode_visibility  = true
 
-dataplane_v2_enabled = true
-enable_dpv2_hubble   = true
+# mutually exclusive with the the custom node taint example shown below
+# the custom node taint is required only for OSS Cilium
+dataplane_v2_enabled = false
+enable_dpv2_metrics  = false
+enable_dpv2_hubble   = false
 
 machine_type = "e2-medium"
 disk_size_gb = 40

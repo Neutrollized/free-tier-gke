@@ -55,6 +55,8 @@ I've been learning a lot about [eBPF](https://ebpf.io/) and experimenting with [
 
 When Dataplane V2 is enabled, one of the things you may notice is the absence of **kube-proxy** in the cluster.  That's becuase it has been replaced by Cilium CNI!  It replaces iptables as component that controls connections between pods (and between nodes). Iptables is an old-school (albeit, extensive and powerful) program that allows the configuration of (mainly static) IP packet filter rules in a Linux kernel firewall and was never meant for something as dynamic as a Kubernetes environment.  The sheer number of iptables rules in very large clusters makes scaling difficult and hence a kube-proxy replacement such as Cilium would be very welcomed in such a scenario.
 
+If you wish to install open-sourced Cilium, you will need to set `dataplane_v2_enabled = false` and set a node taint (see [terraform.tfvars.sample](./terraform.tfvars.sample) for details) and if you wish to use DPV2, then make sure you don't set the taint!
+
 If you would like to learn more about Cilium and how to get started, I wrote a short Medium article about it [here](https://medium.com/@glen.yu/getting-started-with-ebpf-and-cilium-on-gke-6553c5d7e02a).
 
 ### Hubble

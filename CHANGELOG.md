@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.14.1] - 2023-??-??
+## [0.14.1] - 2023-09-18
 ### Added
 - `examples/tetragon`
+### Fixed
+- Fixed settings [terraform.tfvars.sample](./terraform.tfvars.sample) where I had two mutually exclusive settings enabled causing an [issue](https://github.com/Neutrollized/free-tier-gke/issues/6) in deployed cluster.  Thanks, [darvelo](https://github.com/darvelo)!
+### Changed
+- Updated `proxy_only_subnet`'s purpose in the subnetwork from `INTERNAL_HTTPS_LOAD_BALANCER` to `REGIONAL_MANAGED_PROXY`.  This is preferred setting's name as per [Google's documentation](https://cloud.google.com/load-balancing/docs/proxy-only-subnets#proxy_only_subnet_create)).
 
 ## [0.14.0] - 2023-08-27
 ### Added

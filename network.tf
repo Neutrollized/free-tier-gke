@@ -41,7 +41,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
   provider = google-beta
 
   name          = "${var.gke_cluster_name}-proxy-only-subnet"
-  purpose       = "INTERNAL_HTTPS_LOAD_BALANCER"
+  purpose       = "REGIONAL_MANAGED_PROXY"
   role          = "ACTIVE"
   ip_cidr_range = var.proxy_only_ip_cidr
   network       = google_compute_network.k8s_vpc.id
