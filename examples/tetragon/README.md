@@ -57,7 +57,7 @@ tetralogs --namespace default --pods myapp
 ## Tracing Policy examples
 
 ### fd_install
-The kprobe, `fd_install` is called when a new file descriptor needs to be created.  The following policy prevents a few file descriptor frome being created, provided that file is */tmp/tetragon*.  It will trigger a SIGKILL to kill off the pocess trying to create the file:
+The kprobe, `fd_install` is called when a new file descriptor needs to be created.  The following policy prevents a few file descriptor from being created, provided that file is */tmp/tetragon*.  It will trigger a SIGKILL to kill off the pocess trying to create the file:
 ```console
 kubectl apply -f ./fd-install.yaml
 ```

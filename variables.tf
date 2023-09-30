@@ -154,9 +154,14 @@ variable "enable_tpu" {
 }
 
 variable "networking_mode" {
-  description = "Determines whether alias IPs or routes are used for pod IPs in the cluster.  ip_allocation_policy block needs to be defined if using VPC_NATIVE.  Accepted values are VPC_NATIVE or ROUTES."
+  description = "Determines whether alias IPs or routes are used for pod IPs in the cluster.  ip_allocation_policy block needs to be defined if using VPC_NATIVE."
   type        = string
   default     = "VPC_NATIVE"
+
+  validation {
+    condition     = contains(["VPC_NATIVE", "ROUTES"], var.networking_mode)
+    error_message = "Accepted values are VPC_NATIVE or ROUTES"
+  }
 }
 
 variable "master_authorized_network_cidr" {
@@ -172,9 +177,14 @@ variable "network_policy_enabled" {
 }
 
 variable "channel" {
-  description = "The channel to get the k8s release from. Accepted values are UNSPECIFIED, RAPID, REGULAR and STABLE"
+  description = "The channel to get the k8s release from."
   type        = string
   default     = "UNSPECIFIED"
+
+  validation {
+    condition     = contains(["UNSPECIFIED", "RAPID", "REGULAR", "STABLE"], var.channel)
+    error_message = "Accepted values are UNSPECIFIED, RAPID, REGULAR or STABLE"
+  }
 }
 
 variable "filestore_csi_driver_enabled" {
@@ -291,9 +301,14 @@ variable "enable_cluster_autoscaling" {
 }
 
 variable "nap_profile" {
-  description = "Profile for how the cluster autoscaler should optimize for resource utilization.  Accepted values are BALANCED and OPTIMIZE_UTILIZATION"
+  description = "Profile for how the cluster autoscaler should optimize for resource utilization."
   type        = string
   default     = "OPTIMIZE_UTILIZATION"
+
+  validation {
+    condition     = contains(["BALANCED", "OPTIMIZE_UTILIZATION"], var.nap_profile)
+    error_message = "Accepted values are BALANCED or OPTIMIZE_UTILIZATION"
+  }
 }
 
 variable "nap_max_cpu" {
@@ -362,9 +377,14 @@ variable "max_nodes" {
 }
 
 variable "location_policy" {
-  description = "Algorithm used when scaling up node pool.  Accepted values are BALANCED and ANY"
+  description = "Algorithm used when scaling up node pool."
   type        = string
   default     = "ANY"
+
+  validation {
+    condition     = contains(["BALANCED", "ANY"], var.location_policy)
+    error_message = "Accepted values are BALANCED or ANY"
+  }
 }
 
 variable "auto_upgrade" {
