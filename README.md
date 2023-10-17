@@ -70,6 +70,23 @@ If you decide to go the full private GKE cluster route (private GKE endpoint/con
 
 See this [Medium article](https://medium.com/google-cloud/accessing-gke-private-clusters-through-iap-14fedad694f8) if you want to see how the network traffic flows in this setup.
 
+## Test Framework
+Starting in [v0.15.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#0150---2023-10-16), I will be including some tests that utilize the native testing framework that was added in Terraform v1.16.0.  To run the tests:
+
+```console
+terraform test
+```   
+
+- sample output:
+```
+tests/gke.tftest.hcl... in progress
+  run "setup_tests"... pass
+  run "create_zonal_gke"... pass
+tests/gke.tftest.hcl... tearing down
+tests/gke.tftest.hcl... pass
+
+Success! 2 passed, 0 failed.
+```
 
 ### IMPORTANT
 To use the IAP tunnel, your user needs to have the IAP-secured Tunnel User (**roles/iap.tunnelResourceAccessor**) -- even if you're the Owner of the project, you will need to add this role!!
