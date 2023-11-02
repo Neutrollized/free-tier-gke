@@ -1,0 +1,22 @@
+---
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicyNamespaced
+metadata:
+  name: "block-internet-egress"
+spec:
+  kprobes:
+  - call: "tcp_connect"
+    syscall: false
+    args:
+    - index: 0
+      type: "sock"
+    selectors:
+    - matchArgs:
+      - index: 0
+        operator: "NotDAddr"
+        values:
+        - 127.0.0.1
+        - 10.0.0.0/18	# pod CIDR
+        - 10.1.0.0/20	# services CIDR
+      matchActions:
+      - action: Sigkill

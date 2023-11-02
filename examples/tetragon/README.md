@@ -45,7 +45,7 @@ gketetra version
 ```
 Health Status: running
 
-CLI version: v0.11.0
+CLI version: v1.0.0
 ```
 
 #### Sample usage
@@ -84,4 +84,18 @@ kubectl apply -f ./tcp-connection.yaml
 📤 sendmsg galaxy/tiefighter /usr/bin/curl tcp 10.0.0.7:43724 -> 10.1.11.240:80 bytes 117
 🧹 close   galaxy/tiefighter /usr/bin/curl tcp 10.0.0.7:43724 -> 10.1.11.240:80
 💥 exit    galaxy/tiefighter /usr/bin/curl -s -XPOST deathstar.galaxy.svc.cluster.local/v1/request-landing 0
+```
+
+### Block Internet egress
+The following policy blocks any egress traffic that is outside of the CIDRs specified.  In my case it was *127.0.0.1* (localhost), *10.0.0.0/18* (pod CIDR, `cluster_ipv4_cidr_block` Terraform variable value) and *10.1.0.0/20* (services CIDR, `services_ipv4_cidr_block` Terraform variable value):
+```console
+kubectl apply -f ./block-internet-egress.yaml
+```
+
+You will also notice that this is a `TracingPolicyNamespaced`, which works the same way as a `TracingPolicy`, except it is namespace-scoped (as you can probably already guess)
+
+- you get the following if you try to access something outside the specified CIDR ranges from within a pod:
+```
+# curl www.google.com
+Killed
 ```
