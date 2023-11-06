@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.15.2] - 2023-11-06
+### Added
+- null resource to run `local-exec` provisioner as a workaround to handle the destruction of deployed for the Hubble relay (`enable_dpv2_hubble = true`), and are not under Terraform's management
+
 ## [0.15.1] - 2023-11-01
 ### Changed
 - Updated `examples/tetragon` to celebrate the release of [Tetragon v1.0.0](https://github.com/cilium/tetragon/releases/tag/v1.0.0)!!

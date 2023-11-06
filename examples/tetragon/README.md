@@ -26,7 +26,7 @@ kubectl rollout restart -n kube-system ds/tetragon
 ```
 
 ### Tetragon CLI
-I suggest making an alias if you already have the Tetragon CLI installed on your system, as you will be calling `tetra` from one of the tetragon containers:
+I suggest making an alias if you don't already have the Tetragon CLI installed on your system, as you will be calling `tetra` from one of the tetragon containers (if you want to use `tetra` that's on your local system, replace `gketetra`):
 
 ```console
 alias gketetra='kubectl exec -it -n kube-system ds/tetragon -c tetragon -- tetra '
