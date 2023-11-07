@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.15.2] - 2023-11-06
 ### Added
-- null resource to run `local-exec` provisioner as a workaround to handle the destruction of deployed for the Hubble relay (`enable_dpv2_hubble = true`), and are not under Terraform's management
+- null resource to run `local-exec` provisioner as a workaround to handle the destruction of resources deployed for the Hubble relay (`enable_dpv2_hubble = true`), and are not under Terraform's management
 
 ## [0.15.1] - 2023-11-01
 ### Changed
