@@ -26,19 +26,19 @@ kubectl rollout restart -n kube-system ds/tetragon
 ```
 
 ### Tetragon CLI
-I suggest making an alias if you don't already have the Tetragon CLI installed on your system, as you will be calling `tetra` from one of the tetragon containers (if you want to use `tetra` that's on your local system, replace `gketetra`):
+I suggest making an alias if you don't already have the Tetragon CLI installed on your system, as you will be calling `tetra` from one of the tetragon containers (if you want to use `tetra` that's on your local system, replace `ktetra`):
 
 ```console
-alias gketetra='kubectl exec -it -n kube-system ds/tetragon -c tetragon -- tetra '
-alias tetralogs='kubectl logs -n kube-system -l app.kubernetes.io/name=tetragon -c export-stdout -f | gketetra getevents -o compact '
+alias ktetra='kubectl exec -it -n kube-system ds/tetragon -c tetragon -- tetra '
+alias tetralogs='kubectl logs -n kube-system -l app.kubernetes.io/name=tetragon -c export-stdout -f | ktetra getevents -o compact '
 ```
 (the second alias will be more relevant later on)
 
 
 ```console
-gketetra status
+ktetra status
 
-gketetra version
+ktetra version
 ```
 
 - output:
@@ -71,7 +71,7 @@ command terminated with exit code 137
 
 
 ### tcp_connect, tcp_sendmsg, and tcp_close
-These kprobes are used for creating a tcp connection, sending data and closing the connection respectively.  Applying this will add extra entries in the `tetra getevents -o compact` output (or in our case, `gketetra`).
+These kprobes are used for creating a tcp connection, sending data and closing the connection respectively.  Applying this will add extra entries in the `tetra getevents -o compact` output (or in our case, `ktetra`).
 
 ```console
 kubectl apply -f ./tcp-connection.yaml
