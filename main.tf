@@ -99,6 +99,12 @@ resource "google_container_cluster" "primary" {
   datapath_provider = var.dataplane_v2_enabled ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
 
 
+  # https://cloud.google.com/kubernetes-engine/docs/how-to/cloud-dns
+  dns_config {
+    cluster_dns       = var.cluster_dns
+    cluster_dns_scope = var.cluster_dns_scope
+  }
+
   release_channel {
     channel = var.channel
   }

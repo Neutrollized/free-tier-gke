@@ -187,6 +187,28 @@ variable "channel" {
   }
 }
 
+variable "cluster_dns" {
+  description = "The in-cluster DNS provider to be used."
+  type        = string
+  default     = "PROVIDER_UNSPECIFIED"
+
+  validation {
+    condition     = contains(["PROVIDER_UNSPECIFIED", "PLATFORM_DEFAULT", "CLOUD_DNS"], var.cluster_dns)
+    error_message = "Accepted values are PROVIDER_UNSPECIFIED, PLATFORM_DEFAULT or CLOUD_DNS"
+  }
+}
+
+variable "cluster_dns_scope" {
+  description = "The in-cluster DNS provider to be used."
+  type        = string
+  default     = "DNS_SCOPE_UNSPECIFIED"
+
+  validation {
+    condition     = contains(["DNS_SCOPE_UNSPECIFIED", "CLUSTER_SCOPE", "VPC_SCOPE"], var.cluster_dns_scope)
+    error_message = "Accepted values are DNS_SCOPE_UNSPECIFIED, CLUSTER_SCOPE or VPC_SCOPE"
+  }
+}
+
 variable "filestore_csi_driver_enabled" {
   description = "When enabled, allows use of Filestore instances as volumes."
   type        = bool

@@ -10,7 +10,10 @@ run "setup_tests" {
 run "create_zonal_gke" {
   variables {
     gke_cluster_name     = run.setup_tests.cluster_name
+    zone                 = "northamerica-northeast1-c"
+    networking_mode      = "VPC_NATIVE"
     dataplane_v2_enabled = true
+    preemptible          = true
   }
 
   # Check that the cluster name is correct
@@ -19,9 +22,27 @@ run "create_zonal_gke" {
     error_message = "Invalid GKE cluster name"
   }
 
+  # Check that cluster is zonal
+  assert {
+    condition     = google_container_cluster.primary.location == "northamerica-northeast1-c"
+    error_message = "Invalid GKE cluster location"
+  }
+
+  # Check that cluster networking mode is VPC Native
+  assert {
+    condition     = google_container_cluster.primary.networking_mode == "VPC_NATIVE"
+    error_message = "Invalid GKE cluster networking mode"
+  }
+
   # Check that Dataplane V2 is enabled correctly
   assert {
     condition     = google_container_cluster.primary.datapath_provider == "ADVANCED_DATAPATH"
     error_message = "Invalid dataplane"
+  }
+
+  # Check that nodes are preemptible
+  assert {
+    condition     = google_container_node_pool.primary_preemptible_nodes.node_config[0].preemptible == true
+    error_message = "Invalid - nodes are not preemptible"
   }
 }
