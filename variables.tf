@@ -135,6 +135,12 @@ variable "regional" {
   default     = false
 }
 
+variable "deletion_protection" {
+  description = "Whether to allow Terraform to destroy the cluster. Unless set to 'false', 'terraform destroy' will fail."
+  type        = bool
+  default     = false
+}
+
 variable "node_locations" {
   description = "List of zones in which the cluster's nodes are located. For zonal cluster, this can be omitted."
   type        = list(string)

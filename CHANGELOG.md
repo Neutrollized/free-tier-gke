@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.15.3] - 2023-11-27
+## [0.16.0] - 2023-11-27
 ### Added
-- `dns_config` with variables, `cluster_dns` (default: `PROVIDER_UNSPECIFIED`) and `cluster_dns_scope` (default: `DNS_SCOPE_UNSPECIFIED`).  This is for [Using Cloud DNS for GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/cloud-dns). Be aware that enabling this feature has cost implications and you're subject to [Cloud DNS pricing](https://cloud.google.com/dns/pricing)
+- New variable `deletion_protection` (default: `false`). If set to `true`, will prevent Terraform from destroying the cluster
+- `dns_config` with new variables, `cluster_dns` (default: `PROVIDER_UNSPECIFIED`) and `cluster_dns_scope` (default: `DNS_SCOPE_UNSPECIFIED`).  This is for [Using Cloud DNS for GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/cloud-dns). Be aware that enabling this feature has cost implications and you're subject to [Cloud DNS pricing](https://cloud.google.com/dns/pricing)
 - Added additional Terraform tests
+### Changed
+- Updated `google` and `google-beta` providers from `~> 4.0` to `~> 5.0`
 
 ## [0.15.2] - 2023-11-06
 ### Added

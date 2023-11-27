@@ -23,8 +23,9 @@ resource "null_resource" "hubble_relay_destroy" {
 resource "google_container_cluster" "primary" {
   provider = google-beta
 
-  name     = var.gke_cluster_name
-  location = var.regional ? var.region : var.zone
+  name                = var.gke_cluster_name
+  location            = var.regional ? var.region : var.zone
+  deletion_protection = var.deletion_protection
 
   # Can be single or multi-zone, as
   # https://www.terraform.io/docs/providers/google/r/container_cluster.html#node_locations
