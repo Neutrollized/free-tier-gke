@@ -7,7 +7,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: nginx
   labels:
     app: nginx
 spec:
@@ -20,21 +20,27 @@ spec:
       labels:
         app: nginx
     spec:
-#      runtimeClassName: gvisor
       serviceAccountName: nginx-sa
       containers:
       - name: nginx
         image: nginx:latest
+        #image: nginxinc/nginx-unprivileged:latest
         securityContext:
           allowPrivilegeEscalation: false
         ports:
         - name: web
           containerPort: 80
+          #containerPort: 8080
+        # needs to specify CPU requests to autoscale
+        # based on CPU utilization
+        resources:
+          requests:
+            cpu: "250m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-deployment-svc
+  name: nginx-svc
 spec:
   type: LoadBalancer
   selector:
@@ -44,3 +50,16 @@ spec:
     port: 80
     protocol: TCP
     targetPort: web
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 10

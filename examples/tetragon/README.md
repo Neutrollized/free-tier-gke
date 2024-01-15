@@ -1,4 +1,5 @@
-# README
+# Tetragon
+
 This example requires the GKE Dataplane V2 feature be enabled.
 
 ## Setup
@@ -45,7 +46,7 @@ ktetra version
 ```
 Health Status: running
 
-CLI version: v1.0.0
+CLI version: v1.0.1
 ```
 
 #### Sample usage
@@ -59,7 +60,7 @@ tetralogs --namespace default --pods myapp
 ### fd_install
 The kprobe, `fd_install` is called when a new file descriptor needs to be created.  The following policy prevents a few file descriptor from being created, provided that file is */tmp/tetragon*.  It will trigger a SIGKILL to kill off the pocess trying to create the file:
 ```console
-kubectl apply -f ./fd-install.yaml
+kubectl apply -f ./block-fd-install.yaml
 ```
 
 - notice how writing to */tmp/bar* is okay, but */tmp/tetragon* will trigger an SIGKILL on the process (in my case, the kubectl exec -it /bin/bash shell)
@@ -74,7 +75,7 @@ command terminated with exit code 137
 These kprobes are used for creating a tcp connection, sending data and closing the connection respectively.  Applying this will add extra entries in the `tetra getevents -o compact` output (or in our case, `ktetra`).
 
 ```console
-kubectl apply -f ./tcp-connection.yaml
+kubectl apply -f ./log-tcp-connection.yaml
 ```
 
 - below is a sample output of `kubectl exec -it tiefighter -n galaxy -- curl -XPOST deathstar.galaxy.svc.cluster.local/v1/request-landing` with the [Starwars demo app](../cilium/starwars-demo/http-sw-app.yaml):
@@ -99,3 +100,7 @@ You will also notice that this is a `TracingPolicyNamespaced`, which works the s
 # curl www.google.com
 Killed
 ```
+
+
+## Additional Notes
+Check out the [monitoring alerts](./monitoring-alerts/) folder to see how to setup [Cloud Monitoring](https://cloud.google.com/monitoring?hl=en) alert policies

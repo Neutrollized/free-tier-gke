@@ -1,8 +1,3 @@
-data "google_netblock_ip_ranges" "health-checkers" {
-  range_type = "health-checkers"
-}
-
-
 resource "google_compute_network" "k8s_vpc" {
   name = "${var.gke_cluster_name}-k8s-vpc"
 

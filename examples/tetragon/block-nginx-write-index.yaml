@@ -1,0 +1,34 @@
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: "block-nginx-write-index"
+spec:
+  kprobes:
+  - call: "fd_install"
+    syscall: false
+    args:
+    - index: 0
+      type: int
+    - index: 1
+      type: "file"
+    selectors:
+    - matchPIDs:
+      # this looks at all processes NOT associated with a container's init PID
+      # i.e. looks at anything performed inside a "kubectl exec"
+      - operator: "NotIn"
+        followForks: false
+        isNamespacePID: true
+        values:
+        - 0
+        - 1
+      matchArgs:
+      - index: 1
+        operator: "Prefix"
+        values:
+        - "/usr/share/nginx/html/"
+      matchBinaries:
+      - operator: "NotIn"
+        values:
+         - "/usr/bin/cat"
+      matchActions:
+      - action: Sigkill
