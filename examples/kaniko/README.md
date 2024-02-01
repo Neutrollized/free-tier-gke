@@ -1,4 +1,4 @@
-# README
+# Kaniko
 
 See my [article](https://cloud.google.com/blog/products/containers-kubernetes/open-source-tools-can-help-gke-work-with-cloud-apis) on Google Cloud Blog!
 

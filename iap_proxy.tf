@@ -1,11 +1,5 @@
 # the resources here are only created
 # if enable_private_endpoint = "true"
-
-data "google_netblock_ip_ranges" "iap-forwarders" {
-  range_type = "iap-forwarders"
-}
-
-
 resource "google_compute_subnetwork" "iap_subnet" {
   count                    = var.enable_private_endpoint ? 1 : 0
   name                     = "${var.gke_cluster_name}-iap-subnet"

@@ -4,13 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.16.1] - 2024-02-01
+### Added
+- `examples/cilium/clustermesh`
+### Changed
+- Moved data sources to `data.tf` for better organization
+- `local-exec` provisioner command to disable Hubble `--dataplane-v2-observability-mode=DISABLED` is being deprecated and changed to `--disable-dataplane-v2-flow-observability` instead
+- `examples/nginx-deployment.yaml` to include Horizontal Pod Autoscaling (HPA)
+- `examples/tetragon` to include Cloud Monitoring alert example
+
 ## [0.16.0] - 2023-11-27
 ### Added
 - New variable `deletion_protection` (default: `false`). If set to `true`, will prevent Terraform from destroying the cluster
 - `dns_config` with new variables, `cluster_dns` (default: `PROVIDER_UNSPECIFIED`) and `cluster_dns_scope` (default: `DNS_SCOPE_UNSPECIFIED`).  This is for [Using Cloud DNS for GKE](https://cloud.google.com/kubernetes-engine/docs/how-to/cloud-dns). Be aware that enabling this feature has cost implications and you're subject to [Cloud DNS pricing](https://cloud.google.com/dns/pricing)
 - Added additional Terraform tests
 ### Changed
-- Updated `google` and `google-beta` providers from `~> 4.0` to `~> 5.0`
+- Updated **google** and **google-beta** providers from `~> 4.0` to `~> 5.0`
 
 ## [0.15.2] - 2023-11-06
 ### Added
@@ -27,7 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `hashicorp/random` provider `v3.5.1`
 ### Changed
 - Updated Terraform `required_version` from `~> 1.0` to `>= 1.6`
-- Updated `google` provider from `>= 4.78.0` to `~> 4.0`
+- Updated **google** provider from `>= 4.78.0` to `~> 4.0`
 
 ## [0.14.1] - 2023-09-18
 ### Added

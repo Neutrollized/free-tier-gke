@@ -1,4 +1,4 @@
-# README
+# Falco
 How to install & use [Falco](https://falco.org/), an eBPF-based cloud-native runtime security open sourced project.
 
 

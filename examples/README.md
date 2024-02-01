@@ -7,4 +7,19 @@ To delete: `kubectl delete -f nginx-deployment.yaml`
 
 The pods should deploy fairly quickly, but the service might take a bit before you get the load balancer's public IP (you can do a `watch kubectl get service` if you're the impatient type)
 
-(There are also other examples in here if you want try them out as well)
+## Horizontal Pod Autoscaling
+The command line equivalen of the HPA manifest is:
+```console
+kubectl autoscale deployment nginx --cpu-percent=10 --min=1 --max=5
+```
+
+- stress test your deployment with:
+```console
+ab -n 100000 -c 5000 http://[LOADBALANCER_IP]/
+```
+
+**NOTE:** I set the autoscale condition artificially low to get HPA to trigger easier.  In practice you probably want higher CPU utilization like 50-60%+
+
+
+
+#### (There are also other examples in here if you want try them out as well)

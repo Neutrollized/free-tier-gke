@@ -1,0 +1,51 @@
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/monitoring_notification_channel
+resource "google_monitoring_notification_channel" "ops_notification" {
+  project      = var.project_id
+  display_name = "Ops email alert"
+  type         = "email"
+  labels = {
+    email_address = "[EMAIL_ADDR]"
+  }
+  force_delete = false
+}
+
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/monitoring_alert_policy
+resource "google_monitoring_alert_policy" "tetragon_log_alert" {
+  project      = var.project_id
+  display_name = "Blocked Tetragon policy log alert"
+  combiner     = "OR"
+  enabled      = true
+
+  documentation {
+    content   = "Log-based alert for Tetragon tracing policies that are blocking"
+    mime_type = "text/markdown"
+  }
+
+  # make sure you use the correct condition type
+  conditions {
+    display_name = "Log match condiditon: kprobe policy named block"
+    condition_matched_log {
+      filter = join(" AND ",
+        [
+          "resource.labels.namespace_name=\"kube-system\"",
+          "resource.type=\"k8s_container\"",
+          "resource.labels.cluster_name=\"${var.gke_cluster_name}\"",
+          "resource.labels.pod_name:\"tetragon\"",
+          "resource.labels.container_name=\"export-stdout\"",
+          "jsonPayload.process_kprobe.process_name:\"block-\""
+        ]
+      )
+    }
+  }
+
+  alert_strategy {
+    notification_rate_limit {
+      period = "300s"
+    }
+
+    # 7 days
+    auto_close = "604800s"
+  }
+
+  notification_channels = [google_monitoring_notification_channel.ops_notification.name]
+}

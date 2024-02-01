@@ -1,7 +1,8 @@
+---
 apiVersion: cilium.io/v1alpha1
 kind: TracingPolicy
 metadata:
-  name: "fd-install"
+  name: "block-fd-install"
 spec:
   kprobes:
   - call: "fd_install"

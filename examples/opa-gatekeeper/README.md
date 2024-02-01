@@ -1,4 +1,4 @@
-# README
+# OPA Gatekeeper
 
 ```console
 helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts

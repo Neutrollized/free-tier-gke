@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: web
+  name: web
+  annotations:
+#    cloud.google.com/neg: '{"ingress": true}'
+    service.cilium.io/global: "true"
+    service.cilium.io/shared: "true"
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+     app: web
+  type: ClusterIP

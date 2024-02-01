@@ -1,0 +1,26 @@
+{
+  "displayName": "Blocked Tetragon policy",
+  "documentation": {
+    "content": "Log-based alert for Tetragon Tracing Policies that are blocking.",
+    "mimeType": "text/markdown"
+  },
+  "conditions": [
+    {
+      "displayName": "Log match condition: kprobe policy named block",
+      "conditionMatchedLog": {
+        "filter": "resource.labels.namespace_name=\"kube-system\"\nresource.type=\"k8s_container\"\nresource.labels.cluster_name=\"playground\"\nresource.labels.pod_name:\"tetragon\"\nresource.labels.container_name=\"export-stdout\"\njsonPayload.process_kprobe.policy_name:\"block-\""
+      }
+    }
+  ],
+  "alertStrategy": {
+    "notificationRateLimit": {
+      "period": "300s"
+    },
+    "autoClose": "604800s"
+  },
+  "combiner": "OR",
+  "enabled": true,
+  "notificationChannels": [
+    "projects/[PROJECT_ID]/notificationChannels/[CHANNEL_ID]"
+  ]
+}
