@@ -10,7 +10,7 @@ resource "null_resource" "hubble_relay_destroy" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = "gcloud container clusters update ${self.triggers.cluster_name} --project=${self.triggers.project_id} --location=${self.triggers.location} --dataplane-v2-observability-mode=DISABLED"
+    command = "gcloud container clusters update ${self.triggers.cluster_name} --project=${self.triggers.project_id} --location=${self.triggers.location} --disable-dataplane-v2-flow-observability"
   }
 
   # ensure this runs before cluster destruction begins

@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.16.1] - 2024-??-??
+## [0.16.1] - 2024-02-01
 ### Added
 - `examples/cilium/clustermesh`
 ### Changed
 - Moved data sources to `data.tf` for better organization
+- `local-exec` provisioner command to disable Hubble `--dataplane-v2-observability-mode=DISABLED` is being deprecated and changed to `--disable-dataplane-v2-flow-observability` instead
 - `examples/nginx-deployment.yaml` to include Horizontal Pod Autoscaling (HPA)
 - `examples/tetragon` to include Cloud Monitoring alert example
 

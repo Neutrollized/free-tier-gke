@@ -57,8 +57,8 @@ tetralogs --namespace default --pods myapp
 
 ## Tracing Policy examples
 
-### fd_install
-The kprobe, `fd_install` is called when a new file descriptor needs to be created.  The following policy prevents a few file descriptor from being created, provided that file is */tmp/tetragon*.  It will trigger a SIGKILL to kill off the pocess trying to create the file:
+### [fd_install](https://elixir.bootlin.com/linux/v6.6.7/source/fs/file.c#L602) (Basic)
+The kernel function, `fd_install` is called when a new file descriptor needs to be created.  The following policy prevents a few file descriptor from being created (or opened if it already exists), provided that file is */tmp/tetragon*.  It will trigger a SIGKILL to kill off the pocess trying to create the file:
 ```console
 kubectl apply -f ./block-fd-install.yaml
 ```
@@ -70,8 +70,44 @@ bash-4.3# echo 'foo' > /tmp/tetragon
 command terminated with exit code 137
 ```
 
+### fd_install (Intermediate)
+For a little more advanced example, deploy my `nginx-deployment.yaml` example (one folder up) and then apply the `block-nginx-write-index.yaml`:
+```console
+kubectl apply -f ../nginx-deployment.yaml
 
-### tcp_connect, tcp_sendmsg, and tcp_close
+kubectl apply -f ./block-nginx-write-index.yaml
+```
+
+The following block ignores (`NotIn`) the container's init PID (in our case, NGINX).  Because this policy blocks the `fd_install` kernel function, we do not want to preven NGINX from reading the index.html.  This sets the stage to apply the policy only to other PIDs (i.e. from `kubectl exec`).  This is a fairly common pattern, so learn to recognize it:
+```yaml
+    - matchPIDs:
+      - operator: "NotIn"
+        followForks: false
+        isNamespacePID: true
+        values:
+        - 0
+        - 1
+```
+
+- matches argument to be anything in the following path list:
+```yaml
+      matchArgs:
+      - index: 1
+        operator: "Prefix"
+        values:
+        - "/usr/share/nginx/html/"
+```
+
+- finally, allowlist the `cat` command (so you can open the file provided it's with `cat`, but `sed`, `vi` or anything else not in this list will get sent a SIGKILL):
+```yaml
+      matchBinaries:
+      - operator: "NotIn"
+        values:
+         - "/usr/bin/cat"
+```
+
+
+### [tcp_connect](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp_output.c#L3946), [tcp_sendmsg](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp.c#L1335), and [tcp_close](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp.c#L2918)
 These kprobes are used for creating a tcp connection, sending data and closing the connection respectively.  Applying this will add extra entries in the `tetra getevents -o compact` output (or in our case, `ktetra`).
 
 ```console
@@ -103,4 +139,4 @@ Killed
 
 
 ## Additional Notes
-Check out the [monitoring alerts](./monitoring-alerts/) folder to see how to setup [Cloud Monitoring](https://cloud.google.com/monitoring?hl=en) alert policies
+Check out the [monitoring alerts](./monitoring-alerts/) folder to see how to setup [Cloud Monitoring](https://cloud.google.com/monitoring) alert policies
