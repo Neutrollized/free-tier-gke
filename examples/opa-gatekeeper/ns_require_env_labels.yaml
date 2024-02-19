@@ -11,4 +11,4 @@ spec:
         kinds: ["Namespace"]
     excludedNamespaces: ["default", "kube-*", "gatekeeper-system"]
   parameters:
-    labels: ["purpose"]
+    labels: ["env"]
