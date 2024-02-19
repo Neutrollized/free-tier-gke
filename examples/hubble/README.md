@@ -1,6 +1,8 @@
 # GKE Dataplane V2 observability tools
-This example requires the GKE Dataplane V2 observability feature be enabled. **Enabling this feature will provision an internal network load balancer**.
 
+I wrote a Medium article on Hubble [here](https://medium.com/@glen.yu/using-hubble-with-gke-dataplane-v2-acb73d1291c6)
+
+This example requires the GKE Dataplane V2 observability feature be enabled. **Enabling this feature will provision an internal network load balancer**.
 
 ### Hubble CLI
 I suggest making an alias if you already have the Hubble CLI installed on your system, as you will be calling `hubble` from one of the hubble-relay pods:
