@@ -10,4 +10,4 @@ spec:
         kinds: ["Namespace"]
     excludedNamespaces: ["default","kube-system","gatekeeper-system"]
   parameters:
-    labels: ["dev", "prod"]
+    labels: ["purpose"]

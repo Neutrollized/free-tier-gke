@@ -2,6 +2,9 @@
 
 ```console
 helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+helm repo update
+
+helm search repo gatekeeper -l
 
 helm install --namespace gatekeeper-system [RELEASE_VERSION] gatekeeper/gatekeeper --create-namespace
 ```
