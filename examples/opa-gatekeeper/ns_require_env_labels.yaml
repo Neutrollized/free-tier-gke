@@ -4,10 +4,11 @@ kind: K8sRequiredLabels
 metadata:
   name: ns-require-env-labels
 spec:
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]
         kinds: ["Namespace"]
-    excludedNamespaces: ["default","kube-system","gatekeeper-system"]
+    excludedNamespaces: ["default", "kube-*", "gatekeeper-system"]
   parameters:
     labels: ["purpose"]
