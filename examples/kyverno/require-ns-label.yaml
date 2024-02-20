@@ -1,0 +1,32 @@
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-ns-label
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: require-ns-owner-label
+    match:
+      any:
+      - resources:
+          kinds:
+          - Namespace
+    validate:
+      message: "You must have label `owner` with a value of set on all new namespaces."
+      pattern:
+        metadata:
+          labels:
+            owner: "?*"
+  - name: require-ns-env-label
+    match:
+      any:
+      - resources:
+          kinds:
+          - Namespace
+    validate:
+      message: "You must have label `env` with a value of `dev`, `stage`, or `prod` set on all new namespaces."
+      pattern:
+        metadata:
+          labels:
+            env: dev | staging | prod

@@ -2,12 +2,13 @@
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sRequiredLabels
 metadata:
-  name: ns-require-env-labels
+  name: require-ns-labels
 spec:
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]
         kinds: ["Namespace"]
-    excludedNamespaces: ["default","kube-system","gatekeeper-system"]
+    excludedNamespaces: ["default", "kube-*", "gatekeeper-system"]
   parameters:
-    labels: ["dev", "prod"]
+    labels: ["owner", "env"]

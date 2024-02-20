@@ -1,5 +1,7 @@
 # Tetragon
 
+I wrote a couple of Medium articles on Tetragon [here](https://medium.com/@glen.yu/getting-started-with-tetragon-on-gke-2c11549720b0) and [here](https://medium.com/google-cloud/google-cloud-logging-and-cloud-monitoring-example-with-tetragon-5eb2012066d4)
+
 This example requires the GKE Dataplane V2 feature be enabled.
 
 ## Setup

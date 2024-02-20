@@ -1,5 +1,7 @@
 # Cilium
 
+I wrote a Medium article on Cilium [here](https://medium.com/@glen.yu/getting-started-with-ebpf-and-cilium-on-gke-6553c5d7e02a)
+
 ## Installation 
 Steps to install can be found [here](https://docs.cilium.io/en/latest/gettingstarted/k8s-install-default/), but basically boils down to:
 ```console
