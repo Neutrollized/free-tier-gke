@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added `description` to output values
 ### Changed
-- Added `roles/artifactregistry.reader" to GKE service account IAM roles list
+- Added `roles/artifactregistry.reader` to GKE service account IAM roles list
 - Renamed resources
 
 ## [0.16.2] - 2024-02-20
