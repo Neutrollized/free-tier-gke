@@ -1,14 +1,14 @@
-resource "google_compute_network" "k8s_vpc" {
+resource "google_compute_network" "k8s" {
   name = "${var.gke_cluster_name}-k8s-vpc"
 
   # defaults to true.  false = --subnet-mode custom
   auto_create_subnetworks = "false"
 }
 
-resource "google_compute_subnetwork" "k8s_subnet" {
+resource "google_compute_subnetwork" "k8s" {
   name                     = "${var.gke_cluster_name}-subnet"
   ip_cidr_range            = var.primary_ip_cidr
-  network                  = google_compute_network.k8s_vpc.id
+  network                  = google_compute_network.k8s.id
   private_ip_google_access = "true"
   region                   = var.region
 
@@ -32,25 +32,25 @@ resource "google_compute_subnetwork" "k8s_subnet" {
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways#gateway_controller_requirements
 # https://cloud.google.com/load-balancing/docs/l7-internal/proxy-only-subnets
-resource "google_compute_subnetwork" "proxy_only_subnet" {
+resource "google_compute_subnetwork" "proxy_only" {
   provider = google-beta
 
   name          = "${var.gke_cluster_name}-proxy-only-subnet"
   purpose       = "REGIONAL_MANAGED_PROXY"
   role          = "ACTIVE"
   ip_cidr_range = var.proxy_only_ip_cidr
-  network       = google_compute_network.k8s_vpc.id
+  network       = google_compute_network.k8s.id
   region        = var.region
 }
 
 # https://cloud.google.com/vpc/docs/private-service-connect#psc-subnets
-resource "google_compute_subnetwork" "psc_subnet" {
+resource "google_compute_subnetwork" "psc" {
   provider = google-beta
 
   name                     = "${var.gke_cluster_name}-psc-subnet"
   purpose                  = "PRIVATE_SERVICE_CONNECT"
   ip_cidr_range            = var.psc_ip_cidr
-  network                  = google_compute_network.k8s_vpc.id
+  network                  = google_compute_network.k8s.id
   private_ip_google_access = "true"
   region                   = var.region
 }
@@ -61,7 +61,7 @@ resource "google_compute_subnetwork" "psc_subnet" {
 #------------------------------
 resource "google_compute_firewall" "lb_health_check" {
   name        = "allow-health-check"
-  network     = google_compute_network.k8s_vpc.name
+  network     = google_compute_network.k8s.name
   description = "Allow health checks from GCP LBs"
 
   direction = "INGRESS"
@@ -80,18 +80,18 @@ resource "google_compute_firewall" "lb_health_check" {
 # - required only if you're using private nodes
 #   so the can reach the internet
 #---------------------------------------------------
-resource "google_compute_router" "k8s_vpc_router" {
+resource "google_compute_router" "k8s_vpc" {
   count   = var.enable_private_nodes ? 1 : 0
   name    = "${var.gke_cluster_name}-vpc-router"
   region  = var.region
-  network = google_compute_network.k8s_vpc.id
+  network = google_compute_network.k8s.id
 }
 
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resource/compute_router_nat
-resource "google_compute_router_nat" "k8s_vpc_router_nat" {
+resource "google_compute_router_nat" "k8s_vpc" {
   count                              = var.enable_private_nodes ? 1 : 0
   name                               = "${var.gke_cluster_name}-vpc-router-nat"
-  router                             = google_compute_router.k8s_vpc_router[count.index].name
+  router                             = google_compute_router.k8s_vpc[count.index].name
   region                             = var.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"

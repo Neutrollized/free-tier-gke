@@ -15,7 +15,7 @@ resource "null_resource" "hubble_relay_destroy" {
 
   # ensure this runs before cluster destruction begins
   depends_on = [
-    google_container_node_pool.primary_preemptible_nodes
+    google_container_node_pool.primary
   ]
 }
 
@@ -59,8 +59,8 @@ resource "google_container_cluster" "primary" {
   enable_shielded_nodes = var.enable_shielded_nodes
   enable_tpu            = var.enable_tpu
 
-  network    = google_compute_network.k8s_vpc.id
-  subnetwork = google_compute_subnetwork.k8s_subnet.id
+  network    = google_compute_network.k8s.id
+  subnetwork = google_compute_subnetwork.k8s.id
 
   # ip_allocation_policy left empty here to let GCP pick
   # otherwise you will have to define your own secondary CIDR ranges
@@ -178,7 +178,7 @@ resource "google_container_cluster" "primary" {
 }
 
 
-resource "google_container_node_pool" "primary_preemptible_nodes" {
+resource "google_container_node_pool" "primary" {
   name     = var.gke_nodepool_name
   location = var.regional ? var.region : var.zone
   cluster  = google_container_cluster.primary.id

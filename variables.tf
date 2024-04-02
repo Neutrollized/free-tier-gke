@@ -76,6 +76,7 @@ variable "iam_roles_list" {
   type        = list(string)
   default = [
     "roles/container.nodeServiceAccount",
+    "roles/artifactregistry.reader",
   ]
 }
 
