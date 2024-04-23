@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mynginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-unpriv
+  namespace: mynginx
+  labels:
+    app: nginx-unpriv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-unpriv
+  template:
+    metadata:
+      labels:
+        app: nginx-unpriv
+    spec:
+      securityContext:
+        fsGroup: 2000
+      containers:
+      - name: nginx
+        image: nginxinc/nginx-unprivileged:1.25-alpine-slim
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10001
+          runAsGroup: 10001
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
+          seccompProfile:
+            type: RuntimeDefault
+        ports:
+        - name: web
+          containerPort: 8080
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "64Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-unpriv-svc
+  namespace: mynginx
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx-unpriv
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: web
