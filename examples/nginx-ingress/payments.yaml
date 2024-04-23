@@ -15,7 +15,7 @@ spec:
     targetPort: 8080
   selector:
      app: payments
-  type: NodePort
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
