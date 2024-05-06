@@ -2,13 +2,19 @@
 
 I wrote a couple of Medium articles on Tetragon [here](https://medium.com/@glen.yu/getting-started-with-tetragon-on-gke-2c11549720b0) and [here](https://medium.com/google-cloud/google-cloud-logging-and-cloud-monitoring-example-with-tetragon-5eb2012066d4)
 
-This example requires the GKE Dataplane V2 feature be enabled.
+**NOTE:** Tetragon can work standalone and does NOT require Cilium (or GKE Dataplane V2) to be installed.
+
 
 ## Setup
 ```console
 helm repo add cilium https://helm.cilium.io
 helm repo update
-helm install tetragon cilium/tetragon -n kube-system
+
+helm search repo cilium/tetragon -l
+
+helm install tetragon cilium/tetragon \
+  --namespace kube-system \
+  --version 1.1.0
 ```
 
 - upgrade:
@@ -48,7 +54,7 @@ ktetra version
 ```
 Health Status: running
 
-CLI version: v1.0.1
+CLI version: v1.1.0
 ```
 
 #### Sample usage
@@ -142,3 +148,11 @@ Killed
 
 ## Additional Notes
 Check out the [monitoring alerts](./monitoring-alerts/) folder to see how to setup [Cloud Monitoring](https://cloud.google.com/monitoring) alert policies
+
+### Kernel Function References
+- [fd_install](https://elixir.bootlin.com/linux/v6.6.7/source/fs/file.c#L602)
+- [tcp_connect](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp_output.c#L3946)
+- [tcp_sendmsg](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp.c#L1335)
+- [tcp_close](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp.c#L2918)
+- [security_file_permission](https://elixir.bootlin.com/linux/latest/source/security/security.c#L2672)
+- [security_bprm_creds_from_file](https://elixir.bootlin.com/linux/latest/source/security/security.c#L1173)

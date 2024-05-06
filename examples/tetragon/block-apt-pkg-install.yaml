@@ -2,16 +2,16 @@
 apiVersion: cilium.io/v1alpha1
 kind: TracingPolicy
 metadata:
-  name: "block-fd-install"
+  name: "block-apt-pkg-install"
   annotations:
-    description: "Blocks access to file, directory, block & char devices"
+    description: "Blocks execution of apt, apt-get, and dpkg commands"
 spec:
   kprobes:
-  - call: "fd_install"
+  - call: "security_bprm_creds_from_file"
     syscall: false
     args:
     - index: 0
-      type: "int"
+      type: "nop"
     - index: 1
       type: "file"
     selectors:
@@ -19,6 +19,8 @@ spec:
       - index: 1
         operator: "Equal"
         values:
-        - "/tmp/tetragon"
+        - "/usr/bin/apt"
+        - "/usr/bin/apt-get"
+        - "/usr/bin/dpkg"
       matchActions:
       - action: Sigkill

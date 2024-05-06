@@ -3,7 +3,12 @@ apiVersion: cilium.io/v1alpha1
 kind: TracingPolicy
 metadata:
   name: "block-nginx-write-index"
+  annotations:
+    description: "Blocks writes to NGINX html directory"
 spec:
+  podSelector:
+    matchLabels:
+      app: nginx
   kprobes:
   - call: "fd_install"
     syscall: false
