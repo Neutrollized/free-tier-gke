@@ -3,6 +3,8 @@ apiVersion: cilium.io/v1alpha1
 kind: TracingPolicy
 metadata:
   name: "log-tcp-connection"
+  annotations:
+    description: "Log TCP connections"
 spec:
   kprobes:
   - call: "tcp_connect"

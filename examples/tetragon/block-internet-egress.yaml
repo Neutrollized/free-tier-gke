@@ -3,6 +3,8 @@ apiVersion: cilium.io/v1alpha1
 kind: TracingPolicyNamespaced
 metadata:
   name: "block-internet-egress"
+  annotations:
+    description: "Blocks egress traffic to the internet"
 spec:
   kprobes:
   - call: "tcp_connect"
