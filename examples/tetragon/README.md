@@ -154,5 +154,5 @@ Check out the [monitoring alerts](./monitoring-alerts/) folder to see how to set
 - [tcp_connect](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp_output.c#L3946)
 - [tcp_sendmsg](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp.c#L1335)
 - [tcp_close](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp.c#L2918)
-- [security_file_permission](https://elixir.bootlin.com/linux/latest/source/security/security.c#L2672)
-- [security_bprm_creds_from_file](https://elixir.bootlin.com/linux/latest/source/security/security.c#L1173)
+- [security_file_permission](https://elixir.bootlin.com/linux/v6.6.7/source/security/security.c#L2581)
+- [security_bprm_creds_from_file](https://elixir.bootlin.com/linux/v6.6.7/source/security/security.c#L1082)
