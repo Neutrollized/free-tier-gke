@@ -1,24 +1,4 @@
-# https://www.terraform.io/docs/providers/google/r/container_cluster.html#example-usage-with-a-separately-managed-node-pool-recommended-
-
-# workaround to destroy Hubble relay resource that is not managed by Terraform
-resource "null_resource" "hubble_relay_destroy" {
-  triggers = {
-    project_id   = var.project_id
-    cluster_name = var.gke_cluster_name
-    location     = var.zone
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = "gcloud container clusters update ${self.triggers.cluster_name} --project=${self.triggers.project_id} --location=${self.triggers.location} --disable-dataplane-v2-flow-observability"
-  }
-
-  # ensure this runs before cluster destruction begins
-  depends_on = [
-    google_container_node_pool.primary
-  ]
-}
-
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster.html#example-usage---with-a-separately-managed-node-pool-recommended
 
 resource "google_container_cluster" "primary" {
   provider = google-beta
@@ -91,8 +71,9 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-  # GKE Dataplane V2 is generally available as of GKE version 1.20.6-gke.700
   # https://cloud.google.com/kubernetes-engine/docs/how-to/dataplane-v2#create-cluster
+  # NOTE: DPv2 has its own network policy enforcement built-in
+  #       and this should be set to 'false' when DPv2 is enabled
   network_policy {
     enabled = var.network_policy_enabled
   }
@@ -125,7 +106,7 @@ resource "google_container_cluster" "primary" {
       for_each = var.dataplane_v2_enabled ? [1] : []
       content {
         enable_metrics = var.enable_dpv2_metrics
-        relay_mode     = var.enable_dpv2_hubble ? "INTERNAL_VPC_LB" : "DISABLED"
+        enable_relay   = var.enable_dpv2_relay
       }
     }
   }

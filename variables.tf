@@ -312,8 +312,8 @@ variable "enable_dpv2_metrics" {
   default     = false
 }
 
-variable "enable_dpv2_hubble" {
-  description = "Enable GKE Dataplane V2 observability.  Note: enabling this will also provision an internal network load balancer"
+variable "enable_dpv2_relay" {
+  description = "Enable GKE Dataplane V2 observability"
   type        = bool
   default     = false
 }

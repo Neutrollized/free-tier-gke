@@ -1,8 +1,22 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: hubble-ui
-  namespace: kube-system
+  namespace: gke-managed-dpv2-observability
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -62,13 +76,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: hubble-ui
-    namespace: kube-system
+    namespace: gke-managed-dpv2-observability
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: hubble-ui-nginx
-  namespace: kube-system
+  namespace: gke-managed-dpv2-observability
 data:
   nginx.conf: |
     server {
@@ -109,7 +123,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: hubble-ui
-  namespace: kube-system
+  namespace: gke-managed-dpv2-observability
   labels:
     k8s-app: hubble-ui
     app.kubernetes.io/name: hubble-ui
@@ -159,11 +173,11 @@ spec:
             - name: EVENTS_SERVER_PORT
               value: "8090"
             - name: FLOWS_API_ADDR
-              value: "hubble-relay.kube-system.svc:443"
+              value: "hubble-relay.gke-managed-dpv2-observability.svc:443"
             - name: TLS_TO_RELAY_ENABLED
               value: "true"
             - name: TLS_RELAY_SERVER_NAME
-              value: relay.kube-system.svc.cluster.local
+              value: relay.gke-managed-dpv2-observability.svc.cluster.local
             - name: TLS_RELAY_CA_CERT_FILES
               value: /var/lib/hubble-ui/certs/hubble-relay-ca.crt
             - name: TLS_RELAY_CLIENT_CERT_FILE
@@ -212,7 +226,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: hubble-ui
-  namespace: kube-system
+  namespace: gke-managed-dpv2-observability
   labels:
     k8s-app: hubble-ui
     app.kubernetes.io/name: hubble-ui

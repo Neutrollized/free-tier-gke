@@ -20,7 +20,7 @@ I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basi
 
 #### AKS
 - [free cluster management](https://azure.microsoft.com/en-ca/pricing/details/kubernetes-service/)
-- B2S @ $34USD/mth ([Spot](https://azure.microsoft.com/en-us/pricing/spot/) instances available at up to 90% savings)
+- B2S @ $34USD/mth ([Spot](https://azure.microsoft.com/en-us/pricing/spot/) instances available at up to 90% savings). This only applies to non-default node pools as the default node pool is also the [System Node Pool](https://learn.microsoft.com/en-us/azure/aks/use-system-pools?tabs=azure-cli)
 
 Azure's AKS combined with Spot instances are actually incredibly competitive in pricing vs preemptibles, but in my mind, preemptibles have the edge due to ease of use -- no price bidding and a generably more reliable/predictable uptime (in my use don't think I've had any node get terminated before 22hrs).
 

@@ -20,7 +20,7 @@ enable_intranode_visibility  = true
 # the custom node taint is required only for OSS Cilium
 dataplane_v2_enabled = false
 enable_dpv2_metrics  = false
-enable_dpv2_hubble   = false
+enable_dpv2_relay    = false
 
 machine_type = "e2-medium"
 disk_size_gb = 40

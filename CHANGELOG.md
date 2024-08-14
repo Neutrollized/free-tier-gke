@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.17.0] - 2024-08-14
+### Removed
+- `local-exec` provisioner used to disable Hubble as enabling used to deploy a load balancer that was not managed by Terraform and would cause issues with `terraform destroy`.  Current changes no longer deploys a load balancer when Hubble is enabled
+- Outputs with commands to manually update (enable/disable) GKE cluster with Workload Identity and Hubble (trying to keep the outputs to a minimum)
+### Changed
+- Updated **google** and **google-beta** providers from `~> 5.0` to `~> 5.39`
+- Updated deprecated `advanced_datapath_observability` config settings (replaced `relay_mode` with `enable_relay`)
+- Updated `examples/hubble`
+
 ## [0.16.5] - 2024-05-06
 ### Changed
 - Updated `examples/tetragon`, added more sample tracing policies
