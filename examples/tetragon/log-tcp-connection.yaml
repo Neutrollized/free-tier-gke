@@ -19,6 +19,11 @@ spec:
       type: "sock"
     - index: 2
       type: int
+    selectors:
+    - matchPIDs:	# match all PIDs
+      matchActions:
+      - action: Post
+        rateLimit: 1m
   - call: "tcp_close"
     syscall: false
     args:

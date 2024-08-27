@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.17.1] - 2024-??-??
+### Changed
+- Updated `examples/tetragon`
+- Updated `examples/kyverno`
+
 ## [0.17.0] - 2024-08-14
 ### Removed
 - `local-exec` provisioner used to disable Hubble as enabling used to deploy a load balancer that was not managed by Terraform and would cause issues with `terraform destroy`.  Current changes no longer deploys a load balancer when Hubble is enabled
