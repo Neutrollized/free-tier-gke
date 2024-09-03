@@ -2,7 +2,7 @@
 
 In this folder are a few Kyverno [sample policies](https://kyverno.io/policies/?policytypes=Best%2520Practices) (with a few minor edits) from the recommended best practices.  
 
-I have also include a modified version of Cilium's Starwars app as an example.  There are 2 versions, one is compliant with 5 Kyverno policies I've include, and the other is not.
+I have also include a modified version of [Cilium's Starwars app](https://github.com/cilium/star-wars-demo) as an example.  There are 2 versions, one is compliant with 5 Kyverno policies I've include, and the other is not.
 
 ## Demo
 Apply the 5 policies first, then try to deploy the demo app (`kubectl apply -f starwars-app.yaml`).  It contains a few components including a service of type `NodePort`, which should be disallowed (with the policy being *enforced*).  As a result, all but the service will be deployed and you should get an explicit error indicating what was blocked and why.
