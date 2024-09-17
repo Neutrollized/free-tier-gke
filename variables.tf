@@ -216,32 +216,23 @@ variable "cluster_dns_scope" {
   }
 }
 
-variable "filestore_csi_driver_enabled" {
-  description = "When enabled, allows use of Filestore instances as volumes."
-  type        = bool
-  default     = false
-}
-
-variable "horizontal_pod_autoscaling_disabled" {
-  description = "When enabled, allows increase/decrease number of replica pods based on resource usage of existing pods."
-  type        = bool
-  default     = false
-}
-
-variable "http_lb_disabled" {
-  description = "When enabled, a controller will be installed to coordinate applying load balancing configuration changes to your GCP project."
-  type        = bool
-  default     = false
+variable "addons_config" {
+  description = "Toggles various addons for GKE"
+  type        = map(bool)
+  default = {
+    hpa_disabled                     = false
+    http_lb_disabled                 = false
+    gcp_filestore_csi_driver_enabled = false
+    gcs_fuse_csi_driver_enabled      = false
+    gce_pd_csi_driver_enabled        = false
+    gke_backup_agent_enabled         = false
+    config_connector_enabled         = false
+    ray_operator_enabled             = false
+  }
 }
 
 variable "confidential_nodes_enabled" {
   description = "If enabled, enables Confidential Nodes for this cluster.  If set to true, requires N2D machine_type AND must not be a preemptible node."
-  type        = bool
-  default     = false
-}
-
-variable "config_connector_enabled" {
-  description = "When enabled, ConfigConnector addon will be installed.  Note: this also requires Workload Identity to be enabled. Node size should also be 4vCPUs or more."
   type        = bool
   default     = false
 }

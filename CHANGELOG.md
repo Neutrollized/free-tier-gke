@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.18.0] - 2024-09-16
+### Added
+- New variable `addons_config` is a map variable for toggling various GKE add-ons (HPA, LB, CSI drivers, etc.)
+- New toggles, including `ray_operator_enabled`, `gke_backup_agent_enabled`, `gce_pd_csi_driver_enabled`, and [requested](https://github.com/Neutrollized/free-tier-gke/issues/11) `gcs_fuse_csi_driver_enabled`
+### Changed
+- Various variables used to toggle add-ons previously have been moved to the new `addons_config` variable for better organization
+- `firestore_csi_driver_enabled` renamed to `gcp_firestore_csi_driver_enabled`
+- `horizontal_pod_autoscaling_disabled` renamed to `hpa_disabled`
+- Updated `examples/tetragon`
+
 ## [0.17.1] - 2024-09-03
 ### Changed
 - Updated `examples/tetragon`

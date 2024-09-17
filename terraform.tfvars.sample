@@ -12,9 +12,8 @@ services_ipv4_cidr_block = "10.1.0.0/20"
 channel      = "RAPID"
 auto_upgrade = true
 
-filestore_csi_driver_enabled = true
-enable_managed_prometheus    = false
-enable_intranode_visibility  = true
+enable_managed_prometheus   = false
+enable_intranode_visibility = true
 
 # mutually exclusive with the the custom node taint example shown below
 # the custom node taint is required only for OSS Cilium
@@ -25,6 +24,10 @@ enable_dpv2_relay    = false
 machine_type = "e2-medium"
 disk_size_gb = 40
 max_nodes    = 1
+
+addons_config = {
+  gcs_fuse_csi_driver_enabled = true
+}
 
 oauth_scopes = [
   "https://www.googleapis.com/auth/cloud-platform",

@@ -14,7 +14,7 @@ helm search repo cilium/tetragon -l
 
 helm install tetragon cilium/tetragon \
   --namespace kube-system \
-  --version 1.1.2
+  --version 1.2.0
 ```
 
 - upgrade:
@@ -54,7 +54,7 @@ ktetra version
 ```
 Health Status: running
 
-CLI version: v1.1.2
+CLI version: v1.2.0
 ```
 
 #### Sample usage
@@ -148,6 +148,9 @@ Killed
 
 ## Additional Notes
 Check out the [monitoring alerts](./monitoring-alerts/) folder to see how to setup [Cloud Monitoring](https://cloud.google.com/monitoring) alert policies
+
+### Using the [Override action](https://tetragon.io/docs/concepts/tracing-policy/selectors/#override-action)
+At the time of writing, GKE nodes do not have `CONFIG_BPF_KPROBE_OVERRIDE` set, which is a requirement in order to leverage this action.  I've created a [feature request](https://issuetracker.google.com/issues/366752999) with Google's Issue Tracker and would appreciate any and all upvotes to help expedite this feature.
 
 ### Kernel Function References
 - [fd_install](https://elixir.bootlin.com/linux/v6.6.7/source/fs/file.c#L602)

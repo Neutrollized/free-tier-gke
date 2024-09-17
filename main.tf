@@ -140,20 +140,36 @@ resource "google_container_cluster" "primary" {
   }
 
   addons_config {
-    gcp_filestore_csi_driver_config {
-      enabled = var.filestore_csi_driver_enabled
-    }
-
     horizontal_pod_autoscaling {
-      disabled = var.horizontal_pod_autoscaling_disabled
+      disabled = lookup(var.addons_config, "hpa_disabled", false)
     }
 
     http_load_balancing {
-      disabled = var.http_lb_disabled
+      disabled = lookup(var.addons_config, "http_lb_disabled", false)
+    }
+
+    gcp_filestore_csi_driver_config {
+      enabled = lookup(var.addons_config, "gcp_filestore_csi_driver_enabled", false)
+    }
+
+    gcs_fuse_csi_driver_config {
+      enabled = lookup(var.addons_config, "gcs_fuse_csi_driver_enabled", false)
+    }
+
+    gce_persistent_disk_csi_driver_config {
+      enabled = lookup(var.addons_config, "gce_pd_csi_driver_enabled", false)
+    }
+
+    gke_backup_agent_config {
+      enabled = lookup(var.addons_config, "gke_backup_agent_enabled", false)
     }
 
     config_connector_config {
-      enabled = var.config_connector_enabled
+      enabled = lookup(var.addons_config, "config_connector_enabled", false)
+    }
+
+    ray_operator_config {
+      enabled = lookup(var.addons_config, "ray_operator_enabled", false)
     }
   }
 }
