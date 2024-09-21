@@ -172,6 +172,12 @@ resource "google_container_cluster" "primary" {
       enabled = lookup(var.addons_config, "ray_operator_enabled", false)
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      dns_config,
+    ]
+  }
 }
 
 
