@@ -21,3 +21,6 @@ spec:
         values:
         - "/usr/share/nginx/html/50x.html"
         - "/usr/share/nginx/html/index.html"
+      matchActions:
+      - action: Post
+        rateLimit: 1m # rate limit repeated actions by the same thread

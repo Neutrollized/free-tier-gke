@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.18.1] - 2024-??-??
+### Added
+- `lifecycle` rule to ignore changes to DNS config
+
 ## [0.18.0] - 2024-09-16
 ### Added
 - New variable `addons_config` is a map variable for toggling various GKE add-ons (HPA, LB, CSI drivers, etc.)
