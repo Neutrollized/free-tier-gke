@@ -5,19 +5,19 @@ In addition to CPU and memory constraints, you can also set storage quotas, obje
 
 ## Example
 - create namespace, "devteam" and apply quota:
-```sh
+```console
 kubectl apply -f cpu-mem-quota.yaml
 ```
 
 - deploy NGINX workload to namespace:
-```sh
+```console
 kubectl apply -f nginx-deploy.yaml -n devteam
 ```
 
 At this point, you should have 2 replicas of an NGINX pod because the resource I've allocated still falls within the quota limits.  Now, let's see what happens when we scale up the number of repicas...
 
 - scale up
-```sh
+```console
 kubectl scale --replicas=3 deployment/nginx -n devteam
 ```
 
