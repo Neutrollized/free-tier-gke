@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devteam
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: cpu-mem-quota
+  namespace: devteam
+spec:
+  hard:
+    requests.cpu: 500m
+    requests.memory: 0.5Gi
+    limits.cpu: 1
+    limits.memory: 2Gi
