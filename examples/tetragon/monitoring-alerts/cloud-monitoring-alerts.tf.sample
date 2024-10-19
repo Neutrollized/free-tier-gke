@@ -32,7 +32,7 @@ resource "google_monitoring_alert_policy" "tetragon_log_alert" {
           "resource.labels.cluster_name=\"${var.gke_cluster_name}\"",
           "resource.labels.pod_name:\"tetragon\"",
           "resource.labels.container_name=\"export-stdout\"",
-          "jsonPayload.process_kprobe.process_name:\"block-\""
+          "jsonPayload.process_kprobe.policy_name:\"block-\""
         ]
       )
     }

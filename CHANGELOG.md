@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.18.2] - 2024-??-??
+### Fixed
+- Typo in `examples/tetragon/monitoring-alerts/cloud-monitoring-alerts.tf.sample` (`process_name` should be `policy_name`)
+### Changed
+- Updated and renamed Tetragon tracing policy, `block-apt-pkg-install.yaml` to `block-pkg-managers.yaml`
+
 ## [0.18.1] - 2024-10-19
 ### Added
 - `lifecycle` rule to ignore changes to DNS config
