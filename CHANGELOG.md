@@ -5,10 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
-## [0.18.2] - 2024-??-??
+## [0.19.0] - 2024-??-??
 ### Fixed
 - Typo in `examples/tetragon/monitoring-alerts/cloud-monitoring-alerts.tf.sample` (`process_name` should be `policy_name`)
+- Terraform tests GKE node pool resource reference
 ### Changed
+- Updated **google** and **google-beta** providers from `~> 5.39` to `~> 6.0` ([Upgrade Guide](https://registry.terraform.io/providers/hashicorp/google/5.39.1/docs/guides/version_6_upgrade))
+- Updated **hashicorp/random** provider from `v3.5.1` to `v3.6.3`
 - Updated and renamed Tetragon tracing policy, `block-apt-pkg-install.yaml` to `block-pkg-managers.yaml`
 
 ## [0.18.1] - 2024-10-19

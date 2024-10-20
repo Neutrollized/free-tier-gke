@@ -42,7 +42,7 @@ run "create_zonal_gke" {
 
   # Check that nodes are preemptible
   assert {
-    condition     = google_container_node_pool.primary_preemptible_nodes.node_config[0].preemptible == true
+    condition     = google_container_node_pool.primary.node_config[0].preemptible == true
     error_message = "Invalid - nodes are not preemptible"
   }
 }
