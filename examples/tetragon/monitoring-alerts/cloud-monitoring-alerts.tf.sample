@@ -4,8 +4,10 @@ resource "google_monitoring_notification_channel" "ops_notification" {
   display_name = "Ops email alert"
   type         = "email"
   labels = {
-    email_address = "[EMAIL_ADDR]"
+    email_address = "EMAIL_ADDR_HERE"
   }
+  # if false, will fail to delete if channel is still 
+  # referenced by an existing alerting policy
   force_delete = false
 }
 
@@ -15,6 +17,7 @@ resource "google_monitoring_alert_policy" "tetragon_log_alert" {
   display_name = "Blocked Tetragon policy log alert"
   combiner     = "OR"
   enabled      = true
+  severity     = "WARNING"  # CRITICAL, ERROR, or WARNING
 
   documentation {
     content   = "Log-based alert for Tetragon tracing policies that are blocking"
