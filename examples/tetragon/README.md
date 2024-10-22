@@ -14,7 +14,7 @@ helm search repo cilium/tetragon -l
 
 helm install tetragon cilium/tetragon \
   --namespace kube-system \
-  --version 1.2.0
+  --version 1.1.2
 ```
 
 - upgrade:
@@ -54,7 +54,7 @@ ktetra version
 ```
 Health Status: running
 
-CLI version: v1.2.0
+CLI version: v1.1.2
 ```
 
 #### Sample usage

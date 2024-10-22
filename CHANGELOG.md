@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.19.1] - 2024-10-21
+### Fixed
+- Updated `examples/tetragon` to use Tetragon `v1.1.2` instead of `v1.2.0`, due to a potential bug in the behavior of one of the policies (will need to investigate further)
+
 ## [0.19.0] - 2024-10-20
 ### Fixed
 - Typo in `examples/tetragon/monitoring-alerts/cloud-monitoring-alerts.tf.sample` (`process_name` should be `policy_name`)

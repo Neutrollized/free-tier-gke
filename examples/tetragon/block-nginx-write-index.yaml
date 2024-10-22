@@ -35,6 +35,7 @@ spec:
       matchBinaries:
       - operator: "NotIn"
         values:
-         - "/usr/bin/cat"
+         #- "/usr/sbin/nginx" # this is need in Tetragon v1.2.0, possible bug? need to investigate
+         - "/usr/bin/more"
       matchActions:
       - action: Sigkill
