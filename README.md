@@ -8,7 +8,7 @@ It's not 100% free, but with my 1 node setup, you can pay as low as ~$6USD/mth f
 This is great if you're looking for a small k8s cluster that more closely resembles what you might see in the real world (not that [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) or [MicroK8s](https://microk8s.io/) isn't good as a learning tool -- it's just not the same).  Here, you can also scale in/out your cluster easily if you want test some features or add-ons (like service meshes!).
 
 ## GKE vs EKS vs AKS
-I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basis for comparison between the 3 major cloud providers.  The math is shown below, but it doesn't take an extreme couponer to figure out which is the best deal.
+I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basis for comparison between the 3 major cloud providers (*prices subject to change -- please check cloud provider website for latest numbers*).  The math is shown below, but it doesn't take an extreme couponer to figure out which is the best deal.
 
 #### GKE
 - 1 free zonal GKE cluster
