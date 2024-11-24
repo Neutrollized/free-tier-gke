@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.19.2] - 2024-11-24
+### Added
+- New variable `enable_cilium_clusterwide_network_policy` (default: `false`), used for enabling [CCNP](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-cilium-network-policy)
+### Changed
+- Variable `dataplane_v2_enabled` now set to `true` by default
+
 ## [0.19.1] - 2024-10-21
 ### Fixed
 - Updated `examples/tetragon` to use Tetragon `v1.1.2` instead of `v1.2.0`, due to a potential bug in the behavior of one of the policies (will need to investigate further)

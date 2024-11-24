@@ -1,0 +1,17 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: "l4-rule-sw-ingress"
+spec:
+  endpointSelector:
+    matchLabels:
+      class: deathstar
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        class: tiefighter
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
