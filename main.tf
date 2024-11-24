@@ -80,6 +80,8 @@ resource "google_container_cluster" "primary" {
 
   datapath_provider = var.dataplane_v2_enabled ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
 
+  # https://cloud.google.com/kubernetes-engine/docs/how-to/configure-cilium-network-policy
+  enable_cilium_clusterwide_network_policy = var.enable_cilium_clusterwide_network_policy
 
   # https://cloud.google.com/kubernetes-engine/docs/how-to/cloud-dns
   dns_config {

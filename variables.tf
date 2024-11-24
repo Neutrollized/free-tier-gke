@@ -294,6 +294,12 @@ variable "log_config" {
 variable "dataplane_v2_enabled" {
   description = "If enabled, it uses a dataplane that harnesses the power of eBPF and Cilium.  Cannot be set to true if network_policy_enabled is also set to true."
   type        = bool
+  default     = true
+}
+
+variable "enable_cilium_clusterwide_network_policy" {
+  description = "Whether CiliumClusterWideNetworkPolicy is enabled."
+  type        = bool
   default     = false
 }
 
