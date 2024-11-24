@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.19.2] - 2024-11-24
 ### Added
 - New variable `enable_cilium_clusterwide_network_policy` (default: `false`), used for enabling [CCNP](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-cilium-network-policy)
+- `examples/cilium/clusterwide-network-policies`
 ### Changed
 - Variable `dataplane_v2_enabled` now set to `true` by default
 
