@@ -26,7 +26,7 @@ resource "google_monitoring_alert_policy" "tetragon_log_alert" {
 
   # make sure you use the correct condition type
   conditions {
-    display_name = "Log match condiditon: kprobe policy named block"
+    display_name = "Log match condition: kprobe policy named block"
     condition_matched_log {
       filter = join(" AND ",
         [

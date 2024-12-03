@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sampleapp
+  labels:
+    app: sampleapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sampleapp
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/role: 'internal-app'
+        # agent-inject-secret-[FILENAME]
+        # filename here is "database-config.txt"
+        vault.hashicorp.com/agent-inject-secret-database-config.txt: 'internal/data/database/config'
+      labels:
+        app: sampleapp
+    spec:
+      serviceAccountName: internal-app
+      containers:
+      - name: sampleapp
+        image: jweissig/app:0.0.1
