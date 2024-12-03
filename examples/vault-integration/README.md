@@ -9,7 +9,7 @@ If you want to learn about some of the differences, check [this](https://develop
 
 ## Install Vault in dev mode
 For testing purposes, it's easy to run a single Vault instance in ["Dev" server mode](https://developer.hashicorp.com/vault/docs/concepts/dev-server):
-```
+```console
 helm repo add hashicorp https://helm.releases.hashicorp.com
 helm repo update
 
