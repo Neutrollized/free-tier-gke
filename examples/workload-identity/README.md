@@ -62,7 +62,7 @@ kubectl annotate serviceaccount simple-wi-ksa \
   iam.gke.io/gcp-service-account=simple-wi-gsa@my-project.iam.gserviceaccount.com
 ```
 
-- you can confirm the changes with `kubectl describe serviceaccount wi-ksa -n wi-test`:
+- you can confirm the changes with `kubectl describe serviceaccount simple-wi-ksa -n wi-test`:
 ```
 Name:                simple-wi-ksa
 Namespace:           wi-test

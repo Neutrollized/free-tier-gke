@@ -183,13 +183,13 @@ variable "network_policy_enabled" {
   default     = false
 }
 
-variable "channel" {
+variable "release_channel" {
   description = "The channel to get the k8s release from."
   type        = string
   default     = "UNSPECIFIED"
 
   validation {
-    condition     = contains(["UNSPECIFIED", "RAPID", "REGULAR", "STABLE"], var.channel)
+    condition     = contains(["UNSPECIFIED", "RAPID", "REGULAR", "STABLE"], var.release_channel)
     error_message = "Accepted values are UNSPECIFIED, RAPID, REGULAR or STABLE"
   }
 }
@@ -213,6 +213,17 @@ variable "cluster_dns_scope" {
   validation {
     condition     = contains(["DNS_SCOPE_UNSPECIFIED", "CLUSTER_SCOPE", "VPC_SCOPE"], var.cluster_dns_scope)
     error_message = "Accepted values are DNS_SCOPE_UNSPECIFIED, CLUSTER_SCOPE or VPC_SCOPE"
+  }
+}
+
+variable "gateway_api_channel" {
+  description = "Specify the Gateway API channel to use."
+  type        = string
+  default     = "CHANNEL_DISABLED"
+
+  validation {
+    condition     = contains(["CHANNEL_DISABLED", "CHANNEL_EXPERIMENTAL", "CHANNEL_STANDARD"], var.gateway_api_channel)
+    error_message = "Accepted values are CHANNEL_DISABLED, CHANNEL_EXPERIMENTAL or CHANNEL_STANDARD"
   }
 }
 

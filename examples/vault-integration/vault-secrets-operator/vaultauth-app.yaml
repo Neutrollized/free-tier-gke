@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: app
+  name: demo-static-app
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: static-auth
+  namespace: app
+spec:
+  method: kubernetes
+  mount: gke
+  kubernetes:
+    role: kvreadrole
+    serviceAccount: demo-static-app
+    audiences:
+    - vault

@@ -1,0 +1,5 @@
+---
+defaultVaultConnection:
+  enabled: true
+  address: "http://vault.default.svc.cluster.local:8200"
+  skipTLSVerify: false

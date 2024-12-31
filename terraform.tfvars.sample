@@ -9,8 +9,8 @@ max_pods_per_node        = 32               # max pods per node <= half of max n
 cluster_ipv4_cidr_block  = "10.0.0.0/18"    # max pod IPs = 15360 (60 * 256), CIDR must be able to cover for all the potential IPs
 services_ipv4_cidr_block = "10.1.0.0/20"
 
-channel      = "RAPID"
-auto_upgrade = true
+release_channel = "RAPID"
+auto_upgrade    = true
 
 enable_managed_prometheus   = false
 enable_intranode_visibility = true
@@ -26,6 +26,7 @@ disk_size_gb = 40
 max_nodes    = 1
 
 addons_config = {
+  gce_pd_csi_driver_enabled   = true  # required for Vault Injector
   gcs_fuse_csi_driver_enabled = true
 }
 

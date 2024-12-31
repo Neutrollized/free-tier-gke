@@ -14,7 +14,7 @@ You can check out the [optional](./optional/README.md) steps for the full experi
 - [Stable channel release notes](https://cloud.google.com/kubernetes-engine/docs/release-notes-stable)
 
 #### 2. Enabling Gateway API:
-- currently, there's no option to enable Gateway API via the Terraform provider yet, so you will have to update the cluster manually:
+- You can enable this by setting `var.gateway_api_channel` to `CHANNEL_STANDARD` (or `CHANNEL_EXPERIMENTAL`), but you can also update the cluster manually:
 ```console
 gcloud container clusters update playground \
     --gateway-api=standard \
@@ -23,9 +23,11 @@ gcloud container clusters update playground \
 
 - verify install with `kubectl get gatewayclass -n kube-system` (may take a minute, so be patient):
 ```
-NAME          CONTROLLER                  AGE
-gke-l7-gxlb   networking.gke.io/gateway   51s
-gke-l7-rilb   networking.gke.io/gateway   51s
+NAME                               CONTROLLER                  ACCEPTED   AGE
+gke-l7-global-external-managed     networking.gke.io/gateway   True       6m44s
+gke-l7-gxlb                        networking.gke.io/gateway   True       6m44s
+gke-l7-regional-external-managed   networking.gke.io/gateway   True       6m44s
+gke-l7-rilb                        networking.gke.io/gateway   True       6m44s
 ```
 
 
@@ -44,24 +46,16 @@ kubectl apply -f namespaces.yaml
 kubectl apply -f gateway.yaml
 ```
 
-- verify with `kubectl describe gateway internal-http -n infra-ns` (ignore the warning for now, the backend it's complaining about is the default 404 page which Google provides, this will take a couple of minutes to provision):
+- verify with `kubectl describe gateway internal-http -n infra-ns`:
 ```
 ...
 ...
-Status:
-  Addresses:
-  Conditions:
-    Last Transition Time:  1970-01-01T00:00:00Z
-    Message:               Waiting for controller
-    Reason:                NotReconciled
-    Status:                False
-    Type:                  Scheduled
 Events:
-  Type     Reason  Age               From                   Message
-  ----     ------  ----              ----                   -------
-  Normal   ADD     43s               sc-gateway-controller  infra-ns/internal-http
-  Normal   UPDATE  43s               sc-gateway-controller  infra-ns/internal-http
-  Warning  SYNC    5s                sc-gateway-controller  generic::invalid_argument: error ensuring load balancer: Insert: The resource 'projects/my-project/regions/northamerica-northeast1/backendServices/gkegw-3ac3-default-gw-serve404-80-mcfti8ucx6x5' is not ready
+  Type    Reason  Age                From                   Message
+  ----    ------  ----               ----                   -------
+  Normal  ADD     83s                sc-gateway-controller  infra-ns/internal-http
+  Normal  UPDATE  28s (x3 over 83s)  sc-gateway-controller  infra-ns/internal-http
+  Normal  SYNC    28s                sc-gateway-controller  SYNC on infra-ns/internal-http was a success
 ```
 
 
@@ -80,37 +74,43 @@ kubectl apply -f store-route.yaml
 ```
 ...
 ...
-Status:
-  Gateways:
-    Conditions:
-      Last Transition Time:  2021-12-01T19:38:00Z
-      Message:
-      Reason:                RouteAdmitted
-      Status:                True
-      Type:                  Admitted
-      Last Transition Time:  2021-12-01T19:38:00Z
-      Message:
-      Reason:                ReconciliationSucceeded
-      Status:                True
-      Type:                  Reconciled
-    Gateway Ref:
+    Controller Name:         networking.gke.io/gateway
+    Parent Ref:
+      Group:      gateway.networking.k8s.io
+      Kind:       Gateway
       Name:       internal-http
-      Namespace:  default
+      Namespace:  infra-ns
 Events:
-  Type    Reason  Age                 From                   Message
-  ----    ------  ----                ----                   -------
-  Normal  ADD     3m40s               sc-gateway-controller  store-ns/store
-  Normal  SYNC    2m43s               sc-gateway-controller  Bind of HTTPRoute "default/store" to Gateway "infra-ns/internal-http" was a success
-  Normal  SYNC    2m43s               sc-gateway-controller  Reconciliation of HTTPRoute "store-ns/store" bound to Gateway "infra-ns/internal-http" was a success
+  Type    Reason  Age   From                   Message
+  ----    ------  ----  ----                   -------
+  Normal  ADD     89s   sc-gateway-controller  store-ns/store
+  Normal  SYNC    29s   sc-gateway-controller  All the object references were able to be resolved for HTTPRoute "store-ns/store" bound to ParentRef {Group:       "gateway.networking.k8s.io",
+ Kind:        "Gateway",
+ Namespace:   "infra-ns",
+ Name:        "internal-http",
+ SectionName: nil,
+ Port:        nil}
+  Normal  SYNC  29s  sc-gateway-controller  Bind of HTTPRoute "store-ns/store" to ParentRef {Group:       "gateway.networking.k8s.io",
+ Kind:        "Gateway",
+ Namespace:   "infra-ns",
+ Name:        "internal-http",
+ SectionName: nil,
+ Port:        nil} was a success
+  Normal  SYNC  29s  sc-gateway-controller  Reconciliation of HTTPRoute "store-ns/store" bound to ParentRef {Group:       "gateway.networking.k8s.io",
+ Kind:        "Gateway",
+ Namespace:   "infra-ns",
+ Name:        "internal-http",
+ SectionName: nil,
+ Port:        nil} was a success
 ```
 
 
 #### 5. Deploy Demo Site App and Site HTTPRoute
 - like the store, but for "site.example.com" instead:
 ```console
-kubectl apply -f store.yaml
+kubectl apply -f site.yaml
 
-kubectl apply -f store-route.yaml
+kubectl apply -f site-route.yaml
 ```
 
 **NOTE:** if it were GKE Ingress, you would not have this option as all routes are maintained in a single ingress definition

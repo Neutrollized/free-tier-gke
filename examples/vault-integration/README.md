@@ -1,10 +1,14 @@
-# Vault Integration
+# HashiCorp Vault Integration
 There are a few Vault integration options with Kubernetes:
-- Agent Injector
-- Vault Secrets Operator
-- Vault CSI provider
+- Vault Agent Injector
+- Vault Secrets Operator (VSO)
+- Vault CSI Provider
 
-If you want to learn about some of the differences, check [this](https://developer.hashicorp.com/vault/docs/platform/k8s/injector-csi) out.
+Vault Agent Injector uses a sidecar model which manages your secret and "injects" it to your main application by mounting it as a volume (hence it requires the PD CSI driver).  If you've used VMs with Vault Agents, this option will feel very familiar.
+
+Vaut Secrets Operator is newer, and through various CRDs, will manage your auth and secrets for you and write it to a Kubernetes secret.  This is easier on resources as the sidecar model also comes with an overhead.  However, you need to have a stronger Kubernetes RBAC game here so not to make your k8s secret too accessible.
+
+Vault CSI provider is the oldest one and I would opt for one of the other two options I mentioned above.  I wouldn't be surprised if this integration option were to be deprecated in the future.  You can read more about the differences between the Vault Agent Injector and Vault CSI Provider [here](https://developer.hashicorp.com/vault/docs/platform/k8s/injector-csi#vault-csi-provider).
 
 
 ## Install Vault in dev mode

@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.20.0] - 2025-01-01
+### Added
+- New variable `gateway_api_channel` (default: `CHANNEL_DISABLED`) to specify the Gateway API channel to use
+- `examples/vault-integration/vault-secrets-operator`
+### Changed
+- Variable `channel` renamed to `release_channel`
+- Updated `examples/gke-gateway-controller`
+### Removed
+- `examples/traffic-director`, Anthos Service Mesh & Traffic Director has become [Cloud Service Mesh](https://cloud.google.com/service-mesh/docs/overview), so I will be phasing out these examples and replacing it with a Cloud Servie Mesh at some point
+
 ## [0.19.3] - 2024-12-03
 ### Added
 - `examples/vault-integration/vault-injector`

@@ -89,8 +89,12 @@ resource "google_container_cluster" "primary" {
     cluster_dns_scope = var.cluster_dns_scope
   }
 
+  gateway_api_config {
+    channel = var.gateway_api_channel
+  }
+
   release_channel {
-    channel = var.channel
+    channel = var.release_channel
   }
 
   maintenance_policy {
