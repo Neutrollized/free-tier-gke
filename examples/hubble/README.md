@@ -11,5 +11,14 @@ This example requires the GKE Dataplane V2 observability feature be enabled. **E
 - [How to deploy the Hubble UI binary distribution](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-dpv2-observability#how_to_deploy_the_hubble_ui_binary_distribution)
 
 
+- the following are aliases I set up in my shell environment to make life easier:
+```
+alias gkehubble="kubectl exec -it -n gke-managed-dpv2-observability deployment/hubble-relay -c hubble-cli -- hubble "
+
+alias gkehubbleobserve="kubectl exec -it -n gke-managed-dpv2-observability deployment/hubble-relay -c hubble-cli -- hubble observe --follow --not --namespace kube-system --not --namespace gke-managed-dpv2-observability --not --namespace gke-managed-system "
+
+alias gkehubbleui="kubectl -n gke-managed-dpv2-observability port-forward service/hubble-ui 16100:80 --address='127.0.0.1'"
+```
+
 ## Random info
-There was a typo in the documentation for the `advanced_datapath_observability_config` setting so I made [PR#8813](https://github.com/GoogleCloudPlatform/magic-modules/pull/8813) to correct.
+There was a typo in the documentation for the `advanced_datapath_observability_config` setting so I made [PR#8813](https://github.com/GoogleCloudPlatform/magic-modules/pull/8813) to correct it.
