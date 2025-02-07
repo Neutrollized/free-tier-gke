@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.20.1] - 2025-02-07
+### Added
+- `examples/prometheus`
+### Changed
+- Expanded `release_channel` validation values to allow `EXTENDED` (GKE provides extended support for minor versions up to 24 months)
+- Updated documentation
+- Updated labels in `examples/nginx-deployment.yaml` to use [Kubernetes Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/)
+
 ## [0.20.0] - 2025-01-01
 ### Added
 - New variable `gateway_api_channel` (default: `CHANNEL_DISABLED`) to specify the Gateway API channel to use

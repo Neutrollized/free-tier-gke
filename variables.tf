@@ -189,8 +189,8 @@ variable "release_channel" {
   default     = "UNSPECIFIED"
 
   validation {
-    condition     = contains(["UNSPECIFIED", "RAPID", "REGULAR", "STABLE"], var.release_channel)
-    error_message = "Accepted values are UNSPECIFIED, RAPID, REGULAR or STABLE"
+    condition     = contains(["UNSPECIFIED", "RAPID", "REGULAR", "STABLE", "EXTENDED"], var.release_channel)
+    error_message = "Accepted values are UNSPECIFIED, RAPID, REGULAR, STABLE or EXTENDED"
   }
 }
 

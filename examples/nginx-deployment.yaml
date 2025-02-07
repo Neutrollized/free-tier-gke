@@ -10,6 +10,7 @@ metadata:
   name: nginx
   labels:
     app.kubernetes.io/name: nginx
+    app.kubernetes.io/component: frontend
 spec:
   replicas: 2
   selector:
