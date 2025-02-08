@@ -20,12 +20,12 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: nginx
-        app.kubernetes.io/version: "1.27.3-alpine-slim"
+        app.kubernetes.io/version: "1.27.4"
     spec:
       serviceAccountName: nginx-sa
       containers:
       - name: nginx
-        image: nginx:1.27.3-alpine-slim
+        image: nginx:1.27.4
         #image: nginxinc/nginx-unprivileged:latest
         securityContext:
           allowPrivilegeEscalation: false

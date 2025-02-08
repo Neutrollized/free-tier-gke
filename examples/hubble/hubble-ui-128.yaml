@@ -147,8 +147,9 @@ spec:
       serviceAccount: hubble-ui
       serviceAccountName: hubble-ui
       containers:
+        # https://quay.io/repository/cilium/hubble-ui?tab=tags
         - name: frontend
-          image: quay.io/cilium/hubble-ui:v0.11.0
+          image: quay.io/cilium/hubble-ui:v0.13.1
           ports:
             - name: http
               containerPort: 8081
@@ -168,7 +169,7 @@ spec:
               drop:
                 - all
         - name: backend
-          image: quay.io/cilium/hubble-ui-backend:v0.11.0
+          image: quay.io/cilium/hubble-ui-backend:v0.13.1
           env:
             - name: EVENTS_SERVER_PORT
               value: "8090"

@@ -374,7 +374,7 @@ variable "gke_nodepool_name" {
 variable "machine_type" {
   description = "Machine type of nodes in node pool."
   type        = string
-  default     = "e2-small"
+  default     = "e2-medium"
 }
 
 variable "preemptible" {

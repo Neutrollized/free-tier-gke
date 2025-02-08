@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.20.2] - 2025-02-08
+### Changed
+- Updated documentation
+- Updated `machine_type` default value from `e2-small` to `e2-medium`
+- Updated `examples/hubble` Hubble UI from `0.11.0` to `0.13.1`
+
 ## [0.20.1] - 2025-02-07
 ### Added
 - `examples/prometheus`

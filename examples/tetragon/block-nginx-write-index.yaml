@@ -8,7 +8,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: nginx
+      app.kubernetes.io/name: nginx
   kprobes:
   - call: "fd_install"
     syscall: false
@@ -35,7 +35,7 @@ spec:
       matchBinaries:
       - operator: "NotIn"
         values:
-         #- "/usr/sbin/nginx" # this is need in Tetragon v1.2.0, possible bug? need to investigate
-         - "/usr/bin/more"
+        #- "/usr/sbin/nginx" # this is needed in Tetragon v1.2.0+
+        - "/usr/bin/more"
       matchActions:
       - action: Sigkill
