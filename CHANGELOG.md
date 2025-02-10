@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.20.3] - 2025-02-10
+### Changed
+- Updated `examples/tetragon` from Tetragon `v1.1.2` to `v1.3.0`. I previously had some Tracing Policy behavior issues since `v1.2.0` with the `block-nginx-write-index.yaml` example, which is now resolved via this [Github Issues](https://github.com/cilium/tetragon/issues/3377)
+
 ## [0.20.2] - 2025-02-08
 ### Changed
 - Updated documentation

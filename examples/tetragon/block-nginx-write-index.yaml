@@ -22,10 +22,11 @@ spec:
       # this looks at all processes NOT associated with a container's init PID
       # i.e. looks at anything performed inside a "kubectl exec"
       - operator: "NotIn"
-        followForks: false
+        # because nginx will spawn workers to serve the html pages,
+        # followForks needs to be set to true here
+        followForks: true
         isNamespacePID: true
         values:
-        - 0
         - 1
       matchArgs:
       - index: 1
@@ -35,7 +36,6 @@ spec:
       matchBinaries:
       - operator: "NotIn"
         values:
-        #- "/usr/sbin/nginx" # this is needed in Tetragon v1.2.0+
         - "/usr/bin/more"
       matchActions:
       - action: Sigkill
