@@ -1,6 +1,6 @@
 # Prometheus
 
-I recommend when you're first starting out and trying Prometheus, is to use one of the [community helm charts](https://github.com/prometheus-community/helm-charts)
+I recommend when you're first starting out and trying Prometheus (not to be confused with [Google Cloud Managed Prometheus](https://cloud.google.com/stackdriver/docs/managed-prometheus)), is to use one of the [community helm charts](https://github.com/prometheus-community/helm-charts)
 
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts

@@ -13,7 +13,7 @@ run "create_zonal_gke" {
     zone                 = "northamerica-northeast1-c"
     networking_mode      = "VPC_NATIVE"
     dataplane_v2_enabled = true
-    preemptible          = true
+    spot                 = true
   }
 
   # Check that the cluster name is correct
@@ -40,9 +40,9 @@ run "create_zonal_gke" {
     error_message = "Invalid dataplane"
   }
 
-  # Check that nodes are preemptible
+  # Check that nodes are Spot VMs
   assert {
-    condition     = google_container_node_pool.primary.node_config[0].preemptible == true
-    error_message = "Invalid - nodes are not preemptible"
+    condition     = google_container_node_pool.primary.node_config[0].spot == true
+    error_message = "Invalid - nodes are not Spot VMs"
   }
 }

@@ -75,8 +75,12 @@ variable "iam_roles_list" {
   description = "List of IAM roles to be assigned to GKE service account"
   type        = list(string)
   default = [
-    "roles/container.nodeServiceAccount",
+    "roles/autoscaling.metricsWriter",
     "roles/artifactregistry.reader",
+    "roles/container.nodeServiceAccount",
+    "roles/logging.logWriter",
+    "roles/monitoring.viewer",
+    "roles/stackdriver.resourceMetadata.writer",
   ]
 }
 
@@ -365,12 +369,6 @@ variable "nap_max_memory" {
 # GKE Node Pool
 #-----------------------------
 
-variable "gke_nodepool_name" {
-  description = "Name of node pool."
-  type        = string
-  default     = "preempt-pool"
-}
-
 variable "machine_type" {
   description = "Machine type of nodes in node pool."
   type        = string
@@ -379,6 +377,12 @@ variable "machine_type" {
 
 variable "preemptible" {
   description = "Preemptible nodes are Compute Engine instances that last up to 24 hours and provide no availability guarantees, but are priced lower."
+  type        = bool
+  default     = false
+}
+
+variable "spot" {
+  description = "Spot nodes are Compute Engine instances that have no fixed expiration time and like preemptible nodes can be terminated if Google Cloud needs resources for standard VMs.  Also priced lower."
   type        = bool
   default     = true
 }

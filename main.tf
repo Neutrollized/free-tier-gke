@@ -1,4 +1,7 @@
+#------------------------------------------------------
+# GKE Cluster
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster.html#example-usage---with-a-separately-managed-node-pool-recommended
+#------------------------------------------------------
 
 resource "google_container_cluster" "primary" {
   provider = google-beta
@@ -187,8 +190,16 @@ resource "google_container_cluster" "primary" {
 }
 
 
+#------------------------------------------------------
+# GKE Cluster Node Pool
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool
+#------------------------------------------------------
+resource "random_pet" "node_pool" {
+  length = 1
+}
+
 resource "google_container_node_pool" "primary" {
-  name     = var.gke_nodepool_name
+  name     = random_pet.node_pool.id
   location = var.regional ? var.region : var.zone
   cluster  = google_container_cluster.primary.id
 
@@ -205,6 +216,7 @@ resource "google_container_node_pool" "primary" {
   }
 
   node_config {
+    spot         = var.spot
     preemptible  = var.preemptible
     machine_type = var.machine_type
     disk_size_gb = var.disk_size_gb
@@ -236,5 +248,16 @@ resource "google_container_node_pool" "primary" {
       mode = var.workload_metadata_enabled ? "GKE_METADATA" : "GCE_METADATA"
     }
 
+  }
+
+  lifecycle {
+    # nodes can be either a preemptible VM or a Spot VM, but not both
+    precondition {
+      condition     = !(var.preemptible && var.spot)
+      error_message = "Variables 'preemptible' and 'spot' cannot both be true"
+    }
+    ignore_changes = [
+      node_config[0].resource_labels,
+    ]
   }
 }

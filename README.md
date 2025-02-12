@@ -3,7 +3,7 @@
 
 [GKE Container Node Pool](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool)
 
-It's not 100% free, but with my 1 node setup, you can pay as low as ~$6USD/mth for a fully managed Kubernetes cluster.  This works by taking advantage of Google [always free](https://cloud.google.com/free/docs/gcp-free-tier) tier which waives the management fee of one **zonal** GKE cluster, so you only have to pay for your nodes.  Combine this with using [preemptible VMs](https://cloud.google.com/compute/docs/instances/preemptible) as your nodes and you'll have some spectacular savings.
+It's not 100% free, but with my 1 node setup, you can pay as low as ~$9USD/mth for a fully managed Kubernetes cluster.  This works by taking advantage of Google [always free](https://cloud.google.com/free/docs/gcp-free-tier) tier which waives the management fee of one **zonal** GKE cluster, so you only have to pay for your nodes.  Combine this with using ~~[preemptible VMs](https://cloud.google.com/compute/docs/instances/preemptible)~~ [Spot VMs](https://cloud.google.com/kubernetes-engine/docs/concepts/spot-vms) as your nodes and you'll have some spectacular savings.
 
 This is great if you're looking for a small k8s cluster that more closely resembles what you might see in the real world (not that [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) or [MicroK8s](https://microk8s.io/) isn't good as a learning tool -- it's just not the same).  Here, you can also scale in/out your cluster easily if you want test some features or add-ons (like service meshes!).
 
@@ -12,7 +12,7 @@ I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basi
 
 #### GKE
 - 1 free zonal GKE cluster
-- e2-medium @ $27USD/mth (or $8USD/mth for [preemptible](https://cloud.google.com/compute/docs/instances/preemptible))
+- e2-medium @ $27USD/mth (or $14USD/mth for ~~[preemptible](https://cloud.google.com/compute/docs/instances/preemptible)~~ [Spot VM pricing](https://cloud.google.com/spot-vms/pricing?hl=en))
 
 #### EKS
 - $0.10/hr per EKS cluster @ 730hrs/mth (or $73USD/mth)
@@ -22,7 +22,7 @@ I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basi
 - [free cluster management](https://azure.microsoft.com/en-ca/pricing/details/kubernetes-service/)
 - B2S @ $34USD/mth ([Spot](https://azure.microsoft.com/en-us/pricing/spot/) instances available at up to 90% savings). This only applies to non-default node pools as the default node pool is also the [System Node Pool](https://learn.microsoft.com/en-us/azure/aks/use-system-pools?tabs=azure-cli)
 
-Azure's AKS combined with Spot instances are actually incredibly competitive in pricing vs preemptibles, but in my mind, preemptibles have the edge due to ease of use -- no price bidding and a generably more reliable/predictable uptime (in my use don't think I've had any node get terminated before 22hrs).
+Azure's AKS combined with Spot instances are actually incredibly competitive in pricing vs ~~preemptibles~~ spots, but in my mind, ~~preemptibles~~ spots have the edge due to ease of use -- no price bidding and a generably more reliable/predictable uptime (in my use don't think I've had any node get terminated before 22hrs).
 
 
 ## IMPORTANT
@@ -45,9 +45,10 @@ gcloud services enable --async \
 - You will need to set an [environment variable](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#full-reference) to provide credentials to Terraform in order to deploy these blueprints (typically one of `GOOGLE_CREDENTIALS`, `GOOGLE_APPLICATION_CREDENTIALS` or `GOOGLE_OAUTH_ACCESS_TOKEN`) ...or you can `gcloud auth application-default login`
 - While `e2-micro` is a viable option for `machine_type`, in practice it's not very useful as all the overhead that comes with GKE such as Stackdriver agent, `kube-dns`, `kube-proxy`, etc. consumes most of available memory.  I recommend starting with at least an `e2-medium` (2CPUs/4GB memory)
 - Leaving [`release_channel`](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels) as `UNSPECIFIED` means that you will perform upgrades manually, where as if you subscribed to a channel, you will the get the regular updates that gets released to that channel
-- Depending on your workload/application that you're running, you definitely could run most (or all) of it on a preemptible node pool in GCP, but if you're going to run production, please provision a **regional** cluster rather than cheap out for the free zonal one
+- Depending on your workload/application that you're running, you definitely could run most (or all) of it on a ~~preemptible~~ spot node pool in GCP, but if you're going to run production, please provision a **regional** cluster rather than cheap out for the free zonal one
 - If you deployed a private cluster, some of your k8s deployments may fail due to your pods [not having outbound access to the public Internet](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#docker_hub)...having said that, some of the more common images like the nginx one that I used in my examples folder may still work because you're [pulling from a Docker Hub cache](https://cloud.google.com/container-registry/docs/pulling-cached-images).  Ideally, you should be pulling images from your private GCR in this case
-- If `confidential_nodes_enabled` is set to true, the `machine_type` needs to be from the [N2D family](https://cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes) where the smallest node size starts at `n2d-standard-2` (2CPUs/8GB memory) and it must also NOT be a preemptible node (which effectively nullifies one of the cost-saving components of this free-tier GKE)
+- If `confidential_nodes_enabled` is set to true, the `machine_type` needs to be from the [N2D family](https://cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes) where the smallest node size starts at `n2d-standard-2` (2CPUs/8GB memory) and it must also NOT be a ~~preemptible~~ spot node (which effectively nullifies one of the cost-saving components of this free-tier GKE)
+- [Using GKE with Terraform](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/using_gke_with_terraform) guide from the Google provider docs
 
 
 ## eBPF, Cilium and GKE Dataplane V2
@@ -70,6 +71,14 @@ If you decide to go the full private GKE cluster route (private GKE endpoint/con
 
 See this [Medium article](https://medium.com/google-cloud/accessing-gke-private-clusters-through-iap-14fedad694f8) if you want to see how the network traffic flows in this setup.
 
+### IMPORTANT
+To use the IAP tunnel, your user needs to have the IAP-secured Tunnel User (**roles/iap.tunnelResourceAccessor**) -- even if you're the Owner of the project, you will need to add this role!!
+
+You will need to create an IAP tunnel from your local machine/laptop to the IAP proxy VM (command will be in the Terraform output) and you will also have to `export HTTPS_PROXY=localhost:8888` (just remember to unset the env var when you're done).  Alternatively you can set an alias which prepends the env var (e.g. `alias k='HTTPS_PROXY=localhost:8888 kubectl '`).
+
+## DNS-based Control Plane Endpoint
+New security feature announced in Nov '24, you can read more about it [here](https://cloud.google.com/blog/products/containers-kubernetes/new-dns-based-endpoint-for-the-gke-control-plane)
+
 ## Test Framework
 Starting in [v0.15.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#0150---2023-10-16), I will be including some tests that utilize the native testing framework that was added in Terraform v1.16.0.  To run the tests:
 
@@ -87,8 +96,3 @@ tests/gke.tftest.hcl... pass
 
 Success! 2 passed, 0 failed.
 ```
-
-### IMPORTANT
-To use the IAP tunnel, your user needs to have the IAP-secured Tunnel User (**roles/iap.tunnelResourceAccessor**) -- even if you're the Owner of the project, you will need to add this role!!
-
-You will need to create an IAP tunnel from your local machine/laptop to the IAP proxy VM (command will be in the Terraform output) and you will also have to `export HTTPS_PROXY=localhost:8888` (just remember to unset the env var when you're done).  Alternatively you can set an alias which prepends the env var (e.g. `alias k='HTTPS_PROXY=localhost:8888 kubectl '`).

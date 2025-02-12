@@ -5,6 +5,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.21.0] - 2025-02-12
+### Added
+- New variable `spot` (default: `true`) to provision Spot VMs for GKE nodes
+- Lifecycle precondition checks
+- Resource `random_pet.node_pool` to generate a random node pool name
+### Changed
+- Moved `random` provider declaration from `tests/setup/main.tf` to `provider.tf`
+- Variable `preemptible` new default set to `false`
+- Added additional IAM (logging) roles to the GKE node service account
+### Deprecated 
+- Variable `preempitble` in favor of `spot`.  Pricing model is the same, but [Spot VMs](https://cloud.google.com/kubernetes-engine/docs/concepts/spot-vms) have no set expiration time.  You can still choose to use preemptibles, but set `spot = false` as these settings are mutually exclusive
+### Removed
+- Variable `gke_nodepool_name` in favor of a more fun, [random_pet](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) as the name
+
 ## [0.20.3] - 2025-02-10
 ### Changed
 - Updated `examples/tetragon` from Tetragon `v1.1.2` to `v1.3.0`. I previously had some Tracing Policy behavior issues since `v1.2.0` with the `block-nginx-write-index.yaml` example, which is now resolved via this [Github Issues](https://github.com/cilium/tetragon/issues/3377)
