@@ -242,6 +242,10 @@ resource "google_container_node_pool" "primary" {
       }
     }
 
+    kubelet_config {
+      insecure_kubelet_readonly_port_enabled = var.kubelet_ro_port_enabled
+    }
+
     # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#mode
     # https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#option_2_node_pool_modification
     workload_metadata_config {
@@ -249,6 +253,7 @@ resource "google_container_node_pool" "primary" {
     }
 
   }
+
 
   lifecycle {
     # nodes can be either a preemptible VM or a Spot VM, but not both

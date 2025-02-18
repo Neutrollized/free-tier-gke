@@ -397,6 +397,11 @@ variable "image_type" {
   description = "Node/OS image used for each node."
   type        = string
   default     = "COS_CONTAINERD"
+
+  validation {
+    condition     = contains(["COS_CONTAINERD", "UBUNTU_CONTAINERD"], var.image_type)
+    error_message = "Accepted values are COS_CONTAINERD or UBUNTU_CONTAINERD"
+  }
 }
 
 variable "initial_node_count" {
@@ -464,4 +469,15 @@ variable "workload_metadata_enabled" {
   description = "Even though Workload Identity may be enabled at the cluster level, it can still be disabled at the node pool level"
   type        = bool
   default     = true
+}
+
+variable "kubelet_ro_port_enabled" {
+  description = "Controls whether the kubelet read-only port is enabled."
+  type        = string
+  default     = "FALSE"
+
+  validation {
+    condition     = contains(["TRUE", "FALSE"], var.kubelet_ro_port_enabled)
+    error_message = "Accepted values are TRUE or FALSE"
+  }
 }

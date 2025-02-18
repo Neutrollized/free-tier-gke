@@ -37,7 +37,7 @@ resource "google_compute_instance" "iap-proxy" {
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "debian-cloud/debian-12"
     }
   }
 
@@ -49,6 +49,14 @@ resource "google_compute_instance" "iap-proxy" {
   }
 
   metadata_startup_script = file("./scripts/startup.sh")
+
+  lifecycle {
+    # if you enable private endpoints, your nodes should also be private - why secure one and not the other? :)
+    precondition {
+      condition     = var.enable_private_nodes
+      error_message = "Private nodes need to also be enabled so that a NAT is provisioned."
+    }
+  }
 
   depends_on = [
     google_compute_router_nat.k8s_vpc

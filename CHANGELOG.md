@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.22.0] - 2025-02-18
+### Added
+- New variable `kubelet_ro_port_enabled` (default: `FALSE`) to [disable the kubelet read-only port](https://cloud.google.com/kubernetes-engine/docs/how-to/disable-kubelet-readonly-port) as a security best practice
+### Changed
+- Updated IAP Proxy VM base image from `debian-11` to `debian-12`
+### Fixed
+- Added `enable_private_nodes = true` as a lifecycle precondition when `enable_private_endpoint` is enabled as a NAT needs to be provisioned so that the IAP Proxy VM can download and install required packages
+- Updated `scripts/startup.sh` to fix tinyproxy.log creation error in the IAP Proxy VM
+
 ## [0.21.0] - 2025-02-12
 ### Added
 - New variable `spot` (default: `true`) to provision Spot VMs for GKE nodes
