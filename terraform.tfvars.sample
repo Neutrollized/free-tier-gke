@@ -17,9 +17,9 @@ enable_intranode_visibility = true
 
 # mutually exclusive with the the custom node taint example shown below
 # the custom node taint is required only for OSS Cilium
-dataplane_v2_enabled = false
+dataplane_v2_enabled = true
 enable_dpv2_metrics  = false
-enable_dpv2_relay    = false
+enable_dpv2_relay    = true
 
 machine_type = "e2-medium"
 disk_size_gb = 40
@@ -39,13 +39,13 @@ oauth_scopes = [
 workload_metadata_enabled = true
 
 # custom node taints
-taint = [
-  {
-    key    = "node.cilium.io/agent-not-ready"
-    value  = "true"
-    effect = "NO_SCHEDULE"
-  }
-]
+#taint = [
+#  {
+#    key    = "node.cilium.io/agent-not-ready"
+#    value  = "true"
+#    effect = "NO_SCHEDULE"
+#  }
+#]
 
 
 # private GKE cluster settings
