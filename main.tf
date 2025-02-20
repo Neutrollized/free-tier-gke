@@ -199,6 +199,8 @@ resource "random_pet" "node_pool" {
 }
 
 resource "google_container_node_pool" "primary" {
+  provider = google-beta
+
   name     = random_pet.node_pool.id
   location = var.regional ? var.region : var.zone
   cluster  = google_container_cluster.primary.id
@@ -222,12 +224,21 @@ resource "google_container_node_pool" "primary" {
     disk_size_gb = var.disk_size_gb
     image_type   = var.image_type
 
+    shielded_instance_config {
+      enable_secure_boot          = var.shielded_vm_enable_secure_boot
+      enable_integrity_monitoring = var.shielded_vm_enable_integrity_monitoring
+    }
+
     labels = {
       mesh_id = "proj-${var.project_id}"
     }
 
     metadata = {
       disable-legacy-endpoints = "true"
+    }
+
+    kubelet_config {
+      insecure_kubelet_readonly_port_enabled = "FALSE"
     }
 
     service_account = google_service_account.gke_sa.email
@@ -242,10 +253,6 @@ resource "google_container_node_pool" "primary" {
       }
     }
 
-    kubelet_config {
-      insecure_kubelet_readonly_port_enabled = var.kubelet_ro_port_enabled
-    }
-
     # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#mode
     # https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#option_2_node_pool_modification
     workload_metadata_config {
@@ -253,7 +260,6 @@ resource "google_container_node_pool" "primary" {
     }
 
   }
-
 
   lifecycle {
     # nodes can be either a preemptible VM or a Spot VM, but not both

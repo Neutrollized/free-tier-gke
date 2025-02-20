@@ -75,11 +75,8 @@ variable "iam_roles_list" {
   description = "List of IAM roles to be assigned to GKE service account"
   type        = list(string)
   default = [
-    "roles/autoscaling.metricsWriter",
+    "roles/container.defaultNodeServiceAccount",
     "roles/artifactregistry.reader",
-    "roles/container.nodeServiceAccount",
-    "roles/logging.logWriter",
-    "roles/monitoring.viewer",
     "roles/stackdriver.resourceMetadata.writer",
   ]
 }
@@ -404,6 +401,18 @@ variable "image_type" {
   }
 }
 
+variable "shielded_vm_enable_secure_boot" {
+  description = "Defines if the instance has Secure Boot enabled"
+  type        = bool
+  default     = true
+}
+
+variable "shielded_vm_enable_integrity_monitoring" {
+  description = "Defines if the instance has integrity monitoring enabled"
+  type        = bool
+  default     = true
+}
+
 variable "initial_node_count" {
   description = "The initial number of nodes in the pool.  For regional or multi-zonal clusters, this is the number of nodes PER zone."
   type        = number
@@ -469,15 +478,4 @@ variable "workload_metadata_enabled" {
   description = "Even though Workload Identity may be enabled at the cluster level, it can still be disabled at the node pool level"
   type        = bool
   default     = true
-}
-
-variable "kubelet_ro_port_enabled" {
-  description = "Controls whether the kubelet read-only port is enabled."
-  type        = string
-  default     = "FALSE"
-
-  validation {
-    condition     = contains(["TRUE", "FALSE"], var.kubelet_ro_port_enabled)
-    error_message = "Accepted values are TRUE or FALSE"
-  }
 }

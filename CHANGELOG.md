@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.23.0] - 2025-02-19
+### Added
+- New variables `shielded_vm_enable_secure_boot` (default: `true`) and `shielded_vm_enable_integrity_monitoring` (default: `true`) used to define some Shielded GKE Node options
+### Changed
+- Tightened IAM roles assigned to the GKE node service account
+### Removed
+- Variable `kubelet_ro_port_enabled` and hardcoding the setting to `FALSE` because there is no reason you should be enabling this.  Transition to the more secure, authenticated port `10250` if you have workloads that rely on the read-only port
+
 ## [0.22.0] - 2025-02-18
 ### Added
 - New variable `kubelet_ro_port_enabled` (default: `FALSE`) to [disable the kubelet read-only port](https://cloud.google.com/kubernetes-engine/docs/how-to/disable-kubelet-readonly-port) as a security best practice
