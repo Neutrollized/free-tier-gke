@@ -52,7 +52,7 @@ EOF
 vault policy write kv-read /tmp/kv-read.json
 ```
 
-# https://developer.hashicorp.com/vault/api-docs/auth/kubernetes#create-update-role
+- Kubernetes auth method create/update role [documentation](https://developer.hashicorp.com/vault/api-docs/auth/kubernetes#create-update-role)
 ```console
 vault write auth/gke/role/kvreadrole \
    bound_service_account_names=demo-static-app \
