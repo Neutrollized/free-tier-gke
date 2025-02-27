@@ -23,12 +23,16 @@ spec:
         app.kubernetes.io/version: "1.27.4"
     spec:
       serviceAccountName: nginx-sa
+      #runtimeClassName: gvisor
       containers:
       - name: nginx
         image: nginx:1.27.4
         #image: nginxinc/nginx-unprivileged:latest
         securityContext:
           allowPrivilegeEscalation: false
+          privileged: false
+          seccompProfile:
+            type: RuntimeDefault
         ports:
         - name: web
           containerPort: 80

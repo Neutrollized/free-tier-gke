@@ -67,7 +67,7 @@ Hubble is an observability platform built on top of Cilium and as of [v0.14.0](h
 ## Private GKE Cluster and Nodes
 As of [v0.8.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#080---2022-07-15), you will have the option of provisioning a private GKE nodes.  Doing so will also provision a [Cloud NAT](https://cloud.google.com/nat/docs/overview) router in order for your nodes to get internet -- but this, of course will incur extra costs.
 
-If you decide to go the full private GKE cluster route (private GKE endpoint/control-plane AND private GKE nodes) then it will provision an additional /29 subnet that will house a VM running [tinyproxy](https://github.com/tinyproxy) that will act as a forwarding proxy to the private GKE endpoint. 
+If you decide to go the full private GKE cluster route (private GKE endpoint/control-plane AND private GKE nodes) then it will provision an additional /29 subnet that will house a VM running [tinyproxy](https://tinyproxy.github.io/) that will act as a forwarding proxy to the private GKE endpoint. 
 
 See this [Medium article](https://medium.com/google-cloud/accessing-gke-private-clusters-through-iap-14fedad694f8) if you want to see how the network traffic flows in this setup.
 
