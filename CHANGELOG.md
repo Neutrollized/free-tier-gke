@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.24.0] - 2025-03-06
 ### Added
 - New variable `enable_dns_endpoint` (default: `true`) for enabling [DNS-based endpoints](https://cloud.google.com/blog/products/containers-kubernetes/new-dns-based-endpoint-for-the-gke-control-plane)
-- New variable `dns_endpoint_allow_ext_traffic` (default: `true`)
+- New variable `dns_endpoint_allow_ext_traffic` (default: `true`) for allowing user traffic is allowed over this endpoint.  Even if set to `false`, GCP-managed services may still use this endpoint
 ### Changed
 - Updated **google** and **google-beta** providers from `~> 6.0` to `~> 6.11`
 - Updated `examples/nginx-deployment.yaml`'s `securityContext` settings
