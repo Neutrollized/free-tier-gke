@@ -77,7 +77,13 @@ To use the IAP tunnel, your user needs to have the IAP-secured Tunnel User (**ro
 You will need to create an IAP tunnel from your local machine/laptop to the IAP proxy VM (command will be in the Terraform output) and you will also have to `export HTTPS_PROXY=localhost:8888` (just remember to unset the env var when you're done).  Alternatively you can set an alias which prepends the env var (e.g. `alias k='HTTPS_PROXY=localhost:8888 kubectl '`).
 
 ## DNS-based Control Plane Endpoint
-New security feature announced in Nov '24, you can read more about it [here](https://cloud.google.com/blog/products/containers-kubernetes/new-dns-based-endpoint-for-the-gke-control-plane)
+New security feature announced in Nov '24, you can read more about it [here](https://cloud.google.com/blog/products/containers-kubernetes/new-dns-based-endpoint-for-the-gke-control-plane). In [v0.24.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#0240---2025-03-06), I've added support for this new feature and below is a table of the various combinations of settings and the resulting endpoint access type:
+
+| `enable_dns_endpoint` | `enable_private_endpoint` | `enable_private_nodes` | Result                                                  |
+|:---------------------:|:-------------------------:|:----------------------:|:--------------------------------------------------------|
+| `true`                | `true`                    | Either                 | DNS-based endpoint                                      |
+| `false`               | `false`                   | Either                 | Public IP-based endpoint with Master Authorized Network |
+| `false`               | `true`                    | `true`                 | Private IP-based endpoint with IAP Proxy VM             |
 
 ## Test Framework
 Starting in [v0.15.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#0150---2023-10-16), I will be including some tests that utilize the native testing framework that was added in Terraform v1.16.0.  To run the tests:

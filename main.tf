@@ -2,7 +2,6 @@
 # GKE Cluster
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster.html#example-usage---with-a-separately-managed-node-pool-recommended
 #------------------------------------------------------
-
 resource "google_container_cluster" "primary" {
   provider = google-beta
 
@@ -58,19 +57,41 @@ resource "google_container_cluster" "primary" {
   default_max_pods_per_node = var.max_pods_per_node
 
   # Only applied if `enable_private_nodes` is `true`.
+  #  dynamic "private_cluster_config" {
+  #for_each = var.enable_private_nodes ? [1] : []
+  #content {
+  #      enable_private_endpoint = var.enable_private_endpoint
+  #enable_private_nodes    = var.enable_private_nodes
+  # only applicable when enable_private_nodes = true
+  # master_ipv4_cidr_block = var.master_ipv4_cidr_block
+  #}
+  # }
   dynamic "private_cluster_config" {
-    for_each = var.enable_private_nodes ? [1] : []
+    for_each = var.enable_private_nodes || var.enable_private_endpoint ? [1] : []
     content {
-      enable_private_endpoint = var.enable_private_endpoint
+      enable_private_endpoint = var.enable_dns_endpoint ? true : var.enable_private_endpoint
       enable_private_nodes    = var.enable_private_nodes
-      master_ipv4_cidr_block  = var.master_ipv4_cidr_block
+      # only applicable when enable_private_nodes = true
+      master_ipv4_cidr_block = var.enable_dns_endpoint ? null : var.master_ipv4_cidr_block
+    }
+  }
+
+  dynamic "control_plane_endpoints_config" {
+    for_each = var.enable_dns_endpoint ? [1] : []
+    content {
+      dns_endpoint_config {
+        allow_external_traffic = var.dns_endpoint_allow_ext_traffic
+      }
     }
   }
 
   master_authorized_networks_config {
-    cidr_blocks {
-      cidr_block   = var.enable_private_endpoint ? var.iap_proxy_ip_cidr : var.master_authorized_network_cidr
-      display_name = "allowed-cidr"
+    dynamic "cidr_blocks" {
+      for_each = var.enable_private_endpoint && !var.enable_dns_endpoint ? [1] : []
+      content {
+        cidr_block   = var.enable_private_endpoint && !var.enable_dns_endpoint ? var.iap_proxy_ip_cidr : var.master_authorized_network_cidr
+        display_name = "allowed-cidr"
+      }
     }
   }
 

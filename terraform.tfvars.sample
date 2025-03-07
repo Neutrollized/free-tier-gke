@@ -27,7 +27,6 @@ max_nodes    = 1
 
 addons_config = {
   gce_pd_csi_driver_enabled   = true  # required for Vault Injector
-  gcs_fuse_csi_driver_enabled = true
 }
 
 oauth_scopes = [
@@ -49,8 +48,9 @@ workload_metadata_enabled = true
 
 
 # private GKE cluster settings
+enable_dns_endpoint            = true
 enable_private_endpoint        = true
-enable_private_nodes           = true	               # ATTENTION: when enable_private_nodes = true, Cloud NAT will be provisioned
+enable_private_nodes           = false               # ATTENTION: when enable_private_nodes = true, Cloud NAT will be provisioned
 master_authorized_network_cidr = "my.ext.ip.addr/32" # this gets used only if enable_private_endpoint = false
 master_ipv4_cidr_block         = "10.100.100.0/28"   # CIDR of GKE control-plane, this needs to be /28
 iap_proxy_ip_cidr              = "192.168.100.0/29"

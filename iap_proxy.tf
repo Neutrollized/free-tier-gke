@@ -1,7 +1,7 @@
 # the resources here are only created
 # if enable_private_endpoint = "true"
 resource "google_compute_subnetwork" "iap" {
-  count                    = var.enable_private_endpoint ? 1 : 0
+  count                    = var.enable_private_endpoint && !var.enable_dns_endpoint ? 1 : 0
   name                     = "${var.gke_cluster_name}-iap-subnet"
   ip_cidr_range            = var.iap_proxy_ip_cidr
   network                  = google_compute_network.k8s.id
@@ -10,7 +10,7 @@ resource "google_compute_subnetwork" "iap" {
 }
 
 resource "google_compute_firewall" "iap_tcp_forwarding" {
-  count   = var.enable_private_endpoint ? 1 : 0
+  count   = var.enable_private_endpoint && !var.enable_dns_endpoint ? 1 : 0
   name    = "allow-ingress-from-iap"
   network = google_compute_network.k8s.name
 
@@ -28,7 +28,7 @@ resource "google_compute_firewall" "iap_tcp_forwarding" {
 
 
 resource "google_compute_instance" "iap-proxy" {
-  count        = var.enable_private_endpoint ? 1 : 0
+  count        = var.enable_private_endpoint && !var.enable_dns_endpoint ? 1 : 0
   name         = "gke-iap-proxy"
   machine_type = "e2-micro"
   zone         = var.zone
@@ -51,7 +51,6 @@ resource "google_compute_instance" "iap-proxy" {
   metadata_startup_script = file("./scripts/startup.sh")
 
   lifecycle {
-    # if you enable private endpoints, your nodes should also be private - why secure one and not the other? :)
     precondition {
       condition     = var.enable_private_nodes
       error_message = "Private nodes need to also be enabled so that a NAT is provisioned."

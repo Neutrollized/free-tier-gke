@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.24.0] - 2025-03-06
+### Added
+New variable `enable_dns_endpoint` (default: `true`) for enabling [DNS-based endpoints](https://cloud.google.com/blog/products/containers-kubernetes/new-dns-based-endpoint-for-the-gke-control-plane)
+New variable `dns_endpoint_allow_ext_traffic` (default: `true`)
+### Changed
+- Updated **google** and **google-beta** providers from `~> 6.0` to `~> 6.11`
+- Updated `examples/nginx-deployment.yaml`'s `securityContext` settings
+
 ## [0.23.0] - 2025-02-19
 ### Added
 - New variables `shielded_vm_enable_secure_boot` (default: `true`) and `shielded_vm_enable_integrity_monitoring` (default: `true`) used to define some Shielded GKE Node options

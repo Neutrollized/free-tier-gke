@@ -106,7 +106,7 @@ variable "enable_private_endpoint" {
 variable "enable_private_nodes" {
   description = "Nodes only have private IPs and communicate to master via private networking."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "master_ipv4_cidr_block" {
@@ -119,6 +119,18 @@ variable "iap_proxy_ip_cidr" {
   description = "CIDR of subnet for IAP proxy VM.  Should make this subnet as small as possible (i.e. /29)"
   type        = string
   default     = "192.168.100.0/29"
+}
+
+variable "enable_dns_endpoint" {
+  description = "Enable DNS-based access to cluster"
+  type        = bool
+  default     = true
+}
+
+variable "dns_endpoint_allow_ext_traffic" {
+  description = "Whether user traffic is allowed over this endpoint.  GCP-managed services may still use this endpoint even if this is false"
+  type        = bool
+  default     = true
 }
 
 
