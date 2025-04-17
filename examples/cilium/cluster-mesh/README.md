@@ -12,13 +12,13 @@ I wrote [Cilium's documentation](https://docs.cilium.io/en/stable/network/cluste
 
 
 ### Enable ClusterMesh
-```sh
+```
 cilium clustermesh enable --context ${CONTEXT1} --enable-kvstoremesh
 cilium clustermesh enable --context ${CONTEXT2} --enable-kvstoremesh
 ```
 
 - (recommended) match Cilium CA certs
-```sh
+```
 kubectl --context=${CONTEXT2} delete secret -n kube-system cilium-ca
 
 kubectl --context=${CONTEXT1} get secret -n kube-system cilium-ca -o yaml | \
@@ -35,7 +35,7 @@ kubectl --context=${CONTEXT1} get secret -n kube-system cilium-ca -o yaml | \
 ```
 
 ### Connect clusters
-```sh
+```
 cilium clustermesh connect --context ${CONTEXT1} --destination-context ${CONTEXT2}
 ```
 
@@ -43,7 +43,7 @@ cilium clustermesh connect --context ${CONTEXT1} --destination-context ${CONTEXT
 I'm using NGINX ingress controller here, but basically you want to deploy the services in BOTH clusters, but the ingress controller in **ONLY ONE**.
 
 - installing NGINX ingress controller via Helm:
-```sh
+```
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm install nginx-ingress ingress-nginx/ingress-nginx

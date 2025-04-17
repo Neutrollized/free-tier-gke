@@ -7,26 +7,26 @@ The services in this example all utilize the [fake-service](https://github.com/n
 
 ## Install Ingress Controller with Helm
 - add repo:
-```sh
+```
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 ```
 
 - deploy NGINX ingress controller (this creates a TCP/UDP load balancer in GCP)
 - wait until you get an external IP
-```sh
+```
 helm install nginx-ingress ingress-nginx/ingress-nginx
 ```
 
 - deploy services
-```sh
+```
 kubectl apply -f ./currency.yaml
 kubectl apply -f ./payments.yaml
 kubectl apply -f ./web.yaml
 ```
 
 - deploy Ingress resource (with rewrite)
-```sh
+```
 kubectl apply -f ./nginx-ingress-rewrite.yaml
 ```
 
@@ -64,7 +64,7 @@ curl -H "host: mysite.example.com" http://${LOAD_BALANCER_IP}/world/currency
 
 
 ## Cleanup
-```sh
+```
 kubectl delete -f ./currency.yaml
 kubectl delete -f ./payments.yaml
 kubectl delete -f ./web.yaml

@@ -11,13 +11,13 @@ This makes the Secrets Store CSI Driver a versatile secrets management tool in t
 It is recommended to use its helm chart for installation.  List of configurable options can be found [here](https://github.com/kubernetes-sigs/secrets-store-csi-driver/tree/main/charts/secrets-store-csi-driver#configuration).  A notable feature that is still in **alpha** stage is [secrets auto-rotation](https://secrets-store-csi-driver.sigs.k8s.io/topics/secret-auto-rotation.html)
 
 - adding Secrets Store CSI Driver helm repo & listing available versions
-```sh
+```
 helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
 helm search repo secrets-store-csi-driver/secrets-store-csi-driver --versions
 ```
 
 - installing version 1.3.4 (latest at time of writing)
-```sh
+```
 helm install csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver --namespace kube-system --version 1.3.4
 ```
 
@@ -73,7 +73,7 @@ Since the GCP provider utilizes Workload Identity to access secrets from [Secret
 **ATTENTION:** Please note the **gsa** and **ksa** suffixes in the service account names for differentiation between a Google service account (GSA) and Kubernetes service account (KSA).  It is recommended that a naming convention that can easily identify the mapping between the GSA and KSA be used.
 
 - create Google service account and Kubernetes service account
-```sh
+```
 gcloud iam service-accounts create secret-csi-wi-gsa \
   --description="Workload Identity SA for Secret Store CSI Driver"
 
@@ -81,21 +81,21 @@ kubectl create serviceaccount secret-csi-wi-ksa
 ```
 
 - assign the appropriate role to GSA (for accessing Secrets Manager secrets, this is typically the **Secret Accessor** role)
-```sh
+```
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --role roles/secretmanager.secretAccessor \
   --member "serviceAccount:secret-csi-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com"
 ```
 
 - assign your KSA the [Workload Identity User](https://cloud.google.com/iam/docs/understanding-roles#iam.workloadIdentityUser) role which gives it the permission to impersonate your GSA
-```sh
+```
 gcloud iam service-accounts add-iam-policy-binding secret-csi-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com \
   --role roles/iam.workloadIdentityUser \
   --member "serviceAccount:${PROJECT_ID}.svc.id.goog[default/secret-csi-wi-ksa]"
 ```
 
 - annotate the KSA
-```sh
+```
 kubectl annotate serviceaccount secret-csi-wi-ksa \
   iam.gke.io/gcp-service-account=secret-csi-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com
 ```
@@ -103,17 +103,17 @@ kubectl annotate serviceaccount secret-csi-wi-ksa \
 
 ### Sample application
 - enable Secrets Manager API:
-```sh
+```
 gcloud services enable secretmanager.googleapis.com
 ```
 
 - create Secrets Manager secret from file:
-```sh
+```
 gcloud secrets create myappsecret --replication-policy=automatic --data-file=secret.data
 ```
 
 - update & create Secrets Store secret
-```sh
+```
 kubectl apply -f app-secrets.yaml
 ```
 
@@ -121,18 +121,18 @@ kubectl apply -f app-secrets.yaml
 
 
 - deploy app, referencing secret and CSI driver
-```sh
+```
 kubectl apply -f mypod.yaml
 ```
 
 The secret is fetched and mounted in a read-only file located at `/var/secrets/myappsecret.txt` and ready for consumption, which you can confirm with:
-```sh
+```
 kubectl exec mypod -- cat /var/secret/myappsecret.txt
 ```
 
 
 ## Cleanup
-```sh
+```
 kubectl delete -f mypod.yaml
 kubectl delete -f app-secrets.yaml
 

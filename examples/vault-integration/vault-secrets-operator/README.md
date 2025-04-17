@@ -8,14 +8,14 @@ This following is a (modified) basic version of the example from the [HashiCorp 
 ## Installation
 ### Install Vault (Dev) Server
 For the demo below, we will deploy a single-instance Vault server in dev mode:
-```sh
+```
 helm install vault hashicorp/vault \
   --set="server.dev.enabled=true" \
   --set="injector.enabled=false"
 ```
 
 ### Install VSO
-```sh
+```
 helm install vault-secrets-operator hashicorp/vault-secrets-operator \
   -n vault-secrets-operator-system \
   --create-namespace \
@@ -25,17 +25,17 @@ helm install vault-secrets-operator hashicorp/vault-secrets-operator \
 
 ## Vault Config
 ### Kubernetes Auth Method
-```sh
+```
 vault auth enable -path gke kubernetes
 ```
 
-```sh
+```
 vault write auth/gke/config \
   kubernetes_host="https://192.168.0.2:443"
 ```
 
 - you can find your GKE's private endpoint with this command (adjust your cluster name and zone accordingly):
-```sh
+```
 gcloud container clusters describe playground \
   --zone=northamerica-northeast1-c \
   --format="value(privateClusterConfig.privateEndpoint)"
@@ -53,7 +53,7 @@ vault policy write kv-read /tmp/kv-read.json
 ```
 
 - Kubernetes auth method create/update role [documentation](https://developer.hashicorp.com/vault/api-docs/auth/kubernetes#create-update-role)
-```sh
+```
 vault write auth/gke/role/kvreadrole \
    bound_service_account_names=demo-static-app \
    bound_service_account_namespaces=app \
@@ -63,12 +63,12 @@ vault write auth/gke/role/kvreadrole \
 ```
 
 ### Vault Static Secrets
-```sh
+```
 vault kv put secret/webapp/config username="static-user" password="static-password"
 ```
 
 ## Vault Secrets Operator Demo
-```sh
+```
 kubectl create ns app
 
 kubectl apply -f vaultauth-app.yaml

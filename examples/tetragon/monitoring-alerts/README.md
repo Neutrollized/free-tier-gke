@@ -8,7 +8,7 @@ I've included a sample policy and equivalent in Terraform where I used the [`joi
 You will need to create a [Notification Channel](https://cloud.google.com/monitoring/support/notification-options) first as the associated *CHANNEL_ID* will have to be passed into the alert policy if you want to receive notifications (via email, Slack, PagerDuty, etc.).  This is *optional* but highly recommended unless you have a team that watches for notifications around the clock 
 
 ### Alert Policy 
-```sh
+```
 gcloud alpha monitoring policies create --policy-from-file="alert-blocked-tracingpolicies.json
 ```
 

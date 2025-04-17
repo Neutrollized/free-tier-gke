@@ -3,7 +3,7 @@ Trivy Operator let's you continuously scan your Kubernetes (GKE) cluster for any
 
 ## Install
 - install via helm:
-```sh
+```
 helm repo add aqua https://aquasecurity.github.io/helm-charts/
 helm repo update
 

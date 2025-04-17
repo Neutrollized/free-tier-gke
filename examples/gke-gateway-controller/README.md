@@ -15,7 +15,7 @@ You can check out the [optional](./optional/README.md) steps for the full experi
 
 #### 2. Enabling Gateway API:
 - You can enable this by setting `var.gateway_api_channel` to `CHANNEL_STANDARD` (or `CHANNEL_EXPERIMENTAL`), but you can also update the cluster manually:
-```sh
+```
 gcloud container clusters update playground \
     --gateway-api=standard \
     --zone=northamerica-northeast1-c
@@ -34,7 +34,7 @@ gke-l7-rilb                        networking.gke.io/gateway   True       6m44s
 ## Deploying the Demo
 #### 1. Create Namespaces with Labels
 - create namespaces with label `shared-gateway-access: "true"`
-```sh
+```
 kubectl apply -f namespaces.yaml
 ```
 
@@ -42,7 +42,7 @@ kubectl apply -f namespaces.yaml
 
 
 #### 2. Deploy an internal gateway: 
-```sh
+```
 kubectl apply -f gateway.yaml
 ```
 
@@ -60,13 +60,13 @@ Events:
 
 
 #### 3. Deploy Demo Store App
-```sh
+```
 kubectl apply -f store.yaml
 ```
 
 
 #### 4. Deploy HTTPRoute 
-```sh
+```
 kubectl apply -f store-route.yaml
 ```
 
@@ -107,7 +107,7 @@ Events:
 
 #### 5. Deploy Demo Site App and Site HTTPRoute
 - like the store, but for "site.example.com" instead:
-```sh
+```
 kubectl apply -f site.yaml
 
 kubectl apply -f site-route.yaml
@@ -118,7 +118,7 @@ kubectl apply -f site-route.yaml
 
 ## Testing 
 #### 1. Get the IP of the internal HTTP(s) load balancer:
-```sh
+```
 kubectl get gateway internal-http -n infra-ns -o=jsonpath="{.status.addresses[0].value}"
 ```
 
@@ -189,7 +189,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 
 
 ## Cleanup
-```sh
+```
 kubectl delete -f site-route.yaml
 kubectl delete -f site.yaml
 kubectl delete -f store-route.yaml

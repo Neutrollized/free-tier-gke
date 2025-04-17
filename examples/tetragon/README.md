@@ -6,7 +6,7 @@ I wrote a couple of Medium articles on Tetragon [here](https://medium.com/@glen.
 
 
 ## Setup
-```sh
+```
 helm repo add cilium https://helm.cilium.io
 helm repo update
 
@@ -18,19 +18,19 @@ helm install tetragon cilium/tetragon \
 ```
 
 - upgrade:
-```sh
+```
 helm upgrade tetragon cilium/tetragon -n kube-system
 ```
 
 ### Configuration
 If you want to update Tetragon's config, you can do so by editing ConfigMap:
-```sh
+```
 kubectl edit configmap -n kube-system tetragon-config
 ```
 You can, for example, set `enable-process-cred` to `true`, will enable visibility to capability changes/privileged execution (i.e. `CAP_SYS_ADMIN`)
 
 After you've made your changes, you will need to restart the Tetragon daemonset with:
-```sh
+```
 kubectl rollout restart -n kube-system ds/tetragon
 ```
 
@@ -80,7 +80,7 @@ command terminated with exit code 137
 
 ### fd_install (Intermediate)
 For a little more advanced example, deploy my `nginx-deployment.yaml` example (one folder up) and then apply the `block-nginx-write-index.yaml`:
-```sh
+```
 kubectl apply -f ../nginx-deployment.yaml
 
 kubectl apply -f ./block-nginx-write-index.yaml
@@ -118,7 +118,7 @@ The following block ignores (`NotIn`) the container's init PID (in our case, NGI
 ### [tcp_connect](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp_output.c#L3946), [tcp_sendmsg](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp.c#L1335), and [tcp_close](https://elixir.bootlin.com/linux/v6.6.7/source/net/ipv4/tcp.c#L2918)
 These kprobes are used for creating a tcp connection, sending data and closing the connection respectively.  Applying this will add extra entries in the `tetra getevents -o compact` output (or in our case, `ktetra`).
 
-```console
+```
 kubectl apply -f ./log-tcp-connection.yaml
 ```
 
@@ -133,7 +133,7 @@ kubectl apply -f ./log-tcp-connection.yaml
 
 ### Block Internet egress
 The following policy blocks any egress traffic that is outside of the CIDRs specified.  In my case it was *127.0.0.1* (localhost), *10.0.0.0/18* (pod CIDR, `cluster_ipv4_cidr_block` Terraform variable value) and *10.1.0.0/20* (services CIDR, `services_ipv4_cidr_block` Terraform variable value):
-```sh
+```
 kubectl apply -f ./block-internet-egress.yaml
 ```
 
@@ -141,7 +141,7 @@ You will also notice that this is a `TracingPolicyNamespaced`, which works the s
 
 - you get the following if you try to access something outside the specified CIDR ranges from within a pod:
 ```sh
-# curl www.google.com
+curl www.google.com
 Killed
 ```
 

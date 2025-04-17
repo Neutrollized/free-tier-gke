@@ -5,7 +5,7 @@ I wrote a Medium article on Kyverno vs. OPA Gatekeeper [here](https://medium.com
 
 ## Install
 - install via helm:
-```sh
+```
 helm repo add kyverno https://kyverno.github.io/kyverno/
 helm repo update
 
@@ -18,7 +18,7 @@ helm install kyverno kyverno/kyverno \
 ```
 
 - optionally install Kyverno policies (full set of Kyverno policies which implement PSP):
-```sh
+```
 helm install kyverno-policies kyverno/kyverno-policies -n kyverno
 ```
 

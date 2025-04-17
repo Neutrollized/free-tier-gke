@@ -13,7 +13,7 @@ Vault CSI provider is the oldest one and I would opt for one of the other two op
 
 ## Install Vault in dev mode
 For testing purposes, it's easy to run a single Vault instance in ["Dev" server mode](https://developer.hashicorp.com/vault/docs/concepts/dev-server):
-```sh
+```
 helm repo add hashicorp https://helm.releases.hashicorp.com
 helm repo update
 

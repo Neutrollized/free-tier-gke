@@ -1,6 +1,6 @@
 # OPA Gatekeeper
 
-```sh
+```
 helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
 helm repo update
 
@@ -34,7 +34,7 @@ Example policies include:
 
 
 ## Testing
-```sh
+```
 kubectl run nginx-test --image nginx:latest
 ```
 

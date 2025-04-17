@@ -7,7 +7,7 @@ gcloud iam service-accounts create store-user
 ```
 
 - give the service account the Kubernetes Cluster Viewer role (`roles/container.clusterViewer`) which allows the SA access to the cluster **only**:
-```sh
+```
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member=serviceAccount:store-user@${PROJECT_ID}.iam.gserviceaccount.com \
   --role=roles/container.clusterViewer
@@ -47,14 +47,14 @@ Follows documentation for [authenticating to the Kubernetes API server](https://
 You will need a `kubeconfig.yaml` with your GKE's cluster, users and contexts as well as the corresponding credentials JSON.
 
 ### Credentials JSON
-```sh
+```
 gcloud iam service-accounts keys create gsa-key.json \
   --iam-account=store-user@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 ### `kubeconfig.yaml`
 - you can get the ENDPOINT with:
-```sh
+```
 gcloud container clusters describe playground \
     --zone=northamerica-northeast1-c \
     --format="value(endpoint)" 
@@ -62,7 +62,7 @@ gcloud container clusters describe playground \
 or from `kubectl cluster-info`
 
 - you can get the CA_CERT with:
-```sh
+```
 gcloud container clusters describe playground \
     --zone=northamerica-northeast1-c \
     --format="value(masterAuth.clusterCaCertificate)" 

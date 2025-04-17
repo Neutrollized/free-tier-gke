@@ -3,7 +3,7 @@ ASM can be installed on GKE as a standalone service and [does not require an Ant
 
 ## Requirements
 - The following APIs enabled:
-```sh
+```
 gcloud services enable --async \
   gkehub.googleapis.com \
   meshconfig.googleapis.com \
@@ -17,18 +17,18 @@ NOTE 2: the **mesh_id** label is only required for multi-cluster deployments -- 
 
 
 ## Enable ASM
-```sh
+```
 gcloud container fleet mesh enable --project ${PROJECT_ID}
 ```
 
-```sh
+```
 gcloud container fleet memberships register ${GKE_CLUSTER_NAME}-membership \
   --gke-cluster=${GKE_LOCATION}/${GKE_CLUSTER_NAME} \
   --enable-workload-identity \
   --project ${PROJECT_ID}
 ```
 
-```sh
+```
 gcloud container fleet mesh update \
   --management automatic \
   --memberships ${GKE_CLUSTER_NAME}-membership \
@@ -37,7 +37,7 @@ gcloud container fleet mesh update \
 
 ### Verify
 - Takes ~5-10 min to provision, note the "**Revision(s) ready for use**" as you will require that a little later on.
-```sh
+```
 gcloud container fleet mesh describe --project ${PROJECT_ID}
 ```
 
@@ -75,21 +75,21 @@ You will need a namespace for your ASM gateway.  Here I just called it **asm-gat
 
 The revision can be found in the output of the verification step above, or you can run: `kubectl -n istio-system get controlplanerevision`
 
-```sh
+```
 kubectl create ns asm-gateway
 kubectl label ns asm-gateway istio.io/rev=asm-managed-rapid
 
 kubectl apply -f gateways/istio-ingressgateway -n asm-gateway
 ```
 
-```sh
+```
 kubectl get service -n asm-gateway
 ```
 
 ## Deploy Bookinfo Sample App
 We will use the same auto-injection label for the namespace in which we will be deploying our sample application.
 
-```sh
+```
 kubectl create ns bookinfo
 kubectl label ns bookinfo istio.io/rev=asm-managed-rapid
 
@@ -97,7 +97,7 @@ kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/bo
 ```
 
 ### Expose Application 
-```sh
+```
 kubectl apply -f productpage-gateway.yaml
 ```
 
@@ -114,7 +114,7 @@ Despite its name, **ServiceEntry** is used *allow* your pods egress to the Inter
 **For an additional super lightweight sample app, check out the [starwars-app](./starwars-app) folder**
 
 ## Cleanup
-```sh
+```
 kubectl delete -f istio-manifests/productpage-gateway.yaml
 kubectl delete -f https://raw.githubusercontent.com/istio/istio/master/samples/bookinfo/platform/kube/bookinfo.yaml -n bookinfo
 kubectl delete -f gateways/istio-ingressgateway -n asm-gateway

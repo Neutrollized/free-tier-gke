@@ -9,7 +9,7 @@ This example makes use of [Workload Identity](https://cloud.google.com/kubernete
 
 ### How-To
 You will need to create a GCS bucket to store the container image context tarball (I've provided an [example](./context.tar.gz), but feel free to use your own):
-```sh
+```
 gsutil mb gs://${GCS_BUCKET}
 
 gsutil cp ./context.tar.gz gs://${GCS_BUCKET}
@@ -18,7 +18,7 @@ NOTE 1: the build context needs to be in `.tar.gz` format and is just a tarball 
 NOTE 2: the `context.tar.gz` I've included builds a HashiCorp Vault image
 
 - create Docker repo in GAR
-```sh
+```
 gcloud artifacts repositories create ${GAR_REPO_NAME} \
   --repository-format=docker \
   --location=${GAR_LOCATION} \
@@ -26,42 +26,42 @@ gcloud artifacts repositories create ${GAR_REPO_NAME} \
 ```
 
 - create Google service account (GSA) and Kubernetes service account (KSA)
-```sh
+```
 gcloud iam service-accounts create kaniko-wi-gsa \
   --description="Workload Identity SA for Kaniko"
 ```
 
-```sh
+```
 kubectl create serviceaccount kaniko-wi-ksa
 ```
 
 - you will need additional roles added to the **kaniko-wi-gsa** service account that got created as part of this repo's blueprint to write to GAR
-```sh
+```
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --role roles/artifactregistry.writer \
   --member "serviceAccount:kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com"
 ```
 and
-```sh
+```
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --role roles/storage.objectViewer \
   --member "serviceAccount:kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com"
 ```
 
 - assign your KSA the [Workload Identity User](https://cloud.google.com/iam/docs/understanding-roles#iam.workloadIdentityUser) role which gives it the permission to impersonate your GSA
-```sh
+```
 gcloud iam service-accounts add-iam-policy-binding kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com \
   --role roles/iam.workloadIdentityUser \
   --member "serviceAccount:${PROJECT_ID}.svc.id.goog[default/kaniko-wi-ksa]"
 ```
 
-```sh
+```
 kubectl annotate serviceaccount kaniko-wi-ksa \
   iam.gke.io/gcp-service-account=kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 - make a copy of the [pod YAML](./kaniko-executor-wi.yaml.sample), edit accordingly and then apply!
-```sh
+```
 kubectl apply -f ./kaniko-executor-wi.yaml
 ```
 
@@ -113,7 +113,7 @@ kaniko kaniko Get:5 http://deb.debian.org/debian buster/main amd64 openssl amd64
 
 
 ## Cleanup
-```sh
+```
 gcloud artifacts repositories delete ${GAR_REPO_NAME} --location=${GAR_LOCATION}
 
 gcloud iam service-accounts remove-iam-policy-binding kaniko-wi-gsa@${PROJECT_ID}.iam.gserviceaccount.com \
