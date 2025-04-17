@@ -12,7 +12,7 @@ This example requires the GKE Dataplane V2 observability feature be enabled. **E
 
 
 - the following are aliases I set up in my shell environment to make life easier:
-```
+```sh
 alias gkehubble="kubectl exec -it -n gke-managed-dpv2-observability deployment/hubble-relay -c hubble-cli -- hubble "
 
 alias gkehubbleobserve="kubectl exec -it -n gke-managed-dpv2-observability deployment/hubble-relay -c hubble-cli -- hubble observe --follow --not --namespace kube-system --not --namespace gke-managed-dpv2-observability --not --namespace gke-managed-system "

@@ -7,13 +7,13 @@ You will need something beefier than an **e2-medium** node machine type.  I pers
 
 ## Setup
 Add the Helm chart:
-```console
+```sh
 helm repo add falcosecurity https://falcosecurity.github.io/charts
 ```
 
 
 Install using Helm (set driver to `ebpf`):
-```console
+```sh
 helm install falco falcosecurity/falco \
   --set driver.kind=ebpf \
   --namespace falco \
@@ -21,7 +21,7 @@ helm install falco falcosecurity/falco \
 ```
 
 For GKE Sandbox (gVisor enabled) clusters:
-```console
+```sh
 helm install falco-gvisor falcosecurity/falco \
   -f https://raw.githubusercontent.com/falcosecurity/charts/master/falco/values-gvisor-gke.yaml \
   --namespace falco-gvisor \
@@ -31,7 +31,7 @@ helm install falco-gvisor falcosecurity/falco \
 
 ## Adding Custom Rules
 If you want to add custom rules, you can redeploy falco with helm and specify custom rules file:
-```console
+```sh
 helm upgrade falco falcosecurity/falco --set driver.kind=ebpf --namespace falco -f ./custom_falco_rules.yaml
 ```
 
@@ -39,7 +39,7 @@ helm upgrade falco falcosecurity/falco --set driver.kind=ebpf --namespace falco 
 Spin up any pod and then exec into it.  It should get logged by Falco by one of its default rules (*priority: NOTICE*) as well as the custom rule (*priority: CRITICAL*) that was included in this repo (if you added it)
 
 - sample Falco log output:
-```
+```console
 + falco-5zh6f › falco
 falco-5zh6f falco Fri Dec  9 02:48:25 2022: Falco version: 0.33.1 (x86_64)
 falco-5zh6f falco Fri Dec  9 02:48:25 2022: Falco initialized with configuration file: /etc/falco/falco.yaml

@@ -3,7 +3,7 @@
 ## GKE-to-AKS
 I have a [Free Tier AKS](https://github.com/Neutrollized/free-tier-aks) repo for creating a fairly low-cost Azure Kubernetes Service cluster and if you wish, you can deploy that along with this free tier GKE. **However**, you will have to create a VPN tunnel between the two cloud providers, and that can be costly.
 
-## Optionally: GKE-to-GKE (recommended!)
+## GKE-to-GKE (recommended!)
 This is a cheaper option because unlike other cloud providers where their VPCs are regionally scoped, Google's VPCs are global, so a GKE cluster in Asia can communicate with a GKE cluster in South America internally by default (provided they're in the same VPC).
 
 Currently, this repo only creates a single GKE cluster in a single subnet in the VPC, but you can create the missing resources on top of this if you'd like.
@@ -12,13 +12,13 @@ I wrote [Cilium's documentation](https://docs.cilium.io/en/stable/network/cluste
 
 
 ### Enable ClusterMesh
-```
+```sh
 cilium clustermesh enable --context ${CONTEXT1} --enable-kvstoremesh
 cilium clustermesh enable --context ${CONTEXT2} --enable-kvstoremesh
 ```
 
-- (recommended) match Cillium CA certs
-```
+- (recommended) match Cilium CA certs
+```sh
 kubectl --context=${CONTEXT2} delete secret -n kube-system cilium-ca
 
 kubectl --context=${CONTEXT1} get secret -n kube-system cilium-ca -o yaml | \
@@ -26,7 +26,7 @@ kubectl --context=${CONTEXT1} get secret -n kube-system cilium-ca -o yaml | \
 ```
 
 **NOTE** - if you don't have matching certs, you'll get something like the following when you connect your clusters:
-```
+```console
 ...
 ⚠️ Cilium CA certificates do not match between clusters. Multicluster features will be limited!
 ℹ️ Configuring Cilium in cluster 'gke-1' to connect to cluster 'gke-2'
@@ -35,7 +35,7 @@ kubectl --context=${CONTEXT1} get secret -n kube-system cilium-ca -o yaml | \
 ```
 
 ### Connect clusters
-```
+```sh
 cilium clustermesh connect --context ${CONTEXT1} --destination-context ${CONTEXT2}
 ```
 
@@ -43,7 +43,7 @@ cilium clustermesh connect --context ${CONTEXT1} --destination-context ${CONTEXT
 I'm using NGINX ingress controller here, but basically you want to deploy the services in BOTH clusters, but the ingress controller in **ONLY ONE**.
 
 - installing NGINX ingress controller via Helm:
-```console
+```sh
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm install nginx-ingress ingress-nginx/ingress-nginx

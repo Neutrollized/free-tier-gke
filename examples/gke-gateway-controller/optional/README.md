@@ -7,14 +7,15 @@ gcloud iam service-accounts create store-user
 ```
 
 - give the service account the Kubernetes Cluster Viewer role (`roles/container.clusterViewer`) which allows the SA access to the cluster **only**:
-```
+```sh
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member=serviceAccount:store-user@${PROJECT_ID}.iam.gserviceaccount.com \
   --role=roles/container.clusterViewer
 ```
 
 - actual cluster permissions will be defined by the following, which you will have to apply (i.e. `kubectl apply -f serviceaccount.yaml`):
-```
+```yaml
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -46,14 +47,14 @@ Follows documentation for [authenticating to the Kubernetes API server](https://
 You will need a `kubeconfig.yaml` with your GKE's cluster, users and contexts as well as the corresponding credentials JSON.
 
 ### Credentials JSON
-```
+```sh
 gcloud iam service-accounts keys create gsa-key.json \
   --iam-account=store-user@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 ### `kubeconfig.yaml`
 - you can get the ENDPOINT with:
-```
+```sh
 gcloud container clusters describe playground \
     --zone=northamerica-northeast1-c \
     --format="value(endpoint)" 
@@ -61,13 +62,14 @@ gcloud container clusters describe playground \
 or from `kubectl cluster-info`
 
 - you can get the CA_CERT with:
-```
+```sh
 gcloud container clusters describe playground \
     --zone=northamerica-northeast1-c \
     --format="value(masterAuth.clusterCaCertificate)" 
 ```
 
-```
+```yaml
+---
 apiVersion: v1
 kind: Config
 clusters:
@@ -95,7 +97,7 @@ current-context: playground-store
 ```
 
 ### Export ENV VARs
-```
+```sh
 export KUBECONFIG=/path/to/kubeconfig.yaml
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gsa-key.json
 ```
@@ -105,12 +107,12 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gsa-key.json
 Since your user would only have permissions in the **store-ns** namespace, trying to run commands anywhere else should produce an error:
 
 - example `kubectl get pods` (in **default** namespace):
-```
+```console
 Error from server (Forbidden): pods is forbidden: User "store-user@my-project.iam.gserviceaccount.com" cannot list resource "pods" in API group "" in the namespace "default": requires one of ["container.pods.list"] permission(s).
 ```
 
 - example `kubectl apply -f site.yaml` (which deploys to **site-ns** namespace):
-```
+```console
 Error from server (Forbidden): error when retrieving current configuration of:
 Resource: "apps/v1, Resource=deployments", GroupVersionKind: "apps/v1, Kind=Deployment"
 Name: "site-v1", Namespace: "site-ns"

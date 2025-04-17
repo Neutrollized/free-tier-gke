@@ -5,7 +5,7 @@ I wrote a Medium article on Kyverno vs. OPA Gatekeeper [here](https://medium.com
 
 ## Install
 - install via helm:
-```console
+```sh
 helm repo add kyverno https://kyverno.github.io/kyverno/
 helm repo update
 
@@ -18,7 +18,7 @@ helm install kyverno kyverno/kyverno \
 ```
 
 - optionally install Kyverno policies (full set of Kyverno policies which implement PSP):
-```console
+```sh
 helm install kyverno-policies kyverno/kyverno-policies -n kyverno
 ```
 
@@ -26,7 +26,7 @@ helm install kyverno-policies kyverno/kyverno-policies -n kyverno
 
 ### Exclusions
 - namespace:
-```
+```yaml
 ...
   exclude:
     any:
@@ -35,7 +35,7 @@ helm install kyverno-policies kyverno/kyverno-policies -n kyverno
         - kube-system
 ...
 ```
-- **NOTE**: exclusion of the `kube-system` namespace is aready implied so no need to explicitly state (unless you want to)
+- **NOTE**: exclusion of the `kube-system` namespace is already implied so no need to explicitly state (unless you want to)
 
 
 ## Example

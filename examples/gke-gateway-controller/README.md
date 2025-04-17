@@ -15,14 +15,14 @@ You can check out the [optional](./optional/README.md) steps for the full experi
 
 #### 2. Enabling Gateway API:
 - You can enable this by setting `var.gateway_api_channel` to `CHANNEL_STANDARD` (or `CHANNEL_EXPERIMENTAL`), but you can also update the cluster manually:
-```console
+```sh
 gcloud container clusters update playground \
     --gateway-api=standard \
     --zone=northamerica-northeast1-c
 ```
 
 - verify install with `kubectl get gatewayclass -n kube-system` (may take a minute, so be patient):
-```
+```console
 NAME                               CONTROLLER                  ACCEPTED   AGE
 gke-l7-global-external-managed     networking.gke.io/gateway   True       6m44s
 gke-l7-gxlb                        networking.gke.io/gateway   True       6m44s
@@ -34,7 +34,7 @@ gke-l7-rilb                        networking.gke.io/gateway   True       6m44s
 ## Deploying the Demo
 #### 1. Create Namespaces with Labels
 - create namespaces with label `shared-gateway-access: "true"`
-```console
+```sh
 kubectl apply -f namespaces.yaml
 ```
 
@@ -42,12 +42,12 @@ kubectl apply -f namespaces.yaml
 
 
 #### 2. Deploy an internal gateway: 
-```console
+```sh
 kubectl apply -f gateway.yaml
 ```
 
 - verify with `kubectl describe gateway internal-http -n infra-ns`:
-```
+```console
 ...
 ...
 Events:
@@ -60,18 +60,18 @@ Events:
 
 
 #### 3. Deploy Demo Store App
-```console
+```sh
 kubectl apply -f store.yaml
 ```
 
 
 #### 4. Deploy HTTPRoute 
-```console
+```sh
 kubectl apply -f store-route.yaml
 ```
 
 - verify with `kubectl describe httproute store -n store-ns`:
-```
+```console
 ...
 ...
     Controller Name:         networking.gke.io/gateway
@@ -107,7 +107,7 @@ Events:
 
 #### 5. Deploy Demo Site App and Site HTTPRoute
 - like the store, but for "site.example.com" instead:
-```console
+```sh
 kubectl apply -f site.yaml
 
 kubectl apply -f site-route.yaml
@@ -118,7 +118,7 @@ kubectl apply -f site-route.yaml
 
 ## Testing 
 #### 1. Get the IP of the internal HTTP(s) load balancer:
-```console
+```sh
 kubectl get gateway internal-http -n infra-ns -o=jsonpath="{.status.addresses[0].value}"
 ```
 
@@ -127,7 +127,7 @@ kubectl get gateway internal-http -n infra-ns -o=jsonpath="{.status.addresses[0]
 Since only internal traffic is allowed, I'm going to do the `curl` command via one the of the pods.
 
 - `kubectl exec -it store-v2-6856f59f7f-7kj2w -n store-ns -- curl -H "host: store.example.com" 192.168.0.6`:
-```
+```JSON
 {
   "cluster_name": "playground",
   "host_header": "store.example.com",
@@ -143,7 +143,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 **NOTE:** I am using the [traffic splitting](https://gateway-api.sigs.k8s.io/v1alpha2/guides/traffic-splitting/) of the Gateway API (which is normally a feature you would only find with serivce meshes), so you may hit *store-v2*
 
 - `kubectl exec -it store-v2-6856f59f7f-7kj2w -n store-ns -- curl -H "host: store.example.com" -H "env: canary" 192.168.0.6`:
-```
+```JSON
 {
   "cluster_name": "playground",
   "host_header": "store.example.com",
@@ -158,7 +158,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 ```
 
 - `kubectl exec -it store-v2-6856f59f7f-7kj2w -n store-ns -- curl -H "host: store.example.com" 192.168.0.6/de`: 
-```
+```JSON
 {
   "cluster_name": "playground",
   "host_header": "store.example.com",
@@ -173,7 +173,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 ```
 
 - `kubectl exec -it store-v2-6856f59f7f-zrblv -n store-ns -- curl -H "host: site.example.com" 192.168.0.6`:
-```
+```JSON
 {
   "cluster_name": "playground",
   "host_header": "site.example.com",
@@ -189,7 +189,7 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
 
 
 ## Cleanup
-```console
+```sh
 kubectl delete -f site-route.yaml
 kubectl delete -f site.yaml
 kubectl delete -f store-route.yaml

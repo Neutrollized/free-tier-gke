@@ -11,24 +11,24 @@ Example below based on [Workload Identity guide](https://cloud.google.com/kubern
 
 
 ## Syntax
-```console
+```sh
 gcloud iam service-accounts create GSA_NAME
 ```
 
-```console
+```sh
 kubectl create serviceaccount KSA_NAME \
   --namespace NAMESPACE
 ```
 
 - allow Kubernetes service account to impersonate the GCP service account by adding IAM policy binding between the two:
-```console
+```sh
 gcloud iam service-accounts add-iam-policy-binding GSA_NAME@GSA_PROJECT_ID.iam.gserviceaccount.com \
   --role roles/iam.workloadIdentityUser \
   --member "serviceAccount:PROJECT_ID.svc.id.goog[NAMESPACE/KSA_NAME]"
 ```
 
 - annotate Kubernetes service account with email address of GCP service account:
-```console
+```sh
 kubectl annotate serviceaccount KSA_NAME \
   --namespace NAMESPACE \
   iam.gke.io/gcp-service-account=GSA_NAME@PROJECT_ID.iam.gserviceaccount.com
@@ -41,29 +41,29 @@ kubectl annotate serviceaccount KSA_NAME \
 
 ### Example
 - I will be using a separate namespace in this example
-```console
+```sh
 kubectl create ns wi-test
 ```
 
-```console
+```sh
 kubectl create serviceaccount simple-wi-ksa -n wi-test
 ```
 
 - if you deployed the cluster from my blueprint, a Google service account called "simple-wi-gsa" should arleady be created for you, otherwise please create one first before continuing onto the next step
-```console
+```sh
 gcloud iam service-accounts add-iam-policy-binding simple-wi-gsa@my-project.iam.gserviceaccount.com \
   --role roles/iam.workloadIdentityUser \
   --member "serviceAccount:my-project.svc.id.goog[wi-test/simple-wi-ksa]"
 ```
 
-```console
+```sh
 kubectl annotate serviceaccount simple-wi-ksa \
   --namespace wi-test \
   iam.gke.io/gcp-service-account=simple-wi-gsa@my-project.iam.gserviceaccount.com
 ```
 
 - you can confirm the changes with `kubectl describe serviceaccount simple-wi-ksa -n wi-test`:
-```
+```console
 Name:                simple-wi-ksa
 Namespace:           wi-test
 Labels:              <none>
@@ -75,11 +75,11 @@ Events:              <none>
 ```
 
 - deploy container
-```console
+```sh
 kubectl apply -f wi-test.yaml
 ```
 
 - verify setup by checking node metadata server:
-```console
+```sh
 kubectl exec workload-identity-test -n wi-test -- curl -s -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/email
 ```

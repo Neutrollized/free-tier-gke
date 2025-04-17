@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.24.1] - 2025-04-16
+### Changed
+- Updated `examples/hubble` Hubble UI from `0.13.1` to `0.13.2`
+- Redid the READMEs' formatting style and fixed typos
+
 ## [0.24.0] - 2025-03-06
 ### Added
 - New variable `enable_dns_endpoint` (default: `true`) for enabling [DNS-based endpoints](https://cloud.google.com/blog/products/containers-kubernetes/new-dns-based-endpoint-for-the-gke-control-plane)

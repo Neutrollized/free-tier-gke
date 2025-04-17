@@ -1,6 +1,6 @@
 # OPA Gatekeeper
 
-```console
+```sh
 helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
 helm repo update
 
@@ -22,7 +22,9 @@ Example policies include:
 
 ### NOTE
 - if the k8simagetag `ContraintsTemplate` violation was the following, then the latest tag is effectively hardcoded (compared the current one)
-```
+```yaml
+...
+...
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           endswith(container.image, ":latest")
@@ -32,11 +34,11 @@ Example policies include:
 
 
 ## Testing
-```console
+```sh
 kubectl run nginx-test --image nginx:latest
 ```
 
 Produces error:
-```
+```console
 Error from server (Forbidden): admission webhook "validation.gatekeeper.sh" denied the request: [deny-latest-tags] container <nginx-test> uses an image tagged with latest <nginx:latest>
 ```

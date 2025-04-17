@@ -36,7 +36,7 @@ Leaving `node_locations` blank will default your node to be in the same zone as 
 
 ### Enable Required APIs
 You can do this via console or...
-```console
+```sh
 gcloud services enable --async \
   container.googleapis.com
 ```
@@ -88,12 +88,12 @@ New security feature announced in Nov '24, you can read more about it [here](htt
 ## Test Framework
 Starting in [v0.15.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#0150---2023-10-16), I will be including some tests that utilize the native testing framework that was added in Terraform v1.16.0.  To run the tests:
 
-```console
+```sh
 terraform test
 ```   
 
 - sample output:
-```
+```console
 tests/gke.tftest.hcl... in progress
   run "setup_tests"... pass
   run "create_zonal_gke"... pass

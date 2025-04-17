@@ -9,12 +9,12 @@ The pods should deploy fairly quickly, but the service might take a bit before y
 
 ## Horizontal Pod Autoscaling
 The command line equivalen of the HPA manifest is:
-```console
+```sh
 kubectl autoscale deployment nginx --cpu-percent=10 --min=1 --max=5
 ```
 
 - stress test your deployment with:
-```console
+```sh
 ab -n 100000 -c 5000 http://[LOADBALANCER_IP]/
 ```
 

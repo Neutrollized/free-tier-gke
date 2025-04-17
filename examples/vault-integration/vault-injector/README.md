@@ -17,7 +17,7 @@ addons_config = {
 
 ### Install Injector ONLY
 This will likely be the mode for most users as they want to connect to an external Vault instance/cluster:
-```console
+```sh
 helm install vault hashicorp/vault \
   --set="global.externalVaultAddr=[YOUR_VAULT_ADDR:PORT]" \
   --set="injector.enabled=true"
@@ -25,7 +25,7 @@ helm install vault hashicorp/vault \
 
 ### Install Injector with Vault
 For the demo below, we will deploy a single-instance Vault server in dev mode:
-```console
+```sh
 helm install vault hashicorp/vault \
   --set="server.dev.enabled=true" \
   --set="injector.enabled=true"
@@ -39,7 +39,7 @@ The following is a slightly-modified version of the sample found [here](https://
 
 ### Create KV secret
 - exec into your Vault instance/pod:
-```console
+```sh
 vault secrets enable -path=internal kv-v2
 
 vault kv put internal/database/config username="db-readonly-username" password="db-secret-password"
@@ -47,7 +47,7 @@ vault kv put internal/database/config username="db-readonly-username" password="
 
 ### Setup Kubernetes auth
 - exec into your Vault instance/pod:
-```console
+```sh
 vault auth enable kubernetes
 
 vault write auth/kubernetes/config \
@@ -55,7 +55,7 @@ vault write auth/kubernetes/config \
 ```
 
 For the *KUBERNETES_ADDR*, I used the private endpoint.  You can use the Google Cloud console, but I queried it with the following (adjust values as it pertains to your cluster/zone setup):
-```console
+```sh
 gcloud container clusters describe playground \
   --zone=northamerica-northeast1-c \
   --format="value(privateClusterConfig.privateEndpoint)"
@@ -63,7 +63,7 @@ gcloud container clusters describe playground \
 
 ### Configure Kubernetes auth policy
 - exec into your Vault instance/pod:
-```console
+```sh
 vault policy write internal-app - <<EOF
 path "internal/data/database/config" {
    capabilities = ["read"]
@@ -71,7 +71,7 @@ path "internal/data/database/config" {
 EOF
 ```
 
-```console
+```sh
 vault write auth/kubernetes/role/internal-app \
       bound_service_account_names=internal-app \
       bound_service_account_namespaces=default \
@@ -81,12 +81,12 @@ vault write auth/kubernetes/role/internal-app \
 
 ### Deploying app
 - create Kubernetes service account:
-```console
+```sh
 kubectl create sa internal-app
 ```
 
 #### Basic example (v1)
-```console
+```sh
 kubectl apply -f sample-app_v1.yaml
 ```
 
@@ -95,7 +95,7 @@ In this deployment, the KV secret will be mounted at `/vault/secrets/database-co
 You can also exec into your Vault instance/pod and update your secret, and you should see it updated in about 300s (but you can [configure the frequency which the sidecar agent polls vault for KV secret updates](https://developer.hashicorp.com/vault/docs/platform/k8s/injector/annotations#vault-hashicorp-com-template-static-secret-render-interval))
 
 #### Templated example (v2)
-```console
+```sh
 kubectl apply -f sample-app_v2.yaml
 ```
 

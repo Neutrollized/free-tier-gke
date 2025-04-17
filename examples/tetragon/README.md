@@ -6,7 +6,7 @@ I wrote a couple of Medium articles on Tetragon [here](https://medium.com/@glen.
 
 
 ## Setup
-```console
+```sh
 helm repo add cilium https://helm.cilium.io
 helm repo update
 
@@ -18,47 +18,47 @@ helm install tetragon cilium/tetragon \
 ```
 
 - upgrade:
-```console
+```sh
 helm upgrade tetragon cilium/tetragon -n kube-system
 ```
 
 ### Configuration
 If you want to update Tetragon's config, you can do so by editing ConfigMap:
-```console
+```sh
 kubectl edit configmap -n kube-system tetragon-config
 ```
 You can, for example, set `enable-process-cred` to `true`, will enable visibility to capability changes/privileged execution (i.e. `CAP_SYS_ADMIN`)
 
 After you've made your changes, you will need to restart the Tetragon daemonset with:
-```console
+```sh
 kubectl rollout restart -n kube-system ds/tetragon
 ```
 
 ### Tetragon CLI
 I suggest making an alias if you don't already have the Tetragon CLI installed on your system, as you will be calling `tetra` from one of the tetragon containers (if you want to use `tetra` that's on your local system, replace `ktetra`):
 
-```console
+```sh
 alias ktetra='kubectl exec -it -n kube-system ds/tetragon -c tetragon -- tetra '
 alias tetralogs='kubectl logs -n kube-system -l app.kubernetes.io/name=tetragon -c export-stdout -f | ktetra getevents -o compact '
 ```
 (the second alias will be more relevant later on)
 
 
-```console
+```sh
 ktetra status
 
 ktetra version
 ```
 
 - output:
-```
+```console
 Health Status: running
 
 CLI version: v1.3.0
 ```
 
 #### Sample usage
-```console
+```sh
 tetralogs --namespace default --pods myapp
 ```
 
@@ -72,7 +72,7 @@ kubectl apply -f ./block-fd-install.yaml
 ```
 
 - notice how writing to */tmp/bar* is okay, but */tmp/tetragon* will trigger an SIGKILL on the process (in my case, the kubectl exec -it /bin/bash shell)
-```
+```sh
 bash-4.3# echo 'foo' > /tmp/bar
 bash-4.3# echo 'foo' > /tmp/tetragon
 command terminated with exit code 137
@@ -80,7 +80,7 @@ command terminated with exit code 137
 
 ### fd_install (Intermediate)
 For a little more advanced example, deploy my `nginx-deployment.yaml` example (one folder up) and then apply the `block-nginx-write-index.yaml`:
-```console
+```sh
 kubectl apply -f ../nginx-deployment.yaml
 
 kubectl apply -f ./block-nginx-write-index.yaml
@@ -123,7 +123,7 @@ kubectl apply -f ./log-tcp-connection.yaml
 ```
 
 - below is a sample output of `kubectl exec -it tiefighter -n galaxy -- curl -XPOST deathstar.galaxy.svc.cluster.local/v1/request-landing` with the [Starwars demo app](../cilium/starwars-demo/http-sw-app.yaml):
-```
+```console
 🚀 process galaxy/tiefighter /usr/bin/curl -s -XPOST deathstar.galaxy.svc.cluster.local/v1/request-landing
 🔌 connect galaxy/tiefighter /usr/bin/curl tcp 10.0.0.7:43724 -> 10.1.11.240:80
 📤 sendmsg galaxy/tiefighter /usr/bin/curl tcp 10.0.0.7:43724 -> 10.1.11.240:80 bytes 117
@@ -133,14 +133,14 @@ kubectl apply -f ./log-tcp-connection.yaml
 
 ### Block Internet egress
 The following policy blocks any egress traffic that is outside of the CIDRs specified.  In my case it was *127.0.0.1* (localhost), *10.0.0.0/18* (pod CIDR, `cluster_ipv4_cidr_block` Terraform variable value) and *10.1.0.0/20* (services CIDR, `services_ipv4_cidr_block` Terraform variable value):
-```console
+```sh
 kubectl apply -f ./block-internet-egress.yaml
 ```
 
 You will also notice that this is a `TracingPolicyNamespaced`, which works the same way as a `TracingPolicy`, except it is namespace-scoped (as you can probably already guess)
 
 - you get the following if you try to access something outside the specified CIDR ranges from within a pod:
-```
+```sh
 # curl www.google.com
 Killed
 ```

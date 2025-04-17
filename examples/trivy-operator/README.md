@@ -3,7 +3,7 @@ Trivy Operator let's you continuously scan your Kubernetes (GKE) cluster for any
 
 ## Install
 - install via helm:
-```console
+```sh
 helm repo add aqua https://aquasecurity.github.io/helm-charts/
 helm repo update
 
@@ -32,14 +32,14 @@ Apply both NGINX deployment manifests.  Once they are deployed, list the `vulner
 
 #### Reports
 - [VulnerabilityReport](https://aquasecurity.github.io/trivy-operator/v0.20.0/docs/vulnerability-scanning/trivy/) (`kubectl get vulnerabilityreport --all-namespaces -o wide`):
-```
+```console
 NAMESPACE      NAME                                                  REPOSITORY                    TAG                SCANNER   AGE     CRITICAL   HIGH   MEDIUM   LOW   UNKNOWN
 default        replicaset-nginx-6bf45ff-nginx                        library/nginx                 latest             Trivy     15m     2          23     45       91    1
 mynginx        replicaset-nginx-unpriv-58b44548b6-nginx              nginxinc/nginx-unprivileged   1.25-alpine-slim   Trivy     39s     0          0      0        0     0
 ```
 
 - [ConfigAuditReport](https://aquasecurity.github.io/trivy-operator/v0.20.0/docs/crds/configaudit-report/) (`kubectl get configauditreport --all-namespaces -o wide`):
-```
+```coonsole
 NAMESPACE      NAME                                   SCANNER   AGE     CRITICAL   HIGH   MEDIUM   LOW
 default        replicaset-nginx-6bf45ff               Trivy     16m     0          3      8        13
 default        service-nginx-svc                      Trivy     5m44s   0          0      0        2
