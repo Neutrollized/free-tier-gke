@@ -1,6 +1,9 @@
 # Argo CD 
 This is for the setup and usage for the new ArgoCD v3.x, which was released in May 2025! There has been some minor cosmetic changes with the UI from v2.x to v3.x, but most of the improvements are under-the-hood updates.
 
+This is a more complex topic and not everything will be covered here.  I plan on expanding on this topic over time.
+
+
 ## Installation
 The installation below is just a very basic, lightweight install with a load balancer (no certs).  For an ingress, more production-ready setup on GKE, check out these [example values](https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd#gke-application-load-balancer).
 
@@ -59,4 +62,3 @@ The example (private) repository that I created, *Neutrollized/demo-app-argocd* 
 ## ArgoCD Components
 ### Dex
 - [Delegate authentication to EXternal identity providers](https://argocd-operator.readthedocs.io/en/latest/usage/dex/)
-
