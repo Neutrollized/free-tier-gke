@@ -1,0 +1,16 @@
+---
+# https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml
+global:
+  domain: ""
+
+configs:
+  params:
+    server.insecure: true
+
+# we're not using an external identity provider
+dex:
+  enabled: false
+
+server:
+  service:
+    type: "LoadBalancer"

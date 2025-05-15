@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.24.2] - 2025-05-15
+### Added
+- `examples/argocd`
+### Changed
+- Updated the `--zone` flag for the GKE connection string to `--location` instead (a region or zone can be passed as the location)
+
 ## [0.24.1] - 2025-04-16
 ### Changed
 - Updated `examples/hubble` Hubble UI from `0.13.1` to `0.13.2`
@@ -24,7 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Tightened IAM roles assigned to the GKE node service account
 ### Removed
-- Variable `kubelet_ro_port_enabled` and hardcoding the setting to `FALSE` because there is no reason you should be enabling this.  Transition to the more secure, authenticated port `10250` if you have workloads that rely on the read-only port
+- Variable `kubelet_ro_port_enabled` and hardcoded the setting to `FALSE` because there is no reason you should be enabling this.  Transition to the more secure, authenticated port `10250` if you have workloads that rely on the read-only port
 
 ## [0.22.0] - 2025-02-18
 ### Added

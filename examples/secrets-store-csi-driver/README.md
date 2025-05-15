@@ -5,6 +5,9 @@ Secrets management is undoubtedly one of the most important pieces in software d
 
 This makes the Secrets Store CSI Driver a versatile secrets management tool in the Kubernetes ecosystem and is recommended for use with Anthos.
 
+### Open-source or Google-managed?
+The instructions I provided below is for setting up the open source version, but you can actually toggle a setting which will enable a Google-managed version of the same CSI driver for you.  It's called the [Secret Manager add-on for GKE](https://cloud.google.com/secret-manager/docs/secret-manager-managed-csi-component), and as far as I can tell, it's the same thing except it's managed and version of the driver is pinned/set by Google.
+
 
 ## Setup
 ### Installing CSI Driver

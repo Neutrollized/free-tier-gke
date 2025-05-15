@@ -35,3 +35,4 @@ terraform.tfvars
 
 # Miscellaneous
 *.swp
+*.DS_Store
