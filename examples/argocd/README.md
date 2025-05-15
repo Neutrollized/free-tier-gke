@@ -46,12 +46,12 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ## Example repo & apps
 The example (private) repository that I created, *Neutrollized/demo-app-argocd* contains some examples from [argoproj/argocd-example-apps](https://github.com/argoproj/argocd-example-apps)
 
-### Connecting to (private) GitHub repo
+#### Connecting to (private) GitHub repo
 ![GitHub PAT with perms](./static/01_gh_token_perms.png)
 ![ArgoCD connecting to GitHub repo](./static/02_argocd_connect_repo.png)
 ![ArgoCD connected to GitHub repo](./static/03_argocd_connected_repo.png)
 
-### Creating and syncing application
+#### Creating and syncing application
 ![ArgoCD create app](./static/04_argocd_create_app.png)
 ![ArgoCD sync app](./static/05_argocd_sync_app.png)
 
