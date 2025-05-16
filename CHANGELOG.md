@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.24.3] - 2025-05-16
+### Changed
+- Updated `examples/argocd`
+- Updated `examples/tetragon` from Tetragon `v1.3.0` to `v1.4.0`
+
 ## [0.24.2] - 2025-05-15
 ### Added
 - `examples/argocd`

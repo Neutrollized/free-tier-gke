@@ -55,8 +55,9 @@ The example (private) repository that I created, *Neutrollized/demo-app-argocd* 
 ![ArgoCD connected to GitHub repo](./static/03_argocd_connected_repo.png)
 
 #### Creating and syncing application
-![ArgoCD create app](./static/04_argocd_create_app.png)
-![ArgoCD sync app](./static/05_argocd_sync_app.png)
+![ArgoCD create app (GitHub)](./static/04_argocd_create_app_git.png)
+![ArgoCD create app (Helm)](./static/05_argocd_create_app_helm.png)
+![ArgoCD sync app](./static/06_argocd_sync_app.png)
 
 
 ## ArgoCD Components

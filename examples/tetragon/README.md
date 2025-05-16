@@ -14,8 +14,11 @@ helm search repo cilium/tetragon -l
 
 helm install tetragon cilium/tetragon \
   --namespace kube-system \
-  --version 1.3.0
+  --version 1.4.0
 ```
+
+**NOTE:** I also have an [ArgoCD Helm deployment example](../argocd/README.md#creating-and-syncing-application)
+
 
 - upgrade:
 ```
@@ -54,7 +57,7 @@ ktetra version
 ```console
 Health Status: running
 
-CLI version: v1.3.0
+CLI version: v1.4.0
 ```
 
 #### Sample usage
