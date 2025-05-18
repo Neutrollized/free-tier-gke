@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.24.4] - 2025-05-18
+### Changed
+- Updated `examples/kyverno`
+- Updated `examples/opa-gatekeeper`
+- Updated `examples/prometheus`
+- Updated `examples/trivy-operator`
+
 ## [0.24.3] - 2025-05-16
 ### Changed
 - Updated `examples/argocd`

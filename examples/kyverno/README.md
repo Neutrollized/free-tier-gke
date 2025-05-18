@@ -14,7 +14,7 @@ helm search repo kyverno -l
 helm install kyverno kyverno/kyverno \
   --namespace kyverno \
   --create-namespace \
-  --version 3.2.6
+  --version 3.4.1
 ```
 
 - optionally install Kyverno policies (full set of Kyverno policies which implement PSP):
@@ -22,8 +22,13 @@ helm install kyverno kyverno/kyverno \
 helm install kyverno-policies kyverno/kyverno-policies -n kyverno
 ```
 
-## Policy Rules
+### Cleanup
+```
+helm delete kyverno -n kyverno
+```
 
+
+## Policy Rules
 ### Exclusions
 - namespace:
 ```yaml

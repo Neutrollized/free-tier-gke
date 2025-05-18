@@ -9,8 +9,14 @@ helm search repo gatekeeper -l
 helm install gatekeeper gatekeeper/gatekeeper \
   --namespace gatekeeper-system \
   --create-namespace \
-  --version 3.15.1
+  --version 3.19.1
 ```
+
+### Cleanup
+```
+helm delete gatekeeper -n gatekeeper-system
+```
+
 
 ## How-to
 You first need to define a `ContraintsTemplate` which is written in [Rego](https://www.openpolicyagent.org/docs/latest/policy-language/) and is used to define you policy.  Afterwards, you can create rules based on these policies.  Included in this directory is a couple of policies as well as rules that are built upon these policies.

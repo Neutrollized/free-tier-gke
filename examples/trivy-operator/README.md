@@ -12,11 +12,16 @@ helm search repo aqua/trivy-operator -l
 helm install trivy-operator aqua/trivy-operator \
   --namespace trivy-system \
   --create-namespace \
-  --version 0.22.0 \
+  --version 0.28.1 \
   --set="excludeNamespaces=gke-managed-system\,kube-system"
 ```
 
 **NOTE:** you need to escape the comma for the lists if you are setting options in command line.  
+
+### Cleanup
+```
+helm delete trivy-operator -n trivy-system
+```
 
 
 ## Reports
