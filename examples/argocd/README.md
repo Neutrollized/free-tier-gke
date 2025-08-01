@@ -12,14 +12,21 @@ The installation below is just a very basic, lightweight install with a load bal
 helm repo add argocd https://argoproj.github.io/argo-helm
 helm repo updates
 
-helm search repo argo-cd -l
+helm search repo argo-cd -l | head -10
 
-helm install argocd \
+helm install argocd argocd/argo-cd \
   --create-namespace \
   -n argocd \
-  --version 8.0.3 \
-  -f myvalues.yaml \
-  argocd/argo-cd
+  --version 8.2.4 \
+  -f myvalues.yaml
+```
+
+#### Upgrade
+```
+helm upgrade argocd argocd/argo-cd \
+  -n argocd \
+  --version [NEW_CHART_VERSION] \
+  -f myvalues.yaml
 ```
 
 #### Uninstall

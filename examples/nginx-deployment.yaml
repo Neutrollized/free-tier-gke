@@ -23,6 +23,7 @@ spec:
         app.kubernetes.io/version: "1.27.4"
     spec:
       serviceAccountName: nginx-sa
+      automountServiceAccountToken: false
       #runtimeClassName: gvisor
       containers:
       - name: nginx

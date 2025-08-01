@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.24.5] - 2025-08-01
+### Changed
+- Updated **hashicorp/random** provider from `3.6.3` to `3.7.2`
+- Updated `examples/nginx-deployment.yaml` to set `automountServiceAccountToken: false`
+- Updated `examples/argocd` from chart version `8.0.3` to `8.2.4`
+- Updated `examples/tetragon` from Tetragon `v1.4.0` to `v1.4.1`
+
 ## [0.24.4] - 2025-05-18
 ### Changed
 - Updated `examples/kyverno`
@@ -116,7 +123,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Terraform tests GKE node pool resource reference
 ### Changed
 - Updated **google** and **google-beta** providers from `~> 5.39` to `~> 6.0` ([Upgrade Guide](https://registry.terraform.io/providers/hashicorp/google/5.39.1/docs/guides/version_6_upgrade))
-- Updated **hashicorp/random** provider from `v3.5.1` to `v3.6.3`
+- Updated **hashicorp/random** provider from `3.5.1` to `3.6.3`
 - Updated and renamed Tetragon tracing policy, `block-apt-pkg-install.yaml` to `block-pkg-managers.yaml`
 
 ## [0.18.1] - 2024-10-19
@@ -200,7 +207,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - [Custom input validation rules](https://developer.hashicorp.com/terraform/language/values/variables#custom-validation-rules)
 - [Terrafom Tests](./tests)
-- `hashicorp/random` provider `v3.5.1`
+- `hashicorp/random` provider `3.5.1`
 ### Changed
 - Updated Terraform `required_version` from `~> 1.0` to `>= 1.6`
 - Updated **google** provider from `>= 4.78.0` to `~> 4.0`

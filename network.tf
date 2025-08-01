@@ -2,7 +2,7 @@ resource "google_compute_network" "k8s" {
   name = "${var.gke_cluster_name}-k8s-vpc"
 
   # defaults to true.  false = --subnet-mode custom
-  auto_create_subnetworks = "false"
+  auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "k8s" {
