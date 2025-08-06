@@ -4,6 +4,8 @@ Most of the example is taken from [here](https://cloud.google.com/community/tuto
 
 The services in this example all utilize the [fake-service](https://github.com/nicholasjackson/fake-service) container created by [Nic Jackson](https://github.com/nicholasjackson)
 
+**NOTE**: I called this "NGINX Ingress", but really it should be called "INGRESS Nginx".  The former is from F5, while the latter is the community-maintained and you will notice that from the Helm chart repo URL below. I'm adding this in because recently I made a comment to someone that they should clarify which ingress controller they were referring to and then realizing that I didn't do the same :D
+
 
 ## Install Ingress Controller with Helm
 - add repo:

@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.24.6] - 2025-08-06
+### Fixed
+- Added note for clarity in `examples/nginx-ingress` (I called it "nginx-ingress" but I'm actually using "ingress-nginx", which is the community-maintained one)
+
 ## [0.24.5] - 2025-08-01
 ### Changed
 - Updated **hashicorp/random** provider from `3.6.3` to `3.7.2`
