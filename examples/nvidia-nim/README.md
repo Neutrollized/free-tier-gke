@@ -168,7 +168,6 @@ INFO 09-05 22:37:22 [__init__.py:239] Automatically detected platform cuda.
 ```
 
 ### Testing
-Once it's 
 - port forward for testing:
 ```sh
 kubectl port-forward service/my-nim-nim-llm 8000:8000
