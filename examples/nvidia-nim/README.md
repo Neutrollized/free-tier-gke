@@ -31,7 +31,7 @@ gcloud beta compute accelerator-types list \
     --filter="name=( nvidia-l4 )"
 ```
 - sample output:
-```
+```console
 NAME       ZONE                       DESCRIPTION
 nvidia-l4  us-central1-a              NVIDIA L4
 nvidia-l4  us-central1-b              NVIDIA L4
@@ -57,7 +57,7 @@ You'll want to use *g2-standard-4* as it is the cheapest and the GPU it supports
 
 ### Installing the NVIDIA GPU Operator (optional)
 This part is managed for you as long as you left the `gpu_driver_version` as `LATEST` (default).  If you wish to install your own, you would set it to `INSTALLATION_DISABLED` instead and install it via the helm chart below (I haven't tried the manual install yet):
-```
+```sh
 helm repo add nvidia https://helm.ngc.nvidia.com/nvidia
 
 helm repo update
@@ -66,7 +66,7 @@ helm repo update
 - [common deployment scenarios](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html#common-deployment-scenarios)
 - [common helm chart customization options](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html#common-chart-customization-options)
 
-```
+```sh
 helm install --wait --generate-name \
     -n gpu-operator --create-namespace \
     nvidia/gpu-operator \
@@ -79,7 +79,7 @@ helm install --wait --generate-name \
 You'll need to [make an NVIDIA account](https://build.nvidia.com/) in order to get an API key so you are able to download a NIM container. 
 
 - export the key to env var, `NGC_API_KEY` and create two secrets 
-```
+```sh
 export NGC_API_KEY='nvapi-1234567890qwertyuiopasdfghjklzxcvbnm'
 
 kubectl create secret docker-registry ngc-secret --docker-server=nvcr.io --docker-username='$oauthtoken' --docker-password=$NGC_API_KEY
@@ -89,7 +89,7 @@ kubectl create secret generic ngc-api --from-literal=NGC_API_KEY=$NGC_API_KEY
 
 ### Deploying Model via Helm Chart
 - fetch the [helm chart](https://catalog.ngc.nvidia.com/orgs/nim/helm-charts/nim-llm):
-```
+```sh
 helm fetch https://helm.ngc.nvidia.com/nim/charts/nim-llm-1.13.1.tgz \
     --username='$oauthtoken' \
     --password=$NGC_API_KEY
@@ -117,7 +117,7 @@ model:
 
 
 ### Deploying the Model
-```
+```sh
 helm install my-nim nim-llm-1.13.1.tgz -f nim_custom_value.yaml
 ```
 
@@ -140,7 +140,7 @@ Your NIM version is: 1.12.0
 ```
 
 It took ~10 min before it was ready to serve traffic, so be patient.  Here's a snippet of what the container log looks like:
-```
+```console
 ===========================================
 == NVIDIA Inference Microservice LLM NIM ==
 ===========================================
@@ -170,7 +170,7 @@ INFO 09-05 22:37:22 [__init__.py:239] Automatically detected platform cuda.
 ### Testing
 Once it's 
 - port forward for testing:
-```
+```sh
 kubectl port-forward service/my-nim-nim-llm 8000:8000
 ```
 
