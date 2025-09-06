@@ -53,6 +53,28 @@ gcloud services enable --async \
 - [Using GKE with Terraform](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/using_gke_with_terraform) guide from the Google provider docs
 
 
+## Guest Accelerator (GPU)
+GKE supports a wide range of machine types which support different NVIDIA GPUs.  You can read the documentation [here](https://cloud.google.com/compute/docs/accelerator-optimized-machines), but the basic idea is you need to pair up the correct machine type with the GPU you are trying to use.  To make things even more difficult, not every GPU is supported in every region, so you'll need to look up that information first before deciding where to deploy your GKE cluster.
+
+Here's an example where I query the accelerator-types filter by zone (`:` means "contains", while `=` means "exact match"):
+```sh
+gcloud beta compute accelerator-types list \
+    --filter="zone:( northamerica-northeast2 ) AND name=( nvidia-l4 )"
+```
+- sample output:
+```console
+NAME                   ZONE                       DESCRIPTION
+nvidia-l4              northamerica-northeast2-b  NVIDIA L4
+nvidia-l4              northamerica-northeast2-a  NVIDIA L4
+```
+
+As you can see, if I had chosen to deploy my zonal GKE cluster in Toronto zone-c, then my deployment would have failed.
+
+**NOTE**: *g2-standard-4* with an *nvidia-l4* GPU is probably the cheapest pairing you can get.
+
+I've added some guardrails in the form of variable validations to restrict the type of 
+
+
 ## eBPF, Cilium and GKE Dataplane V2
 I've been learning a lot about [eBPF](https://ebpf.io/) and experimenting with [Cilium](https://cilium.io/) in particular.  New in [v0.4.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#040---2021-09-09), you will have the option of enabling [GKE Dataplane V2](https://cloud.google.com/blog/products/containers-kubernetes/bringing-ebpf-and-cilium-to-google-kubernetes-engine) which leverages the power of eBPF and Cilium to provide enhanced security and observability in your GKE cluster.  
 

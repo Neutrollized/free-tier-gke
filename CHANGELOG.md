@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.25.0] - 2025-09-06
+### Added
+- GPU support with NVIDIA NIM example!
+- New variable, `guest_accelerator_config` which contains settings (with guardrails) around the type and number of GPUs that can be deployed  
+- `examples/nvidia-nim` 
+### Changed
+- Updated `var.addons_config.gce_pd_csi_driver_enabled = true` by default
+- Updated `examples/argocd` from chart version `8.2.4` to `8.3.4`
+- Updated `examples/hubble` Hubble UI from `0.13.2` to `0.13.3`
+
 ## [0.24.6] - 2025-08-06
 ### Fixed
 - Added note for clarity in `examples/nginx-ingress` (I called it "nginx-ingress" but I'm actually using "ingress-nginx", which is the community-maintained one)

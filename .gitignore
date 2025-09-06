@@ -36,3 +36,4 @@ terraform.tfvars
 # Miscellaneous
 *.swp
 *.DS_Store
+**/nim-llm-*.tgz

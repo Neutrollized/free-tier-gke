@@ -10,7 +10,7 @@ run "setup_tests" {
 run "create_zonal_gke" {
   variables {
     gke_cluster_name     = run.setup_tests.cluster_name
-    zone                 = "northamerica-northeast1-c"
+    zone                 = "northamerica-northeast1-b"
     networking_mode      = "VPC_NATIVE"
     dataplane_v2_enabled = true
     spot                 = true
@@ -24,7 +24,7 @@ run "create_zonal_gke" {
 
   # Check that cluster is zonal
   assert {
-    condition     = google_container_cluster.primary.location == "northamerica-northeast1-c"
+    condition     = google_container_cluster.primary.location == "northamerica-northeast1-b"
     error_message = "Invalid GKE cluster location"
   }
 

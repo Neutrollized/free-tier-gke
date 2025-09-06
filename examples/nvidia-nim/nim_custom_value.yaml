@@ -1,0 +1,14 @@
+image:
+  repository: "nvcr.io/nim/google/gemma-3-1b-it" # container location
+  tag: 1.12.0 # NIM version you want to deploy
+model:
+  ngcAPISecret: ngc-api  # k8s secret containing your NGC_API_KEY
+  resources:
+    limits:
+      nvidia.com/gpu: 1
+    requests:
+      nvidia.com/gpu: 1
+  persistence:
+    enabled: true
+  imagePullSecrets:
+    - name: ngc-secret

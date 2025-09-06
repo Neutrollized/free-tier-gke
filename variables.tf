@@ -248,7 +248,7 @@ variable "addons_config" {
     http_lb_disabled                 = false
     gcp_filestore_csi_driver_enabled = false
     gcs_fuse_csi_driver_enabled      = false
-    gce_pd_csi_driver_enabled        = false
+    gce_pd_csi_driver_enabled        = true
     gke_backup_agent_enabled         = false
     config_connector_enabled         = false
     ray_operator_enabled             = false
@@ -382,6 +382,31 @@ variable "machine_type" {
   description = "Machine type of nodes in node pool."
   type        = string
   default     = "e2-medium"
+}
+
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#guest_accelerator-1
+variable "guest_accelerator_config" {
+  description = "List of the type and count of GPUs attached to node. Setting the count to 0 will effectively disable the GPU."
+  type = object({
+    type               = optional(string, "nvidia-l4")
+    count              = optional(number, 0)
+    gpu_driver_version = optional(string, "LATEST")
+  })
+
+  validation {
+    condition     = var.guest_accelerator_config.type == "nvidia-l4" #|| startswith(var.guest_accelerator_config.type, "ct")
+    error_message = "You are trying to configure a GPU type that is other than NVIDIA L4, please explicitly update the validation guardrail condition to do so."
+  }
+
+  validation {
+    condition     = var.guest_accelerator_config.count <= 1
+    error_message = "You are trying to configure GPU count of > 1, please explicitly update the validation guardrail condition to do so."
+  }
+
+  validation {
+    condition     = contains(["GPU_DRIVER_VERSION_UNSPECIFIED", "INSTALLATION_DISABLED", "DEFAULT", "LATEST"], var.guest_accelerator_config.gpu_driver_version)
+    error_message = "Accepted values are GPU_DRIVER_VERSION_UNSPECIFIED, INSTALLATION_DISABLED, DISABLED or LATEST"
+  }
 }
 
 variable "preemptible" {

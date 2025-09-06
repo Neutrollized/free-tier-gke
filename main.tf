@@ -176,7 +176,7 @@ resource "google_container_cluster" "primary" {
     }
 
     gce_persistent_disk_csi_driver_config {
-      enabled = lookup(var.addons_config, "gce_pd_csi_driver_enabled", false)
+      enabled = lookup(var.addons_config, "gce_pd_csi_driver_enabled", true)
     }
 
     gke_backup_agent_config {
@@ -234,6 +234,18 @@ resource "google_container_node_pool" "primary" {
     disk_size_gb = var.disk_size_gb
     image_type   = var.image_type
 
+    dynamic "guest_accelerator" {
+      for_each = var.guest_accelerator_config == null ? [] : [var.guest_accelerator_config]
+      content {
+        type  = guest_accelerator.value.type
+        count = guest_accelerator.value.count
+
+        gpu_driver_installation_config {
+          gpu_driver_version = guest_accelerator.value.gpu_driver_version
+        }
+      }
+    }
+
     shielded_instance_config {
       enable_secure_boot          = var.shielded_vm_enable_secure_boot
       enable_integrity_monitoring = var.shielded_vm_enable_integrity_monitoring
@@ -272,8 +284,11 @@ resource "google_container_node_pool" "primary" {
   }
 
   lifecycle {
-    # nodes can be either a preemptible VM or a Spot VM, but not both
     precondition {
+      condition     = var.guest_accelerator_config.count == 0 || startswith(var.machine_type, "g2-standard") && var.guest_accelerator_config.count > 0
+      error_message = "If you want to use nodes with GPUs, make sure you're using a G2 machine type"
+    }
+    precondition { # nodes can either be a preemptible VM or a Spot VM, but not both
       condition     = !(var.preemptible && var.spot)
       error_message = "Variables 'preemptible' and 'spot' cannot both be true"
     }
