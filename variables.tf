@@ -392,6 +392,7 @@ variable "guest_accelerator_config" {
     count              = optional(number, 0)
     gpu_driver_version = optional(string, "LATEST")
   })
+  default = {}
 
   validation {
     condition     = var.guest_accelerator_config.type == "nvidia-l4" #|| startswith(var.guest_accelerator_config.type, "ct")
