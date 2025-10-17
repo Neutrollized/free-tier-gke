@@ -11,9 +11,11 @@ gcloud services enable --async \
 ```
 - Workload Identity enabled (which it should be already if you are using my Terraform blueprint)
 
-NOTE 1: despite the documentation saying the [cluster requirements](https://cloud.google.com/service-mesh/docs/unified-install/anthos-service-mesh-prerequisites#cluster_requirements) as needing at least 2 nodes and 8 vCPUs, my example here works even on a single, n2-standard-2 node (2 vCPU, 8GB mem)
+> [!NOTE]
+> Despite the documentation saying the [cluster requirements](https://cloud.google.com/service-mesh/docs/unified-install/anthos-service-mesh-prerequisites#cluster_requirements) as needing at least 2 nodes and 8 vCPUs, my example here works even on a single, n2-standard-2 node (2 vCPU, 8GB mem)
 
-NOTE 2: the **mesh_id** label is only required for multi-cluster deployments -- not necessary in a standalone
+> [!NOTE]
+> The **mesh_id** label is only required for multi-cluster deployments -- not necessary in a standalone
 
 
 ## Enable ASM

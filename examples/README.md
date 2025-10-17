@@ -18,8 +18,7 @@ kubectl autoscale deployment nginx --cpu-percent=10 --min=1 --max=5
 ab -n 100000 -c 5000 http://[LOADBALANCER_IP]/
 ```
 
-**NOTE:** I set the autoscale condition artificially low to get HPA to trigger easier.  In practice you probably want higher CPU utilization like 50-60%+
-
-
+> [!NOTE]
+> I set the autoscale condition artificially low to get HPA to trigger easier.  In practice you probably want higher CPU utilization like 50-60%+
 
 #### (There are also other examples in here if you want try them out as well)

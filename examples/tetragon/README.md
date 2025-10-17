@@ -37,9 +37,8 @@ After you've made your changes, you will need to restart the Tetragon daemonset 
 kubectl rollout restart -n kube-system ds/tetragon
 ```
 
-### Tetragon CLI
 > [!TIP]
-> I highly recommend making an alias if you don't already have the Tetragon CLI installed on your system, as you will be calling `tetra` from one of the tetragon containers (if you want to use `tetra` that's on your local system, replace `ktetra`):
+> I highly recommend making an alias if you don't already have the [Tetragon CLI](https://tetragon.io/docs/installation/tetra-cli/) installed on your system, as you will be calling `tetra` from one of the tetragon containers (if you want to use `tetra` that's on your local system, replace `ktetra`):
 >
 > ```sh
 > alias ktetra='kubectl exec -it -n kube-system ds/tetragon -c tetragon -- tetra '
