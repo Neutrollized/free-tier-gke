@@ -17,7 +17,7 @@ helm search repo argo-cd -l | head -10
 helm install argocd argocd/argo-cd \
   --create-namespace \
   -n argocd \
-  --version 8.3.4 \
+  --version 8.6.0 \
   -f myvalues.yaml
 ```
 
