@@ -2,7 +2,8 @@
 
 I wrote a couple of Medium articles on Tetragon [here](https://medium.com/@glen.yu/getting-started-with-tetragon-on-gke-2c11549720b0) and [here](https://medium.com/google-cloud/google-cloud-logging-and-cloud-monitoring-example-with-tetragon-5eb2012066d4)
 
-**NOTE:** Tetragon can work standalone and does NOT require Cilium (or GKE Dataplane V2) to be installed.
+> [!NOTE]
+> Tetragon can work standalone and does NOT require Cilium (or GKE Dataplane V2) to be installed.
 
 
 ## Setup
@@ -17,7 +18,8 @@ helm install tetragon cilium/tetragon \
   --version 1.4.1
 ```
 
-**NOTE:** I also have an [ArgoCD Helm deployment example](../argocd/README.md#creating-and-syncing-application)
+> [!NOTE]
+> I also have an [ArgoCD Helm deployment example](../argocd/README.md#creating-and-syncing-application)
 
 
 - upgrade:

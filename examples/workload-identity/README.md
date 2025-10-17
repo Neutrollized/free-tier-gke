@@ -2,7 +2,8 @@
 
 Here's a great [YouTube video](https://www.youtube.com/watch?v=4OzbPaJCUr8&ab_channel=GoogleCloudTech) from Google developer advocate, Kaslin Fields, that describes how Workload Identity works in GKE and how it increases your security posture.
 
-**NOTE:** just because Workload Identity is enabled doesn't mean you'll be using it.  You'll need to have a service account on the Kubernetes side as well as on the GCP side so that you can associate the two.
+> [!NOTE]
+> Just because Workload Identity is enabled doesn't mean you'll be using it.  You'll need to have a service account on the Kubernetes side as well as on the GCP side so that you can associate the two.
 
 Example below based on [Workload Identity guide](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
 

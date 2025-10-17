@@ -13,7 +13,8 @@ helm install kube-prometheus-stack \
   prometheus-community/kube-prometheus-stack
 ```
 
-**NOTE**: This is the [default values.yaml](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml), but since I don't need everything the stack has to offer at the moment, I'm just going to use my own.
+> [!NOTE]
+> This is the [default values.yaml](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml), but since I don't need everything the stack has to offer at the moment, I'm just going to use my own.
 
 - these are a couple of aliases that I use to get quick access to the Prometheus and Grafana web UIs:
 ```sh

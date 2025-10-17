@@ -16,7 +16,8 @@ helm install trivy-operator aqua/trivy-operator \
   --set="excludeNamespaces=gke-managed-system\,kube-system"
 ```
 
-**NOTE:** you need to escape the comma for the lists if you are setting options in command line.  
+> [!NOTE]
+> You need to escape the comma for the lists if you are setting options in command line.  
 
 ### Cleanup
 ```
