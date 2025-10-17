@@ -36,7 +36,8 @@ kubectl annotate serviceaccount KSA_NAME \
 
 - update `serviceAccountName` in Pod spec to use new KSA
 
-**NOTE** GSA does not have to be in the same project as the GKE cluster (i.e. can access GCP APIs from other projects if needed)
+> [!TIP]
+> GSA does not have to be in the same project as the GKE cluster (i.e. can access GCP APIs from other projects if needed)
 
 
 ### Example
