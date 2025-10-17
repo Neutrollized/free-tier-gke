@@ -38,32 +38,32 @@ kubectl rollout restart -n kube-system ds/tetragon
 ```
 
 ### Tetragon CLI
-I suggest making an alias if you don't already have the Tetragon CLI installed on your system, as you will be calling `tetra` from one of the tetragon containers (if you want to use `tetra` that's on your local system, replace `ktetra`):
-
-```sh
-alias ktetra='kubectl exec -it -n kube-system ds/tetragon -c tetragon -- tetra '
-alias tetralogs='kubectl logs -n kube-system -l app.kubernetes.io/name=tetragon -c export-stdout -f | ktetra getevents -o compact '
-```
-(the second alias will be more relevant later on)
-
-
-```sh
-ktetra status
-
-ktetra version
-```
-
-- output:
-```console
-Health Status: running
-
-CLI version: v1.4.1
-```
-
-#### Sample usage
-```sh
-tetralogs --namespace default --pods myapp
-```
+> [!TIP]
+> I highly recommend making an alias if you don't already have the Tetragon CLI installed on your system, as you will be calling `tetra` from one of the tetragon containers (if you want to use `tetra` that's on your local system, replace `ktetra`):
+>
+> ```sh
+> alias ktetra='kubectl exec -it -n kube-system ds/tetragon -c tetragon -- tetra '
+> alias tetralogs='kubectl logs -n kube-system -l app.kubernetes.io/name=tetragon -c export-stdout -f | ktetra getevents -o compact '
+> ```
+> (the second alias will be more relevant later on)
+>
+> ```sh
+> ktetra status
+> 
+> ktetra version
+> ```
+> 
+> - output:
+> ```console
+> Health Status: running
+> 
+> CLI version: v1.4.1
+> ```
+>
+> - sample useage of `tetralogs` alias:
+> ```sh
+> tetralogs --namespace default --pods myapp
+> ```
 
 
 ## Tracing Policy examples
