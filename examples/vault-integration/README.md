@@ -21,6 +21,8 @@ helm install vault hashicorp/vault \
   --set="server.dev.enabled=true"
 ```
 
-**NOTE 1**: for examples that I create here, I will likely be using this setup method
+> [!NOTE]
+> For examples that I create here, I will likely be using this setup method
 
-**NOTE 2**: because my cluster deployment is built upon ~~preemptible~~ spot nodes, there's chance the nodes can be terminated and replaced, which means the Vault dev server that stores configs and secrets *in-memory* will be reset, so please keep this in mind if you're doing any sort of testing and suddenly find things not working the way it did the days prior
+> [!NOTE]
+> Because my cluster deployment is built upon ~~preemptible~~ spot nodes, there's chance the nodes can be terminated and replaced, which means the Vault dev server that stores configs and secrets *in-memory* will be reset, so please keep this in mind if you're doing any sort of testing and suddenly find things not working the way it did the days prior

@@ -73,7 +73,8 @@ csi-secrets-store-provider-gcp-vzwp5                       1/1     Running   0  
 ## Sample Usage - GCP
 Since the GCP provider utilizes Workload Identity to access secrets from [Secrets Manager](https://cloud.google.com/secret-manager), some setup will be required to create the appropriate accounts and mapping.
 
-**ATTENTION:** Please note the **gsa** and **ksa** suffixes in the service account names for differentiation between a Google service account (GSA) and Kubernetes service account (KSA).  It is recommended that a naming convention that can easily identify the mapping between the GSA and KSA be used.
+> [!IMPORTANT]
+> Please note the **gsa** and **ksa** suffixes in the service account names for differentiation between a Google service account (GSA) and Kubernetes service account (KSA).  It is recommended that a naming convention that can easily identify the mapping between the GSA and KSA be used.
 
 - create Google service account and Kubernetes service account
 ```
@@ -120,7 +121,8 @@ gcloud secrets create myappsecret --replication-policy=automatic --data-file=sec
 kubectl apply -f app-secrets.yaml
 ```
 
-**NOTE:** you can find available secret versions via `gcloud secrets versions list [SECRET_NAME]` or if you prefer the latest version, it can be set to `latest`. The exact manifest YAML can be templated with your preferred tool of choice.
+> [!NOTE]
+> You can find available secret versions via `gcloud secrets versions list [SECRET_NAME]` or if you prefer the latest version, it can be set to `latest`. The exact manifest YAML can be templated with your preferred tool of choice.
 
 
 - deploy app, referencing secret and CSI driver

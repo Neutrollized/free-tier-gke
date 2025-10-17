@@ -32,7 +32,8 @@ helm install vault hashicorp/vault \
   --set="injector.enabled=true"
 ```
 
-**NOTE**: my GKE cluster deployment is built on preemptible nodes which will be replaced every ~24hrs.  If you want your configs and secrets to survive longer than 24hrs, I recommend connecting to an external Vault instance 
+> [!NOTE]
+> My GKE cluster deployment is built on spot nodes which may be replaced as early as every ~24hrs.  If you want your configs and secrets to be more persistent, I recommend connecting to an external Vault instance 
 
 
 ## Vault Injector demo

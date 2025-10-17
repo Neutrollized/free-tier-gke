@@ -40,7 +40,9 @@ helm delete kyverno -n kyverno
         - kube-system
 ...
 ```
-- **NOTE**: exclusion of the `kube-system` namespace is already implied so no need to explicitly state (unless you want to)
+
+> [!NOTE]
+> Exclusion of the `kube-system` namespace is already implied so no need to explicitly state (unless you want to)
 
 
 ## Example

@@ -44,7 +44,8 @@ nvidia-l4  me-central2-c              NVIDIA L4
 nvidia-l4  me-central2-a              NVIDIA L4
 ```
 
-**NOTE**: you can use `AND` to combine multiple filter criteria
+> [!TIP]
+> You can use `AND` to combine multiple filter criteria
 
 
 ### Find out your machine type
@@ -52,7 +53,8 @@ GKE supports a wide range of machine types which support different NVIDIA GPUs. 
 
 You'll want to use *g2-standard-4* as it is the cheapest and the GPU it supports are the [NVIDIA L4's](https://cloud.google.com/compute/docs/gpus#l4-gpus).
 
-**NOTE**: you will have to take your machine type's memory into consideration when deciding on the type of model to use.  The *g2-standard-4* has 16GB of memory so I opted to run the Gemma 3 1B Instruct model. If you wanted to run the Meta Llama 3 8B Instruct, then you'd want the *g2-standard-12* machine type or better.
+> [!NOTE]
+> You will have to take your machine type's memory into consideration when deciding on the type of model to use.  The *g2-standard-4* has 16GB of memory so I opted to run the Gemma 3 1B Instruct model. If you wanted to run the Meta Llama 3 8B Instruct, then you'd want the *g2-standard-12* machine type or better.
 
 
 ### Installing the NVIDIA GPU Operator (optional)
@@ -113,7 +115,8 @@ model:
     - name: ngc-secret
 ```
 
-**NOTE**: you can find the various models and versions (image tag) [here](https://docs.nvidia.com/nim/large-language-models/latest/supported-models.html#optimized-models)
+> [!TIP]
+> You can find the various models and versions (image tag) [here](https://docs.nvidia.com/nim/large-language-models/latest/supported-models.html#optimized-models)
 
 
 ### Deploying the Model

@@ -4,11 +4,12 @@ I wrote a Medium article on Hubble [here](https://medium.com/@glen.yu/using-hubb
 
 This example requires the GKE Dataplane V2 observability feature be enabled. **Enabling this feature will provision an internal network load balancer**.
 
-**UPDATE 2024-08-14**: GKE DPv2 observability has gone through some updates since. So I'm just going to link the relevant Google Cloud docs to get setup with the CLI and UI:
-
-- [How to use Hubble CLI](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-dpv2-observability#configure-cli-binary-distribution)
-
-- [How to deploy the Hubble UI binary distribution](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-dpv2-observability#how_to_deploy_the_hubble_ui_binary_distribution)
+> [!NOTE]
+> *UPDATE 2024-08-14*
+> GKE DPv2 observability has gone through some updates since. So I'm just going to link the relevant Google Cloud docs to get setup with the CLI and UI:
+>
+> - [How to use Hubble CLI](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-dpv2-observability#configure-cli-binary-distribution)
+> - [How to deploy the Hubble UI binary distribution](https://cloud.google.com/kubernetes-engine/docs/how-to/configure-dpv2-observability#how_to_deploy_the_hubble_ui_binary_distribution)
 
 
 - the following are aliases I set up in my shell environment to make life easier:
