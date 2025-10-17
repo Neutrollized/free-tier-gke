@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.25.1] - 2025-??-??
 ### Changed
 - Updated `examples/argocd` from chart version `8.3.4` to `8.6.0`
-- Updated `examples/tetragon` with new Tracing Policy, `block-restricted-binaries.yaml`
+- Updated `examples/tetragon` with new Tracing Policy, `block-restricted-binaries.yaml` and `honeypot.yaml`
 
 ## [0.25.0] - 2025-09-06
 ### Added
