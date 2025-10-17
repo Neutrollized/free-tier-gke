@@ -1,0 +1,39 @@
+---
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: "honeypot"
+  annotations:
+    description: "Triggers Canary Token when certain binaries triggered"
+spec:
+#  podSelector:
+#    matchLabels:
+#      app.kubernetes.io/name: nginx
+  kprobes:
+  - call: "security_bprm_creds_from_file"
+    syscall: false
+    args:
+    - index: 0
+      type: "nop"
+    - index: 1
+      type: "file"
+    selectors:
+    - matchPIDs:
+      # this looks at all processes NOT associated with a container's init PID
+      # i.e. looks at anything performed inside a "kubectl exec"
+      - operator: "NotIn"
+        followForks: false
+        isNamespacePID: true
+        values:
+        - 1
+    - matchArgs:
+      - index: 1
+        operator: "Postfix"
+        values:
+        - "apt-get"
+        - "apk"
+        - "kubectl"
+      matchActions:
+      - action: GetUrl
+        # create a free "Web bug" token at canarytokens.org
+        argUrl: CANARY_TOKEN_URL
