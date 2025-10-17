@@ -6,7 +6,8 @@
 
 ## Installation
 ### Pre-requisite
-**IMPORTANT:** For GKE, you will require the PD CSI driver enabled (I assume you will require something similar for other cloud providers).  So make sure you have this enabled!
+> [!IMPORTANT]
+> For GKE, you will require the PD CSI driver enabled (I assume you will require something similar for other cloud providers).  So make sure you have this enabled!
 
 In your `terraform.tfvars` file, make sure you have the following config set to `true`:
 ```
