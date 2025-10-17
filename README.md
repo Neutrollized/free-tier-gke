@@ -27,14 +27,14 @@ I'm going to use a single node (2CPUs/4GB memory) Kubernetes cluster as the basi
 Azure's AKS combined with Spot instances are actually incredibly competitive in pricing vs ~~preemptibles~~ spots, but in my mind, ~~preemptibles~~ spots have the edge due to ease of use -- no price bidding and a generably more reliable/predictable uptime (in my use don't think I've had any node get terminated before 22hrs).
 
 
-## IMPORTANT
-The key to getting the savings here is to limit the amount of nodes in your cluster (until you need it).  The 3 key settings to ensure this is `location`, `node_locations` and `node_count` (or `initial_node_count`).  
-
-`location` specifies where to place the cluster (masters).  By specifying a zone, you have a free, zonal cluster.  If you replaced it with a region instead, it becomes a regional cluster -- ideal for a production cluster, but not part of the free tier offering.
-
-Leaving `node_locations` blank will default your node to be in the same zone as your GKE cluster's zone.  Any zone you specify will be **in addition** to the the cluster's zone (i.e. `node_locations = ["northamerica-northeast1-a",]`), meaning your nodes will span more than one zone.  This is referred to as a multi-zone cluster.
-
-`node_count` specifies how many nodes **per zone** rather than the total node count in your cluster.  Therefore, if you set 3 zones in `node_locations` with a `node_count` of 2, you're going to have 6 nodes in total.
+> [!IMPORTANT]
+> The key to getting the savings here is to limit the amount of nodes in your cluster (until you need it).  The 3 key settings to ensure this is `location`, `node_locations` and `node_count` (or `initial_node_count`).  
+> 
+> `location` specifies where to place the cluster (masters).  By specifying a zone, you have a free, zonal cluster.  If you replaced it with a region instead, it becomes a regional cluster -- ideal for a production cluster, but not part of the free tier offering.
+> 
+> Leaving `node_locations` blank will default your node to be in the same zone as your GKE cluster's zone.  Any zone you specify will be **in addition** to the the cluster's zone (i.e. `node_locations = ["northamerica-northeast1-a",]`), meaning your nodes will span more than one zone.  This is referred to as a multi-zone cluster.
+> 
+> `node_count` specifies how many nodes **per zone** rather than the total node count in your cluster.  Therefore, if you set 3 zones in `node_locations` with a `node_count` of 2, you're going to have 6 nodes in total.
 
 ### Enable Required APIs
 You can do this via console or...
@@ -95,10 +95,10 @@ If you decide to go the full private GKE cluster route (private GKE endpoint/con
 
 See this [Medium article](https://medium.com/google-cloud/accessing-gke-private-clusters-through-iap-14fedad694f8) if you want to see how the network traffic flows in this setup.
 
-### IMPORTANT
-To use the IAP tunnel, your user needs to have the IAP-secured Tunnel User (**roles/iap.tunnelResourceAccessor**) -- even if you're the Owner of the project, you will need to add this role!!
-
-You will need to create an IAP tunnel from your local machine/laptop to the IAP proxy VM (command will be in the Terraform output) and you will also have to `export HTTPS_PROXY=localhost:8888` (just remember to unset the env var when you're done).  Alternatively you can set an alias which prepends the env var (e.g. `alias k='HTTPS_PROXY=localhost:8888 kubectl '`).
+> [!IMPORTANT]
+> To use the IAP tunnel, your user needs to have the IAP-secured Tunnel User (**roles/iap.tunnelResourceAccessor**) -- even if you're the Owner of the project, you will need to add this role!!
+>
+> You will need to create an IAP tunnel from your local machine/laptop to the IAP proxy VM (command will be in the Terraform output) and you will also have to `export HTTPS_PROXY=localhost:8888` (just remember to unset the env var when you're done).  Alternatively you can set an alias which prepends the env var (e.g. `alias k='HTTPS_PROXY=localhost:8888 kubectl '`).
 
 ## DNS-based Control Plane Endpoint
 New security feature announced in Nov '24, you can read more about it [here](https://cloud.google.com/blog/products/containers-kubernetes/new-dns-based-endpoint-for-the-gke-control-plane). In [v0.24.0](https://github.com/Neutrollized/free-tier-gke/blob/master/CHANGELOG.md#0240---2025-03-06), I've added support for this new feature and below is a table of the various combinations of settings and the resulting endpoint access type:
