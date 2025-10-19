@@ -13,7 +13,8 @@ kubectl get storageclass
 kubectl apply -f filestore-example-class.yaml
 ```
 
-**NOTE:** `volumeBindingMode` here is set to `WaitForFirstConsumer`.  The default is `Immediate`, which provisions the [Filestore](https://cloud.google.com/filestore) instance (i.e. the PV) once the PVC is created (next step).  With `WaitForFirstConsumer`, the Filestore will be provisioned once there are pods that will utilize the PVC (which will take ~2 min)
+> [!NOTE]
+> `volumeBindingMode` here is set to `WaitForFirstConsumer`.  The default is `Immediate`, which provisions the [Filestore](https://cloud.google.com/filestore) instance (i.e. the PV) once the PVC is created (next step).  With `WaitForFirstConsumer`, the Filestore will be provisioned once there are pods that will utilize the PVC (which will take ~2 min)
 
 - apply the PVC
 ```

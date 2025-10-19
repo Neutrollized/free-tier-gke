@@ -14,8 +14,11 @@ gsutil mb gs://${GCS_BUCKET}
 
 gsutil cp ./context.tar.gz gs://${GCS_BUCKET}
 ```
-NOTE 1: the build context needs to be in `.tar.gz` format and is just a tarball of your Dockerfile and anything else needed (i.e. `tar -zcvf context.tar.gz ./*` from the build context directory)
-NOTE 2: the `context.tar.gz` I've included builds a HashiCorp Vault image
+> [!NOTE]
+> The build context needs to be in `.tar.gz` format and is just a tarball of your Dockerfile and anything else needed (i.e. `tar -zcvf context.tar.gz ./*` from the build context directory)
+
+> [!NOTE]
+> The `context.tar.gz` I've included builds a HashiCorp Vault image
 
 - create Docker repo in GAR
 ```

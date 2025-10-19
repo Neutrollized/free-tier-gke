@@ -38,7 +38,8 @@ gke-l7-rilb                        networking.gke.io/gateway   True       6m44s
 kubectl apply -f namespaces.yaml
 ```
 
-**NOTE:** only namespaces with the correct label will be able to attach their routes to the gateway
+> [!NOTE]
+> Only namespaces with the correct label will be able to attach their routes to the gateway
 
 
 #### 2. Deploy an internal gateway: 
@@ -113,7 +114,8 @@ kubectl apply -f site.yaml
 kubectl apply -f site-route.yaml
 ```
 
-**NOTE:** if it were GKE Ingress, you would not have this option as all routes are maintained in a single ingress definition
+> [!NOTE]
+> If it were GKE Ingress, you would not have this option as all routes are maintained in a single ingress definition
 
 
 ## Testing 
@@ -140,7 +142,8 @@ Since only internal traffic is allowed, I'm going to do the `curl` command via o
   "zone": "northamerica-northeast1-c"
 }
 ```
-**NOTE:** I am using the [traffic splitting](https://gateway-api.sigs.k8s.io/v1alpha2/guides/traffic-splitting/) of the Gateway API (which is normally a feature you would only find with serivce meshes), so you may hit *store-v2*
+> [!NOTE]
+> I am using the [traffic splitting](https://gateway-api.sigs.k8s.io/v1alpha2/guides/traffic-splitting/) of the Gateway API (which is normally a feature you would only find with serivce meshes), so you may hit *store-v2*
 
 - `kubectl exec -it store-v2-6856f59f7f-7kj2w -n store-ns -- curl -H "host: store.example.com" -H "env: canary" 192.168.0.6`:
 ```JSON

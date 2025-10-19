@@ -1,0 +1,26 @@
+---
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: "block-restricted-binaries"
+  annotations:
+    description: "Blocks execution of privileged and restricted binaries"
+spec:
+  kprobes:
+  - call: "security_bprm_creds_from_file"
+    syscall: false
+    args:
+    - index: 0
+      type: "nop"
+    - index: 1
+      type: "file"
+    selectors:
+    - matchArgs:
+      - index: 1
+        operator: "Postfix"
+        values:
+        - "kubectl"
+        - "chown"
+        - "chmod"
+      matchActions:
+      - action: Sigkill
