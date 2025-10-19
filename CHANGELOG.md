@@ -5,10 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
-## [0.25.1] - 2025-??-??
+## [0.25.1] - 2025-10-18
 ### Changed
-- Updated `examples/argocd` from chart version `8.3.4` to `8.6.0`
+- Added default for `guest_accelerator_config` variable. Thank you, [jwhb](https://github.com/jwhb) for your [PR](https://github.com/Neutrollized/free-tier-gke/pull/15)
+- Updated `examples/argocd` from chart version `8.3.4` to `8.6.4`
 - Updated `examples/tetragon` with new Tracing Policy, `block-restricted-binaries.yaml` and `honeypot.yaml`
+- Updated formatting in READMEs
 
 ## [0.25.0] - 2025-09-06
 ### Added
