@@ -1,0 +1,62 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: trivy-system
+  RELEASE_NAME: trivy-operator
+  VERSION: 0.31.0
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Trivy Operator tasks
+  #------------------------------
+  repo:install:
+    desc: adds Aqua helm repo
+    cmds:
+      - helm repo add aqua https://aquasecurity.github.io/helm-charts/
+      - helm repo update aqua
+
+  repo:list:
+    desc: list available Trivy Operator releases
+    deps: [repo:install]
+    cmds:
+      - helm search repo aqua/trivy-operator -l | head -10
+
+
+  install:
+    desc: install Trivy Operator
+    deps: [repo:install]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} aqua/trivy-operator \
+          --create-namespace \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}} \
+          --set="excludeNamespaces=gke-managed-system\,kube-system"
+
+  uninstall:
+    desc: uninstall Trivy Operator
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}} --keep-history
+
+  all:
+    desc: full repo setup and Trivy Operator install
+    cmds:
+      - task: install
+
+  clean:
+    desc: purge Trivy Operator install
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}

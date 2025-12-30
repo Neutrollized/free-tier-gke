@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.26.0] - 2025-12-30
+### Added
+- `var.addons_config.dns_cache_config_enabled` (defaut = `false`) used to toggle [NodeLocal DNSCache](https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/), which is recommended for production clusters or large clusters with lots of Pods
+- `Taskfile.yaml` to various examples
+- `examples/velero` Kubernetes backup tool
+### Changed
+- Updated **google** and **google-beta** providers from `~> 6.11` to `~> 7.12` ([Upgrade Guide](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/version_7_upgrade))
+### Removed
+- Ingress NGINX example as it is being [retired on March 2026](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/)
+
 ## [0.25.1] - 2025-10-18
 ### Changed
 - Added default for `guest_accelerator_config` variable. Thank you, [jwhb](https://github.com/jwhb) for your [PR](https://github.com/Neutrollized/free-tier-gke/pull/15)
@@ -143,7 +153,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Typo in `examples/tetragon/monitoring-alerts/cloud-monitoring-alerts.tf.sample` (`process_name` should be `policy_name`)
 - Terraform tests GKE node pool resource reference
 ### Changed
-- Updated **google** and **google-beta** providers from `~> 5.39` to `~> 6.0` ([Upgrade Guide](https://registry.terraform.io/providers/hashicorp/google/5.39.1/docs/guides/version_6_upgrade))
+- Updated **google** and **google-beta** providers from `~> 5.39` to `~> 6.0` ([Upgrade Guide](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/version_6_upgrade))
 - Updated **hashicorp/random** provider from `3.5.1` to `3.6.3`
 - Updated and renamed Tetragon tracing policy, `block-apt-pkg-install.yaml` to `block-pkg-managers.yaml`
 

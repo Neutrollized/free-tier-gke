@@ -1,0 +1,60 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: kube-system
+  RELEASE_NAME: tetragon
+  VERSION: 1.4.1
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Tetragon tasks
+  #------------------------------
+  repo:install:
+    desc: adds Cilium helm repo
+    cmds:
+      - helm repo add cilium https://helm.cilium.io
+      - helm repo update cilium
+
+  repo:list:
+    desc: list available Tetragon releases
+    deps: [repo:install]
+    cmds:
+      - helm search repo cilium/tetragon -l | head -10
+
+
+  install:
+    desc: install Tetragon
+    deps: [repo:install]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} cilium/tetragon \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}}
+
+  uninstall:
+    desc: uninstall Tetragon
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}} --keep-history
+
+  all:
+    desc: full repo setup and Tetragon install
+    cmds:
+      - task: install
+
+  clean:
+    desc: purge Tetragon install
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}

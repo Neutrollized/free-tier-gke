@@ -1,0 +1,61 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: kube-prometheus-stack
+  RELEASE_NAME: kube-prometheus-stack
+  VERSION: 1.29.1
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Prometheus tasks
+  #------------------------------
+  repo:install:
+    desc: adds Prometheus helm repo
+    cmds:
+      - helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      - helm repo update prometheus-community
+
+  repo:list:
+    desc: list available Prometheus releases
+    deps: [repo:install]
+    cmds:
+      - helm search repo prometheus-community -l | head -10
+
+
+  install:
+    desc: install Prometheus
+    deps: [repo:install]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} prometheus-community/kube-prometheus-stack \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}} \
+          -f myvalues.yaml
+
+  uninstall:
+    desc: uninstall Prometheus
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}} --keep-history
+
+  all:
+    desc: full repo setup and Prometheus install
+    cmds:
+      - task: install
+
+  clean:
+    desc: purge Prometheus install
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}

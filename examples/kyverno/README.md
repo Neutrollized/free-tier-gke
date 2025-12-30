@@ -24,7 +24,7 @@ helm install kyverno-policies kyverno/kyverno-policies -n kyverno
 
 ### Cleanup
 ```
-helm delete kyverno -n kyverno
+helm uninstall kyverno -n kyverno
 ```
 
 

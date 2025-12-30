@@ -1,0 +1,61 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: kyverno
+  RELEASE_NAME: kyverno
+  VERSION: 3.6.1
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Kyverno tasks
+  #------------------------------
+  repo:install:
+    desc: adds Kyverno helm repo
+    cmds:
+      - helm repo add kyverno https://kyverno.github.io/kyverno/
+      - helm repo update kyverno
+
+  repo:list:
+    desc: list available Kyverno releases
+    deps: [repo:install]
+    cmds:
+      - helm search repo kyverno -l | head -10
+
+
+  install:
+    desc: install Kyverno
+    deps: [repo:install]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} kyverno/kyverno \
+          --create-namespace \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}}
+
+  uninstall:
+    desc: uninstall Kyverno
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}} --keep-history
+
+  all:
+    desc: full repo setup and Kyverno install
+    cmds:
+      - task: install
+
+  clean:
+    desc: purge Kyverno install
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}

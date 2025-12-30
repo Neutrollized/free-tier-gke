@@ -1,0 +1,61 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: gatekeeper-system
+  RELEASE_NAME: gatekeeper
+  VERSION: 3.20.1
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Gatekeeper tasks
+  #------------------------------
+  repo:install:
+    desc: adds Gatekeeper helm repo
+    cmds:
+      - helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+      - helm repo update gatekeeper
+
+  repo:list:
+    desc: list available Gatekeeper releases
+    deps: [repo:install]
+    cmds:
+      - helm search repo gatekeeper/gatekeeper -l | head -10
+
+
+  install:
+    desc: install Gatekeeper
+    deps: [repo:install]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} gatekeeper/gatekeeper \
+          --create-namespace \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}}
+
+  uninstall:
+    desc: uninstall Gatekeeper
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}} --keep-history
+
+  all:
+    desc: full repo setup and Gatekeeper install
+    cmds:
+      - task: install
+
+  clean:
+    desc: purge Gatekeeper install
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}

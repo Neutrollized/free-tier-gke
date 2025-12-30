@@ -246,6 +246,7 @@ variable "addons_config" {
   default = {
     hpa_disabled                     = false
     http_lb_disabled                 = false
+    dns_cache_config_enabled         = false
     gcp_filestore_csi_driver_enabled = false
     gcs_fuse_csi_driver_enabled      = false
     gce_pd_csi_driver_enabled        = true

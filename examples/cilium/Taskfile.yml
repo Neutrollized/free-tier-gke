@@ -1,0 +1,87 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: kube-system
+  RELEASE_NAME: cilium
+  VERSION: 1.18.4
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Cilium tasks
+  #------------------------------
+  repo:install:
+    desc: adds Cilium helm repo
+    cmds:
+      - helm repo add cilium https://helm.cilium.io
+      - helm repo update cilium
+
+  repo:list:
+    desc: list available Cilium releases
+    deps: [repo:install]
+    cmds:
+      - helm search repo cilium/cilium -l | head -10
+
+  install:
+    desc: install Cilium
+    deps: [repo:install]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} cilium/cilium \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}} \
+          --set gke.enabled=true \
+          --set ipam.mode=kubernetes
+
+  k8s:create:ipsec:
+    desc: generate IPsec secret
+    cmds:
+      - "kubectl create -n {{.NAMESPACE}} secret generic cilium-ipsec-keys --from-literal=keys=\"3 rfc4106(gcm(aes)) $(echo $(dd if=/dev/urandom count=20 bs=1 2> /dev/null | xxd -p -c 64)) 128\""
+    status:
+      - kubectl get secret cilium-ipsec-keys -n {{.NAMESPACE}}
+
+  k8s:delete:ipsec:
+    desc: delete IPsec secret
+    cmds:
+      - kubectl delete -n {{.NAMESPACE}} secret cilium-ipsec-keys
+
+  install:ipsec:
+    desc: install Cilium with IPsec
+    deps: [repo:install, k8s:create:ipsec]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} cilium/cilium \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}} \
+          --set gke.enabled=true \
+          --set ipam.mode=kubernetes \
+          --encryption.enabled=true \
+          --encryption.type=ipsec
+
+  uninstall:
+    desc: uninstall Cilium
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}} --keep-history
+
+  all:
+    desc: full Cilium install
+    cmds:
+      - task: install:ipsec
+
+  clean:
+    desc: purge Cilium install
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}
+      - task: k8s:delete:ipsec

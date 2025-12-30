@@ -167,6 +167,11 @@ resource "google_container_cluster" "primary" {
       disabled = lookup(var.addons_config, "http_lb_disabled", false)
     }
 
+    # NodeLocal DNSCache should be enabled for production or large clusters
+    dns_cache_config {
+      enabled = lookup(var.addons_config, "dns_cache_config_enabled", false)
+    }
+
     gcp_filestore_csi_driver_config {
       enabled = lookup(var.addons_config, "gcp_filestore_csi_driver_enabled", false)
     }
