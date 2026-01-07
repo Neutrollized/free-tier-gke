@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.26.1] - 2026-01-07
+### Changed
+- Updated Taskfiles
+### Fixed
+- Taskfiles' extension updated to `.yaml` rather than `.yml`
+
 ## [0.26.0] - 2025-12-30
 ### Added
 - `var.addons_config.dns_cache_config_enabled` (defaut = `false`) used to toggle [NodeLocal DNSCache](https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/), which is recommended for production clusters or large clusters with lots of Pods

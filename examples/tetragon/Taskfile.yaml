@@ -27,6 +27,7 @@ tasks:
     cmds:
       - helm repo add cilium https://helm.cilium.io
       - helm repo update cilium
+    internal: true
 
   repo:list:
     desc: list available Tetragon releases
@@ -43,6 +44,10 @@ tasks:
         helm install {{.RELEASE_NAME}} cilium/tetragon \
           --namespace {{.NAMESPACE}} \
           --version {{.VERSION}}
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=operator,app.kubernetes.io/instance=tetragon -n {{.NAMESPACE}} --timeout=300s
+    status:
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=operator,app.kubernetes.io/instance=tetragon -n {{.NAMESPACE}} --timeout=300s
+    internal: true
 
   uninstall:
     desc: uninstall Tetragon

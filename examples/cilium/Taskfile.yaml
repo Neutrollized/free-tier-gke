@@ -27,6 +27,7 @@ tasks:
     cmds:
       - helm repo add cilium https://helm.cilium.io
       - helm repo update cilium
+    internal: true
 
   repo:list:
     desc: list available Cilium releases
@@ -44,22 +45,26 @@ tasks:
           --version {{.VERSION}} \
           --set gke.enabled=true \
           --set ipam.mode=kubernetes
+      - cilium status --wait
+    status:
+      - cilium status --wait
 
-  k8s:create:ipsec:
+  k8s:create:secret:ipsec:
     desc: generate IPsec secret
     cmds:
       - "kubectl create -n {{.NAMESPACE}} secret generic cilium-ipsec-keys --from-literal=keys=\"3 rfc4106(gcm(aes)) $(echo $(dd if=/dev/urandom count=20 bs=1 2> /dev/null | xxd -p -c 64)) 128\""
     status:
       - kubectl get secret cilium-ipsec-keys -n {{.NAMESPACE}}
+    internal: true
 
-  k8s:delete:ipsec:
+  k8s:delete:secret:ipsec:
     desc: delete IPsec secret
     cmds:
       - kubectl delete -n {{.NAMESPACE}} secret cilium-ipsec-keys
 
   install:ipsec:
     desc: install Cilium with IPsec
-    deps: [repo:install, k8s:create:ipsec]
+    deps: [repo:install, k8s:create:secret:ipsec]
     cmds:
       - |
         helm install {{.RELEASE_NAME}} cilium/cilium \
@@ -69,6 +74,9 @@ tasks:
           --set ipam.mode=kubernetes \
           --encryption.enabled=true \
           --encryption.type=ipsec
+      - cilium status --wait
+    status:
+      - cilium status --wait
 
   uninstall:
     desc: uninstall Cilium

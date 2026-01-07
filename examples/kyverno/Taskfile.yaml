@@ -27,6 +27,7 @@ tasks:
     cmds:
       - helm repo add kyverno https://kyverno.github.io/kyverno/
       - helm repo update kyverno
+    internal: true
 
   repo:list:
     desc: list available Kyverno releases
@@ -44,6 +45,12 @@ tasks:
           --create-namespace \
           --namespace {{.NAMESPACE}} \
           --version {{.VERSION}}
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=admission-controller,app.kubernetes.io/instance=kyverno -n {{.NAMESPACE}} --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=background-controller,app.kubernetes.io/instance=kyverno -n {{.NAMESPACE}} --timeout=300s
+    status:
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=admission-controller,app.kubernetes.io/instance=kyverno -n {{.NAMESPACE}} --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=background-controller,app.kubernetes.io/instance=kyverno -n {{.NAMESPACE}} --timeout=300s
+    internal: true
 
   uninstall:
     desc: uninstall Kyverno

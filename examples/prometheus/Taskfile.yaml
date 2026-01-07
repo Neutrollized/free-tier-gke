@@ -1,0 +1,79 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: kube-prometheus-stack
+  RELEASE_NAME: kube-prometheus-stack
+  VERSION: 80.12.1
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Prometheus tasks
+  #------------------------------
+  repo:install:
+    desc: adds Prometheus helm repo
+    cmds:
+      - helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      - helm repo update prometheus-community
+    internal: true
+
+  repo:list:
+    desc: list available Prometheus releases
+    deps: [repo:install]
+    cmds:
+      - helm search repo prometheus-community/kube-prometheus-stack -l | head -10
+
+
+  install:
+    desc: install Prometheus
+    deps: [repo:install]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} prometheus-community/kube-prometheus-stack \
+          --create-namespace \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}} \
+          -f myvalues.yaml
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=kube-prometheus-stack,app.kubernetes.io/name=grafana -n {{.NAMESPACE}} --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=metrics,app.kubernetes.io/instance=kube-prometheus-stack -n {{.NAMESPACE}} --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=prometheus-operator,app.kubernetes.io/instance=kube-prometheus-stack -n {{.NAMESPACE}} --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=kube-prometheus-stack -n {{.NAMESPACE}} --timeout=300s
+    status:
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=kube-prometheus-stack,app.kubernetes.io/name=grafana -n {{.NAMESPACE}} --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=metrics,app.kubernetes.io/instance=kube-prometheus-stack -n {{.NAMESPACE}} --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=prometheus-operator,app.kubernetes.io/instance=kube-prometheus-stack -n {{.NAMESPACE}} --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=kube-prometheus-stack -n {{.NAMESPACE}} --timeout=300s
+    internal: true
+
+  grafana:initpw:
+    desc: get initial Grafana admin secret
+    deps: [install]
+    cmds:
+      - kubectl -n {{.NAMESPACE}} get secret kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 -d
+
+  uninstall:
+    desc: uninstall Prometheus
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}} --keep-history
+
+  all:
+    desc: full repo setup and Prometheus install
+    cmds:
+      - task: install
+
+  clean:
+    desc: purge Prometheus install
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}

@@ -27,6 +27,7 @@ tasks:
     cmds:
       - helm repo add aqua https://aquasecurity.github.io/helm-charts/
       - helm repo update aqua
+    internal: true
 
   repo:list:
     desc: list available Trivy Operator releases
@@ -45,6 +46,10 @@ tasks:
           --namespace {{.NAMESPACE}} \
           --version {{.VERSION}} \
           --set="excludeNamespaces=gke-managed-system\,kube-system"
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=trivy-operator,app.kubernetes.io/name=trivy-operator -n {{.NAMESPACE}} --timeout=300s
+    status:
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/instance=trivy-operator,app.kubernetes.io/name=trivy-operator -n {{.NAMESPACE}} --timeout=300s
+    internal: true
 
   uninstall:
     desc: uninstall Trivy Operator
