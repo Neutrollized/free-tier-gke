@@ -1,0 +1,60 @@
+---
+apiVersion: ray.io/v1
+kind: RayCluster
+metadata:
+  name: raycluster-cpu
+spec:
+  rayVersion: '2.53.0'
+  headGroupSpec:
+    rayStartParams:
+      dashboard-host: "0.0.0.0" # required if you wish to expose Ray dashboard outside the cluster (i.e. via ingress)
+      num-cpus: "0" # don't run tasks on the head node
+    template:
+      spec:
+        containers:
+        - name: ray-head
+          image: rayproject/ray:2.53.0-py312-cpu # standard image, no GPU
+          env:
+          - name: RAY_SCHEDULER_EVENTS
+            value: "0"
+          - name: RAY_LOGGING_LEVEL
+            value: "INFO"
+          ports:
+          - containerPort: 6379
+            name: gcs-server
+            protocol: TCP
+          - containerPort: 8265
+            name: dashboard
+            protocol: TCP
+          - containerPort: 10001
+            name: client
+            protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: "2Gi"
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+        nodeSelector:
+            node.kubernetes.io/instance-type: e2-standard-4 # use CPU-only node for head group
+  workerGroupSpecs:
+  - replicas: 2
+    groupName: worker-group
+    rayStartParams: {}
+    template:
+      spec:
+        containers:
+        - name: ray-worker
+          image: rayproject/ray:2.53.0-py312-cpu # standard image, no GPU
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+              # nvidia.com/gpu: "1"
+            requests:
+              cpu: "2"
+              memory: "4Gi"
+              # nvidia.com/gpu: "1"
+        nodeSelector:
+            node.kubernetes.io/instance-type: e2-standard-4 # specify GPU-enabled nodes for AI workloads

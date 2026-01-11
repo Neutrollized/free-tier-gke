@@ -194,6 +194,16 @@ resource "google_container_cluster" "primary" {
 
     ray_operator_config {
       enabled = lookup(var.addons_config, "ray_operator_enabled", false)
+
+      ray_cluster_logging_config {
+        enabled = lookup(var.addons_config, "ray_operator_enabled", false)
+      }
+
+      # Ray cluster metrics require Google Cloud Managed Service for Prometheus to be enabled
+      # https://docs.cloud.google.com/kubernetes-engine/docs/add-on/ray-on-gke/how-to/collect-view-logs-metrics
+      ray_cluster_monitoring_config {
+        enabled = false
+      }
     }
   }
 
