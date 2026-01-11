@@ -10,7 +10,8 @@ ray.init(
 print("🚀 Ray Cluster Connected! Starting parallel processing...")
 
 
-# by default, nump_cpus=1
+# by default, num_cpus=1
+# you can also specify a num_gpus parameter for your AI/ML workloads
 @ray.remote(num_cpus=0.5)
 def fake_job(index):
     # Simulate work (e.g., data processing) for 5 seconds

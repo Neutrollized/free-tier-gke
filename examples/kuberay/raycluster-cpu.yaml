@@ -18,7 +18,9 @@ spec:
           - name: RAY_SCHEDULER_EVENTS
             value: "0"
           - name: RAY_LOGGING_LEVEL
-            value: "INFO"
+            value: "WARNING"
+          - name: RAY_TRAIN_WORKER_GROUP_START_TIMEOUT_S
+            value: "300"
           ports:
           - containerPort: 6379
             name: gcs-server
@@ -32,7 +34,7 @@ spec:
           resources:
             limits:
               cpu: "1"
-              memory: "2Gi"
+              memory: "5Gi"
             requests:
               cpu: "1"
               memory: "2Gi"
@@ -50,7 +52,7 @@ spec:
           resources:
             limits:
               cpu: "2"
-              memory: "4Gi"
+              memory: "5Gi"
               # nvidia.com/gpu: "1"
             requests:
               cpu: "2"

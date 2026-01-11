@@ -1,1 +1,2 @@
-ray[default] == 2.53.0
+ray[default] == 2.53.0                # for Python applications
+#ray[train,data,tune,serve] == 2.53.0 # for ML applications

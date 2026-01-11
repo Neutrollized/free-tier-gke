@@ -1,0 +1,18 @@
+---
+apiVersion: ray.io/v1
+kind: RayJob
+metadata:
+  name: rayjob-pytorch-mnist
+spec:
+  shutdownAfterJobFinishes: false # this setting gets ignored in this case as it has no authority to shutdown the (existing) RayCluster
+  clusterSelector:
+    ray.io/cluster: raycluster-cpu
+  entrypoint: python ray-operator/config/samples/pytorch-mnist/ray_train_pytorch_mnist.py
+  runtimeEnvYAML: |
+    pip:
+      - torch
+      - torchvision
+    working_dir: "https://github.com/ray-project/kuberay/archive/master.zip"
+    env_vars:
+      NUM_WORKERS: "2"
+      CPUS_PER_WORKER: "2"
