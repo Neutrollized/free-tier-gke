@@ -40,6 +40,7 @@ Azure's AKS combined with Spot instances are actually incredibly competitive in 
 You can do this via console or...
 ```
 gcloud services enable --async \
+  compute.googleapis.com \
   container.googleapis.com
 ```
 

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.27.0] - 2026-02-17
 ### Added
+- Enabling on some required Google APIs
 - Private Services Access IP range for Service Networking (for services such as Cloud SQL)
 
 ## [0.26.3] - 2026-01-11

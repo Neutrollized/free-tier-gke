@@ -55,7 +55,7 @@ resource "google_compute_subnetwork" "psc" {
   region                   = var.region
 }
 
-# private services access
+# private services access / service networking (for services such as )
 # for services such as Cloud SQL
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_networking_connection.html
 resource "google_compute_global_address" "private_ip_alloc" {
