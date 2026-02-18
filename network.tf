@@ -55,6 +55,23 @@ resource "google_compute_subnetwork" "psc" {
   region                   = var.region
 }
 
+# private services access
+# for services such as Cloud SQL
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_networking_connection.html
+resource "google_compute_global_address" "private_ip_alloc" {
+  name          = "${var.gke_cluster_name}-psa-ip-range"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 20
+  network       = google_compute_network.k8s.id
+}
+
+resource "google_service_networking_connection" "default" {
+  network                 = google_compute_network.k8s.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
+}
+
 
 #------------------------------
 # Firewalls
