@@ -1,0 +1,135 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: flyte
+  RELEASE_NAME: flyte-backend
+  VERSION: v1.16.4
+  PROJECT_ID: glen-ai-sandbox
+  KSA_NAME: flyte-backend-flyte-binary # this is what the deployment sets it as
+  GSA_NAME: flyte-gsa
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Flyte tasks
+  #------------------------------
+  repo:install:
+    desc: adds Flyte helm repo
+    cmds:
+      - helm repo add flyteorg https://flyteorg.github.io/flyte
+      - helm repo update argocd
+    internal: true
+
+  repo:list:
+    desc: list available Flyte releases
+    deps: [repo:install]
+    cmds:
+      - helm search repo flyteorg/flyte-binary -l | head -10
+
+  k8s:ns:create:
+    desc: create namespace
+    cmds:
+      - kubectl create ns {{.NAMESPACE}}
+    status:
+      - kubectl get ns {{.NAMESPACE}}
+    internal: true
+
+  k8s:ns:delete:
+    desc: create namespace
+    cmds:
+      - kubectl delete ns {{.NAMESPACE}} --wait=true
+    status:
+      - "! kubectl get ns {{.NAMESPACE}}"
+    internal: true
+
+  gcp:wif:add:
+    desc: setup Workload Identity Federation
+    cmds:
+      - gcloud iam service-accounts create {{.GSA_NAME}} --project {{.PROJECT_ID}}
+      - sleep 10
+      - gcloud iam service-accounts add-iam-policy-binding {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:{{.PROJECT_ID}}.svc.id.goog[{{.NAMESPACE}}/{{.KSA_NAME}}]"
+      - gcloud projects add-iam-policy-binding {{.PROJECT_ID}} --role roles/iam.serviceAccountTokenCreator --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - gcloud projects add-iam-policy-binding {{.PROJECT_ID}} --role roles/storage.bucketViewer --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - gcloud projects add-iam-policy-binding {{.PROJECT_ID}} --role roles/storage.objectAdmin --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+    internal: true
+
+  gcp:wif:delete:
+    desc: cleanup Workload Identity Federation
+    cmds:
+      - gcloud projects remove-iam-policy-binding {{.PROJECT_ID}} --role roles/storage.objectAdmin --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - gcloud projects remove-iam-policy-binding {{.PROJECT_ID}} --role roles/storage.bucketViewer --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - gcloud projects remove-iam-policy-binding {{.PROJECT_ID}} --role roles/iam.serviceAccountTokenCreator --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - gcloud iam service-accounts remove-iam-policy-binding {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:{{.PROJECT_ID}}.svc.id.goog[{{.NAMESPACE}}/{{.KSA_NAME}}]"
+      - gcloud iam service-accounts delete {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --project {{.PROJECT_ID}} --quiet
+    internal: true
+
+  install:
+    desc: install Flyte
+    deps: [repo:install]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} flyteorg/flyte-binary \
+          --create-namespace \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}} \
+          --values myvalues.yaml
+    status:
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=flyte-binary,app.kubernetes.io/instance=flyte-backend,app.kubernetes.io/name=flyte-binary -n {{.NAMESPACE}} --timeout=300s
+    internal: true
+
+  flyte:deploy:restart:
+    desc: restart Flyte deployment rollout
+    cmds:
+      - kubectl rollout restart deployment/{{.RELEASE_NAME}}-flyte-binary -n {{.NAMESPACE}}
+    internal: true
+
+  flyte:http:port-forward:
+    desc: port-forward Flyte HTTP service
+    cmds:
+      - kubectl -n {{.NAMESPACE}} port-forward svc/flyte-backend-flyte-binary-http 8088:8088
+    internal: true
+
+  flyte:grpc:port-forward:
+    desc: port-forward Flyte gRPC service
+    cmds:
+      - kubectl -n {{.NAMESPACE}} port-forward svc/flyte-backend-flyte-binary-grpc 8089:8089
+    internal: true
+
+  flyte:services:port-forward:
+    desc: port-forward Flyte services
+    deps:
+      - task: flyte:http:port-forward
+      - task: flyte:grpc:port-forward
+
+  uninstall:
+    desc: uninstall Flyte
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}} --keep-history
+      - task: gcp:wif:delete
+
+  all:
+    desc: full repo setup and Flyte install
+    cmds:
+      - task: gcp:wif:add
+      - sleep 30
+      - task: install
+      - echo "> Please be patient, it will restart a few times"
+
+  clean:
+    desc: purge Flyte install
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}
+      - task: k8s:ns:delete
+      - task: gcp:wif:delete
