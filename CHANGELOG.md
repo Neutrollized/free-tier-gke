@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.28.0] - 2026-03-01
+### Changed
+- Updated `examples/kuberay` with example that uses WIF and GCS bucket to store training artifacts via Taskfile
+- Updated `examples/workload-identity` to setup WIF via Taskfile rather than have the GSA created as a Terraform resource
+### Removed
+- Resources `google_service_account.wi_gsa` and `google_project_iam_member.wi_gsa`
+- Variable `wi_iam_roles_list`
+
 ## [0.27.0] - 2026-02-17
 ### Added
 - Enabling on some required Google APIs

@@ -81,17 +81,6 @@ variable "iam_roles_list" {
   ]
 }
 
-variable "wi_iam_roles_list" {
-  description = "List of IAM roles to be assigned to Workload Identity service account"
-  type        = list(string)
-  default = [
-    "roles/clouddebugger.agent",
-    "roles/cloudprofiler.agent",
-    "roles/cloudtrace.agent",
-    "roles/monitoring.metricWriter",
-  ]
-}
-
 
 #-------------------------------
 # Private GKE Cluster settings

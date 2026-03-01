@@ -51,17 +51,20 @@ kubectl create ns wi-test
 kubectl create serviceaccount simple-wi-ksa -n wi-test
 ```
 
-- if you deployed the cluster from my blueprint, a Google service account called "simple-wi-gsa" should arleady be created for you, otherwise please create one first before continuing onto the next step
 ```
-gcloud iam service-accounts add-iam-policy-binding simple-wi-gsa@my-project.iam.gserviceaccount.com \
+gcloud iam service-accounts create simple-wi-gsa -
+```
+
+```
+gcloud iam service-accounts add-iam-policy-binding simple-wi-gsa@myproject-123.iam.gserviceaccount.com \
   --role roles/iam.workloadIdentityUser \
-  --member "serviceAccount:my-project.svc.id.goog[wi-test/simple-wi-ksa]"
+  --member "serviceAccount:myproject-123.svc.id.goog[wi-test/simple-wi-ksa]"
 ```
 
 ```
 kubectl annotate serviceaccount simple-wi-ksa \
   --namespace wi-test \
-  iam.gke.io/gcp-service-account=simple-wi-gsa@my-project.iam.gserviceaccount.com
+  iam.gke.io/gcp-service-account=simple-wi-gsa@myproject-123.iam.gserviceaccount.com
 ```
 
 - you can confirm the changes with `kubectl describe serviceaccount simple-wi-ksa -n wi-test`:
@@ -69,7 +72,7 @@ kubectl annotate serviceaccount simple-wi-ksa \
 Name:                simple-wi-ksa
 Namespace:           wi-test
 Labels:              <none>
-Annotations:         iam.gke.io/gcp-service-account: simple-wi-gsa@my-project.iam.gserviceaccount.com
+Annotations:         iam.gke.io/gcp-service-account: simple-wi-gsa@myproject-123.iam.gserviceaccount.com
 Image pull secrets:  <none>
 Mountable secrets:   simple-wi-ksa-token-th4tc
 Tokens:              simple-wi-ksa-token-th4tc
@@ -85,3 +88,7 @@ kubectl apply -f wi-test.yaml
 ```
 kubectl exec workload-identity-test -n wi-test -- curl -s -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/email
 ```
+
+
+> [!NOTE]
+> If you have `task` installed, you can just run `task all PROJECT_ID=myproject-123`

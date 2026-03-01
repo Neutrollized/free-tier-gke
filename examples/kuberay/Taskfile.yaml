@@ -1,0 +1,143 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  KSA_NAME: ray-wi-ksa
+  GSA_NAME: ray-wi-gsa
+  GCS_BUCKET: mybucket # UPDATE THIS!! no gs://
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # KubeRay tasks
+  #------------------------------
+  k8s:sa:create:
+    desc: create K8s service account
+    cmds:
+      - kubectl create serviceaccount {{.KSA_NAME}}
+    status:
+      - kubectl get serviceaccount {{.KSA_NAME}}
+    internal: true
+
+  k8s:sa:delete:
+    desc: delete K8s service account
+    cmds:
+      - kubectl delete serviceaccount {{.KSA_NAME}}
+    status:
+      - "! kubectl get serviceaccount {{.KSA_NAME}}"
+    internal: true
+
+  gcp:wif:create:
+    desc: setup Workload Identity Federation
+    deps: [k8s:sa:create]
+    cmds:
+      - gcloud iam service-accounts create {{.GSA_NAME}} --project {{.PROJECT_ID}}
+      - sleep 10
+      - gcloud storage buckets add-iam-policy-binding gs://{{.GCS_BUCKET}} --role "roles/storage.bucketViewer" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - gcloud storage buckets add-iam-policy-binding gs://{{.GCS_BUCKET}} --role "roles/storage.objectUser" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - gcloud iam service-accounts add-iam-policy-binding {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:{{.PROJECT_ID}}.svc.id.goog[default/{{.KSA_NAME}}]"
+    internal: true
+
+  gcp:wif:delete:
+    desc: cleanup Workload Identity Federation
+    cmds:
+      - cmd: gcloud iam service-accounts remove-iam-policy-binding {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:{{.PROJECT_ID}}.svc.id.goog[default/{{.KSA_NAME}}]"
+        ignore_error: true
+      - cmd: gcloud storage buckets remove-iam-policy-binding gs://{{.GCS_BUCKET}} --role "roles/storage.objectUser" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+        ignore_error: true
+      - cmd: gcloud storage buckets remove-iam-policy-binding gs://{{.GCS_BUCKET}} --role "roles/storage.bucketViewer" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+        ignore_error: true
+      - cmd: gcloud iam service-accounts delete {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --project {{.PROJECT_ID}} --quiet
+        ignore_error: true
+    internal: true
+
+  k8s:sa:annotate:add:
+    desc: annotate K8s service account
+    cmds:
+      - kubectl annotate serviceaccount {{.KSA_NAME}} iam.gke.io/gcp-service-account={{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com
+      - kubectl describe serviceaccount {{.KSA_NAME}}
+    internal: true
+
+  k8s:sa:annotate:remove:
+    desc: remove annotation in K8s service account
+    cmds:
+      - cmd: kubectl annotate serviceaccount {{.KSA_NAME}} iam.gke.io/gcp-service-account-
+        ignore_error: true
+      - cmd: kubectl describe serviceaccount {{.KSA_NAME}}
+        ignore_error: true
+    internal: true
+
+  k8s:raycluster:create:
+    desc: deploy RayCluster
+    cmds:
+      - kubectl apply -f raycluster-cpu.yaml
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/created-by=kuberay-operator,app.kubernetes.io/name=kuberay,ray.io/cluster=raycluster-cpu,ray.io/group=headgroup,ray.io/identifier=raycluster-cpu-head --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/created-by=kuberay-operator,app.kubernetes.io/name=kuberay,ray.io/cluster=raycluster-cpu,ray.io/group=worker-group,ray.io/identifier=raycluster-cpu-worker --timeout=300s
+    status:
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/created-by=kuberay-operator,app.kubernetes.io/name=kuberay,ray.io/cluster=raycluster-cpu,ray.io/group=headgroup,ray.io/identifier=raycluster-cpu-head --timeout=300s
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/created-by=kuberay-operator,app.kubernetes.io/name=kuberay,ray.io/cluster=raycluster-cpu,ray.io/group=worker-group,ray.io/identifier=raycluster-cpu-worker --timeout=300s
+    internal: true
+
+  k8s:raycluster:delete:
+    desc: delete RayCluster
+    cmds:
+      - kubectl delete -f raycluster-cpu.yaml
+      - kubectl wait --for=delete pod -l app.kubernetes.io/created-by=kuberay-operator,app.kubernetes.io/name=kuberay,ray.io/cluster=raycluster-cpu,ray.io/group=headgroup,ray.io/identifier=raycluster-cpu-head --timeout=300s
+    status:
+      - "! kubectl wait --for=condition=Ready pod -l app.kubernetes.io/created-by=kuberay-operator,app.kubernetes.io/name=kuberay,ray.io/cluster=raycluster-cpu,ray.io/group=headgroup,ray.io/identifier=raycluster-cpu-head --timeout=300s"
+    internal: true
+
+  kuberay:simple:
+    desc: deploy RayCluster with no WIF
+    preconditions:
+      - sh: '[ -n "{{.PROJECT_ID}}" ]'
+        msg: |
+          ERROR: 'PROJECT_ID' is required but was not provided.
+          Usage: task kuberay:simple PROJECT_ID=myproject-123
+    cmds:
+      - task: k8s:sa:create
+      - task: k8s:raycluster:create
+
+  kuberay:wif:
+    desc: deploy RayCluster with WIF
+    requires:
+      vars: [GCS_BUCKET]
+    preconditions:
+      - sh: '[ -n "{{.PROJECT_ID}}" ]'
+        msg: |
+          ERROR: 'PROJECT_ID' is required but was not provided.
+          Usage: task kuberay:wif PROJECT_ID=myproject-123
+    cmds:
+      - task: gcp:wif:create
+      - task: k8s:sa:annotate:add
+      - task: k8s:raycluster:create
+
+  clean:
+    desc: cleanup RayCluster example
+    preconditions:
+      - sh: '[ -n "{{.PROJECT_ID}}" ]'
+        msg: |
+          ERROR: 'PROJECT_ID' is required but was not provided.
+          Usage: task clean PROJECT_ID=myproject-123
+    cmds:
+      - task: k8s:raycluster:delete
+      - task: k8s:sa:annotate:remove
+      - task: gcp:wif:delete
+      - task: k8s:sa:delete
+
+  kuberay:session:
+    desc: start Ray session (localhost:8265)
+    deps: [k8s:raycluster:create]
+    cmds:
+      - kubectl ray session raycluster-cpu

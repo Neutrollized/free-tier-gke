@@ -1,0 +1,141 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: wi-test
+  KSA_NAME: simple-wi-ksa
+  GSA_NAME: simple-wi-gsa
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+  usage:
+    desc: show usage command
+    cmds:
+      - echo "task [all|clean] PROJECT_ID=myproject-123"
+
+
+  #------------------------------------------
+  # Workload Identity Federation tasks
+  #------------------------------------------
+  k8s:ns:create:
+    desc: create namespace
+    cmds:
+      - kubectl create ns {{.NAMESPACE}}
+    status:
+      - kubectl get ns {{.NAMESPACE}}
+    internal: true
+
+  k8s:ns:delete:
+    desc: delete namespace
+    cmds:
+      - kubectl delete ns {{.NAMESPACE}} --wait=true
+    status:
+      - "! kubectl get ns {{.NAMESPACE}}"
+    internal: true
+
+  k8s:sa:create:
+    desc: create K8s service account
+    deps: [k8s:ns:create]
+    cmds:
+      - kubectl create serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
+    status:
+      - kubectl get serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
+    internal: true
+
+  k8s:sa:delete:
+    desc: delete K8s service account
+    cmds:
+      - kubectl delete serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
+    status:
+      - "! kubectl get serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}"
+    internal: true
+
+  gcp:wif:create:
+    desc: setup Workload Identity Federation
+    deps: [k8s:sa:create]
+    cmds:
+      - gcloud iam service-accounts create {{.GSA_NAME}} --project {{.PROJECT_ID}}
+      - sleep 10
+      - gcloud iam service-accounts add-iam-policy-binding {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:{{.PROJECT_ID}}.svc.id.goog[{{.NAMESPACE}}/{{.KSA_NAME}}]"
+    internal: true
+
+  gcp:wif:delete:
+    desc: cleanup Workload Identity Federation
+    cmds:
+      - gcloud iam service-accounts remove-iam-policy-binding {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:{{.PROJECT_ID}}.svc.id.goog[{{.NAMESPACE}}/{{.KSA_NAME}}]"
+      - gcloud iam service-accounts delete {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --project {{.PROJECT_ID}} --quiet
+    internal: true
+
+  k8s:sa:annotate:add:
+    desc: annotate K8s service account
+    cmds:
+      - kubectl annotate serviceaccount {{.KSA_NAME}} --namespace {{.NAMESPACE}} iam.gke.io/gcp-service-account={{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com
+      - kubectl describe serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
+    internal: true
+
+  k8s:sa:annotate:remove:
+    desc: remove annotation in K8s service account
+    cmds:
+      - kubectl annotate serviceaccount {{.KSA_NAME}} --namespace {{.NAMESPACE}} iam.gke.io/gcp-service-account-
+      - kubectl describe serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
+    internal: true
+
+  k8s:pod:create:
+    desc: deploy test Pod
+    cmds:
+      - kubectl apply -f wi-test.yaml
+    status:
+      - kubectl wait --for=condition=Ready pod workload-identity-test -n {{.NAMESPACE}} --timeout=300s
+    internal: true
+
+  k8s:pod:delete:
+    desc: delete test Pod
+    cmds:
+      - kubectl delete -f wi-test.yaml
+      - kubectl wait --for=delete pod workload-identity-test -n {{.NAMESPACE}} --timeout=300s
+    status:
+      - "! kubectl wait --for=condition=Ready pod workload-identity-test -n {{.NAMESPACE}} --timeout=300s"
+    internal: true
+
+  k8s:pod:exec:
+    desc: verify WIF perms
+    deps: [k8s:pod:create]
+    cmds:
+      - "kubectl exec workload-identity-test -n {{.NAMESPACE}} -- curl -s -H \"Metadata-Flavor: Google\" http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/email"
+
+  all:
+    desc: deploy WIF example
+    preconditions:
+      - sh: '[ -n "{{.PROJECT_ID}}" ]'
+        msg: |
+          ERROR: 'PROJECT_ID' is required but was not provided.
+          Usage: task all PROJECT_ID=myproject-123
+    cmds:
+      - task: gcp:wif:create
+      - task: k8s:sa:annotate:add
+      - task: k8s:pod:create
+      - task: k8s:pod:exec
+
+  clean:
+    desc: cleanup WIF example
+    preconditions:
+      - sh: '[ -n "{{.PROJECT_ID}}" ]'
+        msg: |
+          ERROR: 'PROJECT_ID' is required but was not provided.
+          Usage: task clean PROJECT_ID=myproject-123
+    cmds:
+      - task: k8s:pod:delete
+      - task: k8s:sa:annotate:remove
+      - task: gcp:wif:delete
+      - task: k8s:sa:delete
+      - task: k8s:ns:delete

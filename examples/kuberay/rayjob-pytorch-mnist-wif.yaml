@@ -1,0 +1,20 @@
+---
+apiVersion: ray.io/v1
+kind: RayJob
+metadata:
+  name: rayjob-pytorch-mnist-wif
+spec:
+  shutdownAfterJobFinishes: false # this setting gets ignored in this case as it has no authority to shutdown the (existing) RayCluster
+  clusterSelector:
+    ray.io/cluster: raycluster-cpu
+  entrypoint: python samples/pytorch-mnist/ray_train_pytorch_mnist.py
+  runtimeEnvYAML: |
+    pip:
+      - torch
+      - torchvision
+      - gcsfs
+    working_dir: "https://storage.googleapis.com/public-file-server/aiml/kuberay_samples.zip"
+    env_vars:
+      NUM_WORKERS: "2"
+      CPUS_PER_WORKER: "2"
+      GCS_BUCKET: "gs://mybucket" # UPDATE THIS!!

@@ -11,6 +11,7 @@ spec:
       num-cpus: "0" # don't run tasks on the head node
     template:
       spec:
+        serviceAccountName: ray-wi-ksa
         containers:
         - name: ray-head
           image: rayproject/ray:2.53.0-py312-cpu # standard image, no GPU
@@ -46,6 +47,7 @@ spec:
     rayStartParams: {}
     template:
       spec:
+        serviceAccountName: ray-wi-ksa
         containers:
         - name: ray-worker
           image: rayproject/ray:2.53.0-py312-cpu # standard image, no GPU
