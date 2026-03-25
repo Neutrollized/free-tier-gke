@@ -16,6 +16,6 @@ spec:
     env_vars:
       NUM_WORKERS: "2"
       CPUS_PER_WORKER: "2"
-      GCS_BUCKET: "gs://kuberay-test-gyu" # UPDATE THIS!!
+      GCS_BUCKET: "gs://mybucket" # UPDATE THIS!!
 
   shutdownAfterJobFinishes: false # this setting gets ignored in this case as it has no authority to shutdown the (existing) RayCluster
