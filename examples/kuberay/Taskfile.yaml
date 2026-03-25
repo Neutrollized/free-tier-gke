@@ -98,18 +98,18 @@ tasks:
       - "! kubectl wait --for=condition=Ready pod -l app.kubernetes.io/created-by=kuberay-operator,app.kubernetes.io/name=kuberay,ray.io/cluster=raycluster-cpu,ray.io/group=headgroup,ray.io/identifier=raycluster-cpu-head --timeout=300s"
     internal: true
 
-  kuberay:simple:
+  kuberay:cluster:simple:
     desc: deploy RayCluster with no WIF
     preconditions:
       - sh: '[ -n "{{.PROJECT_ID}}" ]'
         msg: |
           ERROR: 'PROJECT_ID' is required but was not provided.
-          Usage: task kuberay:simple PROJECT_ID=myproject-123
+          Usage: task kuberay:cluster:simple PROJECT_ID=myproject-123
     cmds:
       - task: k8s:sa:create
       - task: k8s:raycluster:create
 
-  kuberay:wif:
+  kuberay:cluster:wif:
     desc: deploy RayCluster with WIF
     requires:
       vars: [GCS_BUCKET]
@@ -117,7 +117,7 @@ tasks:
       - sh: '[ -n "{{.PROJECT_ID}}" ]'
         msg: |
           ERROR: 'PROJECT_ID' is required but was not provided.
-          Usage: task kuberay:wif PROJECT_ID=myproject-123
+          Usage: task kuberay:cluster:wif PROJECT_ID=myproject-123
     cmds:
       - task: gcp:wif:create
       - task: k8s:sa:annotate:add
