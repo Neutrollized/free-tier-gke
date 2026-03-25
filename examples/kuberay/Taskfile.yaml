@@ -5,7 +5,7 @@ version: '3'
 vars:
   KSA_NAME: ray-wi-ksa
   GSA_NAME: ray-wi-gsa
-  GCS_BUCKET: mybucket # UPDATE THIS!! no gs://
+  GCS_BUCKET: kuberay-test-gyu #mybucket # UPDATE THIS!! no gs://
 
 tasks:
   default:
@@ -141,3 +141,21 @@ tasks:
     deps: [k8s:raycluster:create]
     cmds:
       - kubectl ray session raycluster-cpu
+
+  demo:ray:submit:fake_job:
+    desc: submit fake_job to existing Ray cluster (make sure you have session running)
+    deps: [k8s:raycluster:create]
+    cmds:
+      - "ray job submit --working-dir=. --address http://localhost:8265 -- python fake_job.py"
+
+  demo:rayjob:inlinecluster:
+    desc: deploy Fashion MNIST RayJob with inline RayCluster
+    deps: [k8s:raycluster:delete] # make sure you don't already have a cluster running, unless you have a lot of GKE cluster resources :)
+    preconditions:
+      - sh: '[ -n "{{.PROJECT_ID}}" ]'
+        msg: |
+          ERROR: 'PROJECT_ID' is required but was not provided.
+          Usage: task demo:rayjob:inlinecluster PROJECT_ID=myproject-123
+    cmds:
+      - task: k8s:sa:create
+      - cmd: kubectl apply -f rayjob-pytorch-mnist-inline.yaml

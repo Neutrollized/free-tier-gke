@@ -4,7 +4,6 @@ kind: RayJob
 metadata:
   name: rayjob-pytorch-mnist
 spec:
-  shutdownAfterJobFinishes: false # this setting gets ignored in this case as it has no authority to shutdown the (existing) RayCluster
   clusterSelector:
     ray.io/cluster: raycluster-cpu
   entrypoint: python ray-operator/config/samples/pytorch-mnist/ray_train_pytorch_mnist.py
@@ -16,3 +15,5 @@ spec:
     env_vars:
       NUM_WORKERS: "2"
       CPUS_PER_WORKER: "2"
+
+  shutdownAfterJobFinishes: false # this setting gets ignored in this case as it has no authority to shutdown the (existing) RayCluster

@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.28.1] - 2026-03-25
+### Changed
+- Updated `examples/kuberay` with example that performs inline cluster creation in `RayJob` object for my KubeCon EU 2026 talk at Google booth in Amsterdam!
+
 ## [0.28.0] - 2026-03-01
 ### Changed
 - Updated `examples/kuberay` with example that uses WIF and GCS bucket to store training artifacts via Taskfile

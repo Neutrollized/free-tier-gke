@@ -1,0 +1,80 @@
+---
+apiVersion: ray.io/v1
+kind: RayJob
+metadata:
+  name: rayjob-pytorch-mnist-inline
+spec:
+  entrypoint: python ray-operator/config/samples/pytorch-mnist/ray_train_pytorch_mnist.py
+  runtimeEnvYAML: |
+    pip:
+      - torch
+      - torchvision
+    working_dir: "https://github.com/ray-project/kuberay/archive/master.zip"
+    env_vars:
+      NUM_WORKERS: "2"
+      CPUS_PER_WORKER: "2"
+
+  # https://docs.ray.io/en/latest/cluster/kubernetes/getting-started/rayjob-quick-start.html#step-7-create-a-rayjob-with-shutdownafterjobfinishes-set-to-true
+  shutdownAfterJobFinishes: true     # tear down cluster when done
+  ttlSecondsAfterFinished: 60        # seconds before deleting the RayCluster
+
+  rayClusterSpec:                    # inline cluster definition
+    rayVersion: '2.53.0'
+    headGroupSpec:
+      rayStartParams:
+        dashboard-host: "0.0.0.0" # required if you wish to expose Ray dashboard outside the cluster (i.e. via ingress)
+        num-cpus: "0" # don't run tasks on the head node
+      template:
+        spec:
+          serviceAccountName: ray-wi-ksa
+          containers:
+          - name: ray-head
+            image: rayproject/ray:2.53.0-py312-cpu # standard image, no GPU
+            env:
+            - name: RAY_SCHEDULER_EVENTS
+              value: "0"
+            - name: RAY_LOGGING_LEVEL
+              value: "WARNING"
+            - name: RAY_TRAIN_WORKER_GROUP_START_TIMEOUT_S
+              value: "300"
+            ports:
+            - containerPort: 6379
+              name: gcs-server
+              protocol: TCP
+            - containerPort: 8265
+              name: dashboard
+              protocol: TCP
+            - containerPort: 10001
+              name: client
+              protocol: TCP
+            resources:
+              limits:
+                cpu: "1"
+                memory: "5Gi"
+              requests:
+                cpu: "1"
+                memory: "2Gi"
+          nodeSelector:
+              node.kubernetes.io/instance-type: e2-standard-4 # use CPU-only node for head group
+
+    workerGroupSpecs:
+    - replicas: 2
+      groupName: worker-group
+      rayStartParams: {}
+      template:
+        spec:
+          serviceAccountName: ray-wi-ksa
+          containers:
+          - name: ray-worker
+            image: rayproject/ray:2.53.0-py312-cpu # standard image, no GPU
+            resources:
+              limits:
+                cpu: "2"
+                memory: "5Gi"
+                # nvidia.com/gpu: "1"
+              requests:
+                cpu: "2"
+                memory: "4Gi"
+                # nvidia.com/gpu: "1"
+          nodeSelector:
+              node.kubernetes.io/instance-type: e2-standard-4 # specify GPU-enabled nodes for AI workloads
