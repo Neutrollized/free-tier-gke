@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.28.2] - 2026-??-??
+### Changed
+- Updated `examples/hubble` Hubble UI from `0.13.3` to `0.13.4`
+- Updated `examples/harbor` with example that sets up a Harbor registry with a GCS storage backend
+
 ## [0.28.1] - 2026-03-25
 ### Changed
 - Updated `examples/kuberay` with example that performs inline cluster creation in `RayJob` object for my KubeCon EU 2026 talk at Google booth in Amsterdam!
