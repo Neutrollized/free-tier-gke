@@ -6,9 +6,7 @@ vars:
   NAMESPACE: harbor
   RELEASE_NAME: harbor
   VERSION: 1.18.3
-  KSA_NAME: harbor-wi-ksa
-  GSA_NAME: harbor-wi-gsa
-  GCS_BUCKET: harbor-test-gyu
+  KSA_NAME: harbor-ksa
 
 tasks:
   default:
@@ -71,47 +69,6 @@ tasks:
       - "! kubectl get serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}"
     internal: true
 
-  gcp:wif:create:
-    desc: setup Workload Identity Federation
-    deps: [k8s:sa:create]
-    cmds:
-      - gcloud iam service-accounts create {{.GSA_NAME}} --project {{.PROJECT_ID}}
-      - sleep 10
-      - gcloud storage buckets add-iam-policy-binding gs://{{.GCS_BUCKET}} --role "roles/storage.bucketViewer" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
-      - gcloud storage buckets add-iam-policy-binding gs://{{.GCS_BUCKET}} --role "roles/storage.objectUser" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
-      - gcloud iam service-accounts add-iam-policy-binding {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:{{.PROJECT_ID}}.svc.id.goog[default/{{.KSA_NAME}}]"
-    status:
-      - gcloud iam service-accounts describe {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com
-    internal: true
-
-  gcp:wif:delete:
-    desc: cleanup Workload Identity Federation
-    cmds:
-      - cmd: gcloud iam service-accounts remove-iam-policy-binding {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --role roles/iam.workloadIdentityUser --member "serviceAccount:{{.PROJECT_ID}}.svc.id.goog[default/{{.KSA_NAME}}]"
-        ignore_error: true
-      - cmd: gcloud storage buckets remove-iam-policy-binding gs://{{.GCS_BUCKET}} --role "roles/storage.objectUser" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
-        ignore_error: true
-      - cmd: gcloud storage buckets remove-iam-policy-binding gs://{{.GCS_BUCKET}} --role "roles/storage.bucketViewer" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
-        ignore_error: true
-      - gcloud iam service-accounts delete {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --project {{.PROJECT_ID}} --quiet
-    internal: true
-
-  k8s:sa:annotate:add:
-    desc: annotate K8s service account
-    cmds:
-      - kubectl annotate serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}} iam.gke.io/gcp-service-account={{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com
-      - kubectl describe serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
-    internal: true
-
-  k8s:sa:annotate:remove:
-    desc: remove annotation in K8s service account
-    cmds:
-      - cmd: kubectl annotate serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}} iam.gke.io/gcp-service-account-
-        ignore_error: true
-      - cmd: kubectl describe serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
-        ignore_error: true
-    internal: true
-
   k8s:pvc:delete:
     desc: remove PVCs
     cmds:
@@ -161,40 +118,39 @@ tasks:
           --set expose.ingres.hosts.core="{{.INGRESS_IP}}.nip.io" \
           --set externalURL="http://{{.INGRESS_IP}}.nip.io"
       - echo " > Ingress IP may not be active right away. Please be patient and give it a few minutes."
+      - |
+        echo "Waiting for {{.INGRESS_IP}}.nip.io"
+        count=0
+        until $(curl --output /dev/null --silent --head --fail {{.INGRESS_IP}}.nip.io); do
+          if [ $count -eq 25 ]; then
+            echo "Timeout reached!"
+            exit 1
+          fi
+          printf '.'
+          sleep 10
+          count=$((count+1))
+        done
+        echo "Success! Harbor is up and running."
+    silent: true
 
   all:
     desc: full repo setup and Harbor install
-    requires:
-      vars: [GCS_BUCKET]
-    preconditions:
-      - sh: '[ -n "{{.PROJECT_ID}}" ]'
-        msg: |
-          ERROR: 'PROJECT_ID' is required but was not provided.
-          Usage: task all PROJECT_ID=myproject-123
     cmds:
       - task: k8s:namespace:create
-      - task: gcp:wif:create
-      - task: k8s:sa:annotate:add
+      - task: k8s:sa:create
       - task: install
-      - echo " > Once Ingress IP has been provisioned (may take up to 10 min.), please run \"task update:ingress\" so the GCE Ingress controller has a hostname to build its URL map."
+      - echo " > Once Ingress IP has been provisioned (may take a few min., check with \"watch kubectl get ingress -n harbor\"), please run \"task update:ingress\" so the GCE Ingress controller has a hostname to build its URL map."
 
   clean:
     desc: purge Harbor install
-    requires:
-      vars: [GCS_BUCKET]
-    preconditions:
-      - sh: '[ -n "{{.PROJECT_ID}}" ]'
-        msg: |
-          ERROR: 'PROJECT_ID' is required but was not provided.
-          Usage: task clean PROJECT_ID=myproject-123
     cmds:
       - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}
-      - task: k8s:sa:annotate:remove
-      - task: gcp:wif:delete
       - task: k8s:sa:delete
       - sleep 30
       - task: k8s:pvc:delete
       - task: k8s:namespace:delete
+    status:
+      - "! kubectl get ns {{.NAMESPACE}}"
 
 
   #---------------------------

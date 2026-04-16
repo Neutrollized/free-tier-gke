@@ -1,5 +1,5 @@
 # YAML anchor
-ksa_name: &serviceAccountName "harbor-wi-ksa"
+ksa_name: &serviceAccountName "harbor-ksa"
 
 expose:
   type: ingress
@@ -15,16 +15,6 @@ expose:
       kubernetes.io/ingress.allow-http: "true"
 
 externalURL: ""
-
-persistence:
-  resourcePolicy: ""
-  imageChartStorage:
-    type: gcs
-    gcs:
-      bucket: harbor-test-gyu
-      useWorkloadIdentity: true
-
-harborAdminPassword: "Harbor12345"
 
 nginx:
   serviceAccountName: *serviceAccountName
@@ -42,7 +32,7 @@ registry:
   serviceAccountName: *serviceAccountName
 
 trivy:
-  enabled: false
+  enabled: false  # temporarily disabling due to Trivy compromise in March 2026
   serviceAccountName: *serviceAccountName
   severity: "HIGH,CRITICAL"
   insecure: true

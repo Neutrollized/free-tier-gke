@@ -5,10 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
-## [0.28.2] - 2026-??-??
+## [0.28.2] - 2026-04-16
 ### Changed
 - Updated `examples/hubble` Hubble UI from `0.13.3` to `0.13.4`
-- Updated `examples/harbor` with example that sets up a Harbor registry with a GCS storage backend
+- Updated `examples/harbor` with example that sets up a Harbor registry
 
 ## [0.28.1] - 2026-03-25
 ### Changed
