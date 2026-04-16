@@ -1,0 +1,162 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  NAMESPACE: harbor
+  RELEASE_NAME: harbor
+  VERSION: 1.18.3
+  KSA_NAME: harbor-ksa
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Harbor tasks
+  #------------------------------
+  repo:install:
+    desc: adds Harbor helm repo
+    cmds:
+      - helm repo add harbor https://helm.goharbor.io
+      - helm repo update harbor
+    internal: true
+
+  repo:list:
+    desc: list available Harbor releases
+    deps: [repo:install]
+    cmds:
+      - helm search repo harbor/harbor -l | head -10
+
+  k8s:namespace:create:
+    desc: create k8s namespace
+    cmds:
+      - kubectl create namespace {{.NAMESPACE}}
+    status:
+      - kubectl get ns {{.NAMESPACE}}
+    internal: true
+
+  k8s:namespace:delete:
+    desc: create k8s namespace
+    cmds:
+      - kubectl delete namespace {{.NAMESPACE}}
+    status:
+      - "! kubectl get ns {{.NAMESPACE}}"
+    internal: true
+
+  k8s:sa:create:
+    desc: create K8s service account
+    deps: [k8s:namespace:create]
+    cmds:
+      - kubectl create serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
+    status:
+      - kubectl get serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
+    internal: true
+
+  k8s:sa:delete:
+    desc: delete K8s service account
+    cmds:
+      - kubectl delete serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}
+    status:
+      - "! kubectl get serviceaccount {{.KSA_NAME}} -n {{.NAMESPACE}}"
+    internal: true
+
+  k8s:pvc:delete:
+    desc: remove PVCs
+    cmds:
+      - cmd: kubectl delete pvc database-data-harbor-database-0 -n {{.NAMESPACE}}
+        ignore_error: true
+      - cmd: kubectl delete pvc harbor-jobservice -n {{.NAMESPACE}}
+        ignore_error: true
+      - cmd: kubectl delete pvc database-harbor-trivy-0 -n {{.NAMESPACE}}
+        ignore_error: true
+      - cmd: kubectl delete pvc database-harbor-redis-0 -n {{.NAMESPACE}}
+        ignore_error: true
+    internal: true
+
+  install:
+    desc: install Harbor
+    deps: [repo:install, k8s:sa:create]
+    cmds:
+      - |
+        helm install {{.RELEASE_NAME}} harbor/harbor \
+          --create-namespace \
+          --namespace {{.NAMESPACE}} \
+          --version {{.VERSION}} \
+          -f myvalues.yaml
+    status:
+      - kubectl wait --for=condition=Ready pod -l app.kubernetes.io/component=core,app.kubernetes.io/instance=harbor,app.kubernetes.io/managed-by=Helm,app.kubernetes.io/name=harbor -n {{.NAMESPACE}} --timeout=300s
+    internal: true
+
+  uninstall:
+    desc: uninstall Harbor
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}} --keep-history
+
+  update:ingress:
+    desc: update Harbor deployment to use 'nip.io' (free wildcard DNS service)
+    deps: [install]
+    vars:
+      INGRESS_IP:
+        sh: kubectl get ingress harbor-ingress -n harbor -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+    preconditions:
+      - sh: '[ -n "{{.INGRESS_IP}}" ]'
+        msg: "Ingress IP is empty. Waiting for GKE to provision the Load Balancer..."
+    cmds:
+      - |
+        helm upgrade {{.RELEASE_NAME}} harbor/harbor \
+          --namespace {{.NAMESPACE}} \
+          --reuse-values \
+          --set expose.ingres.hosts.core="{{.INGRESS_IP}}.nip.io" \
+          --set externalURL="http://{{.INGRESS_IP}}.nip.io"
+      - echo " > Ingress IP may not be active right away. Please be patient and give it a few minutes."
+      - |
+        echo "Waiting for {{.INGRESS_IP}}.nip.io"
+        count=0
+        until $(curl --output /dev/null --silent --head --fail {{.INGRESS_IP}}.nip.io); do
+          if [ $count -eq 25 ]; then
+            echo "Timeout reached!"
+            exit 1
+          fi
+          printf '.'
+          sleep 10
+          count=$((count+1))
+        done
+        echo "Success! Harbor is up and running."
+    silent: true
+
+  all:
+    desc: full repo setup and Harbor install
+    cmds:
+      - task: k8s:namespace:create
+      - task: k8s:sa:create
+      - task: install
+      - echo " > Once Ingress IP has been provisioned (may take a few min., check with \"watch kubectl get ingress -n harbor\"), please run \"task update:ingress\" so the GCE Ingress controller has a hostname to build its URL map."
+
+  clean:
+    desc: purge Harbor install
+    cmds:
+      - helm uninstall {{.RELEASE_NAME}} -n {{.NAMESPACE}}
+      - task: k8s:sa:delete
+      - sleep 30
+      - task: k8s:pvc:delete
+      - task: k8s:namespace:delete
+    status:
+      - "! kubectl get ns {{.NAMESPACE}}"
+
+
+  #---------------------------
+  # misc / troubleshooting
+  #---------------------------
+  harbor:database:login:
+    desc: exec into database pod (for troubleshooting only)
+    cmds:
+      - kubectl exec -it harbor-database-0 -n harbor -- psql -U postgres -d registry

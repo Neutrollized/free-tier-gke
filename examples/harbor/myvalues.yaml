@@ -1,0 +1,47 @@
+# YAML anchor
+ksa_name: &serviceAccountName "harbor-ksa"
+
+expose:
+  type: ingress
+  tls:
+    enabled: false
+    certSource: none
+  ingress:
+    hosts:
+      core: ""
+    controller: gce
+    annotations:
+      kubernetes.io/ingress.class: "gce"
+      kubernetes.io/ingress.allow-http: "true"
+
+externalURL: ""
+
+nginx:
+  serviceAccountName: *serviceAccountName
+
+portal:
+  serviceAccountName: *serviceAccountName
+
+core:
+  serviceAccountName: *serviceAccountName
+
+jobservices:
+  serviceAccountName: *serviceAccountName
+
+registry:
+  serviceAccountName: *serviceAccountName
+
+trivy:
+  enabled: false  # temporarily disabling due to Trivy compromise in March 2026
+  serviceAccountName: *serviceAccountName
+  severity: "HIGH,CRITICAL"
+  insecure: true
+
+database:
+  serviceAccountName: *serviceAccountName
+
+redis:
+  serviceAccountName: *serviceAccountName
+
+exporter:
+  serviceAccountName: *serviceAccountName
