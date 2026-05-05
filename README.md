@@ -54,6 +54,11 @@ gcloud services enable --async \
 - [Using GKE with Terraform](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/using_gke_with_terraform) guide from the Google provider docs
 
 
+> [!TIP]
+> While I forgot which Kubeflow-related repo I came across this from, but I found a pretty useful script which you can find under `scripts/wi-utils.sh`
+> This script works wonderfully at validating a your WIF setup against GCS storage bucket access.
+
+
 ## Guest Accelerator (GPU)
 GKE supports a wide range of machine types which support different NVIDIA GPUs.  You can read the documentation [here](https://cloud.google.com/compute/docs/accelerator-optimized-machines), but the basic idea is you need to pair up the correct machine type with the GPU you are trying to use.  To make things even more difficult, not every GPU is supported in every region, so you'll need to look up that information first before deciding where to deploy your GKE cluster.
 

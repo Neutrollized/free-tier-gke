@@ -16,66 +16,27 @@
 Before we run the `velero install` command, we'll need to provision some resources and service accounts first: 
 
 ### GCS Bucket
-```
+```sh
 gcloud storage buckets create gs://${GCS_BUCKET} \
   --location=${GCS_BUCKET_LOCATION}
 ```
 
-### IAM Service Account
-- Google Cloud Service Account (GSA):
-```
-gcloud iam service-accounts create velero-sa \
-  --description="Service Account for Velero"
-```
-
-- create custom role for Velero (principle of least privilege):
-```
-ROLE_PERMISSIONS=(
-  compute.disks.get
-  compute.disks.create
-  compute.disks.createSnapshot
-  compute.projects.get
-  compute.snapshots.get
-  compute.snapshots.create
-  compute.snapshots.useReadOnly
-  compute.snapshots.delete
-  compute.snapshots.setLabels
-  compute.zones.get
-  storage.objects.create
-  storage.objects.delete
-  storage.objects.get
-  storage.objects.list
-  iam.serviceAccounts.signBlob
-)
-
-gcloud iam roles create velero.server \
-  --project ${PROJECT_ID} \
-  --title "Velero Server" \
-  --permissions "$(IFS=","; echo "${ROLE_PERMISSIONS[*]}")"
+### Setup Prerequisites
+I'm using [`task`](https://taskfile.dev/) for this:
+```sh
+task velero:prereqs
 ```
 
-
-- assign custom Velero Server role to GSA:
-```
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member "serviceAccount:velero-sa@${PROJECT_ID}.iam.gserviceaccount.com" \
-  --role projects/${PROJECT_ID}/roles/velero.server \
-  --condition None
-
-gsutil iam ch serviceAccount:velero-sa@${PROJECT_ID}.iam.gserviceaccount.com:objectAdmin gs://${GCS_BUCKET}
-```
-
+### Velero install
 > [!WARNING]
 > Workload Identity currently not working as documented so until I get that resolved,
 > this example will require you to create a credentials JSON to be turned in to a k8s secret
 
-
-### Velero install
 - using GCP service account key:
-```
+```sh
 velero install \
     --provider gcp \
-    --plugins velero/velero-plugin-for-gcp:v1.13.1 \
+    --plugins velero/velero-plugin-for-gcp:v1.13.2 \
     --bucket ${GCS_BUCKET} \
     --secret-file /path/to/serviceaccount/credentials.json
 ```
@@ -112,19 +73,12 @@ Velero is installed! ⛵ Use 'kubectl logs deployment/velero -n velero' to view 
 ```
 
 ## Backup
-```
+```sh
 velero backup create nginx-backup --selector app.kubernetes.io/name=nginx
 ```
 
 
 ## Cleanup
-```
-velero uninstall
-
-gcloud projects remove-iam-policy-binding ${PROJECT_ID} \
-  --role projects/${PROJECT_ID}/roles/velero.server \
-  --member "serviceAccount:velero-sa@${PROJECT_ID}.iam.gserviceaccount.com" \
-  --condition None
-
-gcloud iam service-accounts delete velero-sa@${PROJECT_ID}.iam.gserviceaccount.com
+```sh
+task clean
 ```

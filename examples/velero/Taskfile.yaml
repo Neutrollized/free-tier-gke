@@ -1,0 +1,132 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GSA_NAME: velero-gsa
+  NAMESPACE: velero
+  GCS_BUCKET: mybucket # UPDATE THIS!! no gs://
+  VELERO_GCP_PLUGIN_VER: v1.13.2
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  help:
+    desc: show all available tasks
+    cmds:
+      - task --list
+
+
+  #------------------------------
+  # Velero tasks
+  #------------------------------
+
+  gcp:role:create:
+    desc: creates a custom GCP IAM role for Velero
+    vars:
+      # We define the permissions as a simple string or list
+      PERMISSIONS_LIST:
+        - compute.disks.get
+        - compute.disks.create
+        - compute.disks.createSnapshot
+        - compute.projects.get
+        - compute.snapshots.get
+        - compute.snapshots.create
+        - compute.snapshots.useReadOnly
+        - compute.snapshots.delete
+        - compute.snapshots.setLabels
+        - compute.zones.get
+        - storage.objects.create
+        - storage.objects.delete
+        - storage.objects.get
+        - storage.objects.list
+        - iam.serviceAccounts.signBlob
+    cmds:
+      - |
+        gcloud iam roles create velero.server \
+          --project {{.PROJECT_ID}} \
+          --title "Velero Server" \
+          --permissions "{{join "," .PERMISSIONS_LIST}}"
+    status:
+      - gcloud iam roles list --filter="name:velero.server" --project {{.PROJECT_ID}}
+    ignore_error: true
+    internal: true
+
+  gcp:role:delete:
+    desc: deletes a custom GCP IAM role for Velero
+    cmds:
+      - |
+        gcloud iam roles delete velero.server \
+          --project {{.PROJECT_ID}}
+    internal: true
+
+  gcp:sa:create:
+    desc: setus GCP service account
+    deps: [gcp:role:create]
+    cmds:
+      - gcloud iam service-accounts create {{.GSA_NAME}} --project {{.PROJECT_ID}}
+      - sleep 5
+      - gcloud storage buckets add-iam-policy-binding gs://{{.GCS_BUCKET}} --role "projects/{{.PROJECT_ID}}/roles/velero.server" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - gsutil iam ch serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com:objectAdmin gs://{{.GCS_BUCKET}}
+    internal: true
+
+  gcp:sa:delete:
+    desc: cleanup GCP service account
+    cmds:
+      - gsutil iam ch -d serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com:objectAdmin gs://{{.GCS_BUCKET}}
+      - gcloud storage buckets remove-iam-policy-binding gs://{{.GCS_BUCKET}} --role "projects/{{.PROJECT_ID}}/roles/velero.server" --member "serviceAccount:{{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com"
+      - gcloud iam service-accounts delete {{.GSA_NAME}}@{{.PROJECT_ID}}.iam.gserviceaccount.com --quiet
+    internal: true
+
+  velero:install:
+    desc: install Velero using CLI
+    cmds:
+      - |
+        velero install \
+          --provider gcp \
+          --plugins velero/velero-plugin-for-gcp:{{.VELERO_GCP_PLUGIN_VER}} \
+          --bucket {{.GCS_BUCKET}} \
+          --secret-file {{.CREDENTIALS_JSON_PATH}}
+    status:
+      - "! kubectl get ns {{.NAMESPACE}}"
+    internal: true
+
+  velero:uninstall:
+    desc: uninstall Velero using CLI
+    cmds:
+      - velero uninstall --force -n {{.NAMESPACE}}
+    status:
+      - "! kubectl get ns {{.NAMESPACE}}"
+    internal: true
+
+  velero:prereqs:
+    desc: setup prerequisites for Velero install
+    preconditions:
+      - sh: '[ -n "{{.PROJECT_ID}}" ]'
+        msg: |
+          ERROR: 'PROJECT_ID' is required but was not provided.
+          Usage: task velero:prereqs PROJECT_ID=myproject-123
+    cmds:
+      - task: gcp:role:create
+      - task: gcp:sa:create
+      - cmd: echo " > You will need to create credentials JSON file via GCP Console"
+      
+  all:
+    desc: deploy Velero
+    deps: [velero:prereqs]
+    cmds:
+      - task: velero:install
+
+  clean:
+    desc: cleanup RayCluster example
+    preconditions:
+      - sh: '[ -n "{{.PROJECT_ID}}" ]'
+        msg: |
+          ERROR: 'PROJECT_ID' is required but was not provided.
+          Usage: task clean PROJECT_ID=myproject-123
+    cmds:
+      - task: velero:uninstall
+      - task: gcp:sa:delete
