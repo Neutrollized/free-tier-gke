@@ -41,7 +41,8 @@ You can do this via console or...
 ```
 gcloud services enable --async \
   compute.googleapis.com \
-  container.googleapis.com
+  container.googleapis.com \
+  servicenetworking.googleapis.com
 ```
 
 ### Additional Deployment Notes

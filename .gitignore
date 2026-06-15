@@ -37,3 +37,26 @@ terraform.tfvars
 *.swp
 *.DS_Store
 **/nim-llm-*.tgz
+
+# Security / Secrets
+*credential*.json
+*credentials*.json
+*secret*.json
+*token*.json
+service-account*.json
+application_default_credentials.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+*.csr
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*_rsa
+*_dsa
+*_ecdsa
+*_ed25519

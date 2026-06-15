@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.28.4] - 2026-06-15
+### Changed
+- Updated `.gitignore` to help guard against accidental key/secret commits
+- Updated README with additional Service Networking API requirement
+
 ## [0.28.3] - 2026-05-04
 ### Added
 - `scripts/wi-utils.sh`, an handy tools for validating Workload Identity (WIF) setups against GCS bucket access
