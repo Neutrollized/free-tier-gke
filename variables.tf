@@ -24,40 +24,22 @@ variable "zone" {
 # https://cloud.google.com/kubernetes-engine/docs/concepts/alias-ips
 #------------------------------------------------
 
-variable "primary_ip_cidr" {
-  description = "Primary CIDR for nodes.  /24 will provide 256 node addresses."
-  type        = string
-  default     = "192.168.0.0/24"
+variable "network_cidrs" {
+  description = "CIDR ranges used throughout the VPC (primary subnet, pods, services, proxy-only, PSC, IAP)."
+  type = object({
+    primary       = optional(string, "192.168.0.0/24")
+    cluster_ipv4  = optional(string, "10.0.0.0/16")
+    services_ipv4 = optional(string, "10.1.0.0/20")
+    proxy_only    = optional(string, "192.168.254.0/23")
+    psc           = optional(string, "192.168.253.0/26")
+    iap_proxy     = optional(string, "192.168.100.0/29")
+  })
 }
 
 variable "max_pods_per_node" {
   description = "Max pods per node should be half of the number of node IP addresses, up to a max of 110"
   type        = number
   default     = 110
-}
-
-variable "cluster_ipv4_cidr_block" {
-  description = "Secondary CIDR for pods.  /24 node IPs will allow max 252 nodes * 256 pod IPs = 64,512 total IPs, so pod CIDR needs to be > than that so needs to be /16 "
-  type        = string
-  default     = "10.0.0.0/16"
-}
-
-variable "services_ipv4_cidr_block" {
-  description = "Secondary CIDR for services.  /20 will provide 4k service IPs."
-  type        = string
-  default     = "10.1.0.0/20"
-}
-
-variable "proxy_only_ip_cidr" {
-  description = "CIDR for proxy-only subnet to be used by internal HTTP(s) load balancers."
-  type        = string
-  default     = "192.168.254.0/23"
-}
-
-variable "psc_ip_cidr" {
-  description = "CIDR for Private Service Connect subnet. In terms of sizing, you will need 1 IP for every 63 consumer VMs."
-  type        = string
-  default     = "192.168.253.0/26"
 }
 
 variable "enable_cloud_nat_logging" {
@@ -264,34 +246,16 @@ variable "enable_managed_prometheus" {
   default     = false
 }
 
-variable "enable_intranode_visibility" {
-  description = "If enabled, same node pod to pad traffic visible for VPC network.  Requires VPC Flow Logs for subnet to also be enabled."
-  type        = bool
-  default     = false
-}
-
-variable "flow_logs_interval" {
-  description = "Sets aggregation interval for collecting flow logs."
-  type        = string
-  default     = "INTERVAL_5_SEC"
-}
-
-variable "flow_logs_sampling" {
-  description = "Sets sampling rate.  0.5 means half of all collected logs are reported.  1.0 means all collected logs are reported."
-  type        = number
-  default     = 0.5
-}
-
-variable "flow_logs_metadata" {
-  description = "Specifies whether metadata is added to VPC flow logs."
-  type        = string
-  default     = "INCLUDE_ALL_METADATA"
-}
-
-variable "flow_logs_filter" {
-  description = "Enable/disable log filtering."
-  type        = bool
-  default     = true
+variable "flow_logs" {
+  description = "VPC Flow Log configuration."
+  type = object({
+    enabled  = optional(bool, false)
+    interval = optional(string, "INTERVAL_5_SEC")
+    sampling = optional(number, 0.5)
+    metadata = optional(string, "INCLUDE_ALL_METADATA")
+    filter   = optional(string, "true")
+  })
+  default = {}
 }
 
 variable "log_config" {

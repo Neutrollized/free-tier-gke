@@ -4,7 +4,7 @@ output "_connection_string" {
 }
 
 output "dns_endpoint" {
-  value       = var.enable_dns_endpoint ? google_container_cluster.primary.control_plane_endpoints_config[0].dns_endpoint_config[0].endpoint : "DNS-based endpoint not enabled"
+  value       = var.enable_dns_endpoint ? google_container_cluster.standard.control_plane_endpoints_config[0].dns_endpoint_config[0].endpoint : "DNS-based endpoint not enabled"
   description = "GKE DNS endpoint"
 }
 

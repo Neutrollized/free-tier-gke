@@ -11,7 +11,7 @@ resource "google_project_service" "container" {
 # GKE Cluster
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster.html#example-usage---with-a-separately-managed-node-pool-recommended
 #------------------------------------------------------
-resource "google_container_cluster" "primary" {
+resource "google_container_cluster" "standard" {
   provider = google-beta
 
   name                = var.gke_cluster_name
@@ -58,8 +58,8 @@ resource "google_container_cluster" "primary" {
   # which I will probably look to add at a later date
   networking_mode = var.networking_mode
   ip_allocation_policy {
-    cluster_ipv4_cidr_block  = var.cluster_ipv4_cidr_block
-    services_ipv4_cidr_block = var.services_ipv4_cidr_block
+    cluster_ipv4_cidr_block  = var.network_cidrs.cluster_ipv4
+    services_ipv4_cidr_block = var.network_cidrs.services_ipv4
   }
 
   # https://cloud.google.com/kubernetes-engine/docs/how-to/flexible-pod-cidr#cidr_ranges_for_clusters
@@ -237,7 +237,7 @@ resource "google_container_node_pool" "primary" {
 
   name     = random_pet.node_pool.id
   location = var.regional ? var.region : var.zone
-  cluster  = google_container_cluster.primary.id
+  cluster  = google_container_cluster.standard.id
 
   initial_node_count = var.initial_node_count
   autoscaling {

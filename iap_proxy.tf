@@ -3,7 +3,7 @@
 resource "google_compute_subnetwork" "iap" {
   count                    = var.enable_private_endpoint && !var.enable_dns_endpoint ? 1 : 0
   name                     = "${var.gke_cluster_name}-iap-subnet"
-  ip_cidr_range            = var.iap_proxy_ip_cidr
+  ip_cidr_range            = var.network_cidrs.iap_proxy
   network                  = google_compute_network.k8s.id
   private_ip_google_access = "true"
   region                   = var.region

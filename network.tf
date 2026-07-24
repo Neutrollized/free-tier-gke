@@ -7,18 +7,18 @@ resource "google_compute_network" "k8s" {
 
 resource "google_compute_subnetwork" "k8s" {
   name                     = "${var.gke_cluster_name}-subnet"
-  ip_cidr_range            = var.primary_ip_cidr
+  ip_cidr_range            = var.network_cidrs.primary
   network                  = google_compute_network.k8s.id
   private_ip_google_access = "true"
   region                   = var.region
 
   # settings for VPC Flow Logs, if enabled
   dynamic "log_config" {
-    for_each = var.enable_intranode_visibility ? [{
-      aggregation_interval = var.flow_logs_interval
-      flow_sampling        = var.flow_logs_sampling
-      metadata             = var.flow_logs_metadata
-      filter_expr          = var.flow_logs_filter
+    for_each = var.flow_logs.enabled ? [{
+      aggregation_interval = var.flow_logs.interval
+      flow_sampling        = var.flow_logs.sampling
+      metadata             = var.flow_logs.metadata
+      filter_expr          = var.flow_logs.filter
     }] : []
     content {
       aggregation_interval = log_config.value["aggregation_interval"]
@@ -38,7 +38,7 @@ resource "google_compute_subnetwork" "proxy_only" {
   name          = "${var.gke_cluster_name}-proxy-only-subnet"
   purpose       = "REGIONAL_MANAGED_PROXY"
   role          = "ACTIVE"
-  ip_cidr_range = var.proxy_only_ip_cidr
+  ip_cidr_range = var.network_cidrs.proxy_only
   network       = google_compute_network.k8s.id
   region        = var.region
 }
@@ -49,7 +49,7 @@ resource "google_compute_subnetwork" "psc" {
 
   name                     = "${var.gke_cluster_name}-psc-subnet"
   purpose                  = "PRIVATE_SERVICE_CONNECT"
-  ip_cidr_range            = var.psc_ip_cidr
+  ip_cidr_range            = var.network_cidrs.psc
   network                  = google_compute_network.k8s.id
   private_ip_google_access = "true"
   region                   = var.region

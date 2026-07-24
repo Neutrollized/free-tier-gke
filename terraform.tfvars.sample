@@ -4,16 +4,25 @@ zone       = "northamerica-northeast1-c"
 
 gke_cluster_name = "playground"
 
-primary_ip_cidr          = "192.168.0.0/26" # max node IPs = 64 (max nodes = 60; 4 IPs reservered in every VPC)
-max_pods_per_node        = 32               # max pods per node <= half of max node IPs
-cluster_ipv4_cidr_block  = "10.0.0.0/18"    # max pod IPs = 15360 (60 * 256), CIDR must be able to cover for all the potential IPs
-services_ipv4_cidr_block = "10.1.0.0/20"
+network_cidrs = {
+  primary       = "192.168.0.0/26" # max node IPs = 64 (max nodes = 60; 4 IPs reservered in every VPC)
+  cluster_ipv4  = "10.0.0.0/18"    # max pod IPs = 15360 (60 * 256), CIDR must be able to cover for all the potential IPs
+  services_ipv4 = "10.1.0.0/20"
+}
+
+max_pods_per_node = 32               # max pods per node <= half of max node IPs
+
 
 release_channel = "RAPID"
 auto_upgrade    = true
 
 enable_managed_prometheus   = false
-enable_intranode_visibility = true
+
+
+flow_logs = {
+  enabled  = true
+  sampling = 0.3
+}
 
 # mutually exclusive with the the custom node taint example shown below
 # the custom node taint is required only for OSS Cilium
