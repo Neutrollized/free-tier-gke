@@ -30,15 +30,16 @@ resource "google_container_cluster" "standard" {
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#node_config
   # however, it is required if you're going to use confidential nodes otherwise it will complain about the 
   # machine family not being set to N2D, even though is in the "google_container_node_pool" resource
-  dynamic "node_config" {
-    for_each = var.confidential_nodes_enabled ? [1] : []
-    content {
-      machine_type = var.machine_type
+  # the setting here doesn't really matter because we're removing the default node pool anyway
+  node_config {
+    machine_type = var.machine_type
 
-      labels = {
-        mesh_id = "proj-${var.project_id}"
-      }
+    labels = {
+      mesh_id = "proj-${var.project_id}"
     }
+
+    service_account = google_service_account.gke_sa.email
+    oauth_scopes    = var.oauth_scopes
   }
 
   # We can't create a cluster with no node pool defined, but we want to only use

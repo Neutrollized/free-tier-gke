@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [0.29.1] - 2026-10-19
+### Fixed
+- Issue where deployment would fail if default Compute Engine service account was disabled in GCP project as it's still used for the default node pool unless a custom service account is specified
+- Updated `examples/hubble` Hubble UI from `0.13.4` to `0.13.6` (as `0.13.4` no longer exists)
+
 ## [0.29.0] - 2026-07-24
 ### Changed
 - Consolidated top-level network CIDR variables into `network_cidrs` object variable
